@@ -41,4 +41,4 @@ DESCRIPTION FORTHCOMING
 DESCRIPTION FORTHCOMING
 
 ## hbareport
-**hbareport** is designed specifically for PowerPC LPARs running SLES v12 or v15, and in particular those having HBAs provided by VIOs using NPIV. The LUN naming assumed by the tool comes from the SLES-for-SAP environment I built for a R3-to-HANA migration.
+**hbareport-lpar** is designed specifically for PowerPC LPARs running SLES v12 or v15, and in particular those having HBAs provided by VIOs using NPIV. The LUN naming assumed by the tool comes from the SLES-for-SAP environment I built for a R3-to-HANA migration.
