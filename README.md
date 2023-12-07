@@ -45,7 +45,7 @@ One of my planned improvements was to provide a way for the tool to retrieve the
 DESCRIPTION FORTHCOMING
 
 ## fscooler
-I wrote this tool for SLES v15 VMs in a VMware environment. It automates XFS _Freeze_ and _Thaw_ operations during backups (basically, it "settles" the filesystems so the backup is "clean"). Invocation is controlled by the **open-vm-tools** configuration file `/etc/vmware-tools/tools.conf`, specifically the **[vmbackup]** stanza. Among other features, it allows definition of an "immune" Volume Group; that is, an LVM VG where no filesystem in that VG will be frozen. This is important, as freezing something like **/var** or **/tmp**, even for a second, can trigger catastrophic failures is other processes.
+I wrote this tool for SLES v15 VMs in a VMware environment. It automates XFS _Freeze_ and _Thaw_ operations during backups (basically, it "settles" the filesystems so the backup is "clean"). Invocation is controlled by the **open-vm-tools** configuration file `/etc/vmware-tools/tools.conf`, specifically the **[vmbackup]** stanza. Among other features, it allows definition of an "immune" Volume Group; that is, an LVM VG where no filesystem in that VG will be frozen. This is important, as freezing something like **/var** or **/tmp**, even for a second, can trigger catastrophic failures in other processes.
 
 It's also important to note that this tool **_assumes_** that filesystems are all defined in/mounted by **/etc/fstab** and the entries use a "standard" syntax. Before deploying this tool in your environment, check my assumptions about that, and adjust the code if needed.
 
