@@ -34,8 +34,12 @@ Some of these tools are aimed at PowerPC LPARs, and those generally have names e
 ## cpuecode
 DESCRIPTION FORTHCOMING
 
-## dellhardwarereport
-DESCRIPTION FORTHCOMING
+## dell-query-array.py
+Recently, an environment had about 30 Dell **PowerVault ME-{4,5}012 and ME-4084** Storage Arrays. We didn't have a coherent monitoring/alerting strategy, so we weren't always aware of issues on a timely basis. While we were in the process of addressing that shortcoming, I developed this tool to meet dual needs. First, it provided a quick way for anyone in Operations to get a moment-in-time view of any Storage Array in the environment. Second, it provided a potential mechanism for the Monitoring Team (who were separate from Operations) to peek into a given Storage Array to gather detailed information when constructing an alert.
+
+**IMPORTANT** This tool makes a number of assumptions about the environment in which it operates. These are detailed in the _Notes_ section of the comment header.
+
+One of my planned improvements was to provide a way for the tool to retrieve the password for the Management Controller login from a vault such as **1Password** or **LastPass** or whatever. That would be something very specific to the environment, and so I don't include it in this version.
 
 ## ethreport
 DESCRIPTION FORTHCOMING
