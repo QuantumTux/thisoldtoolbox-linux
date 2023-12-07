@@ -32,7 +32,9 @@ The library should be placed in **/usr/local/lib/bash_tools.sh**
 Some of these tools are aimed at PowerPC LPARs, and those generally have names ending **-lpar**
 
 ## cpuecode
-DESCRIPTION FORTHCOMING
+The earliest version I can find for this tool is January, 2011; but I know I started it several years prior to that. In the environment at that time, the host population was almost entirely physical, and there was a need to evaluate those systems, in the fly, during OS install. While the environment eventually shifted towards virtual hosts, the tool was still useful from time to time. It also became handy when in the time of Spectre/Meltdown, and proved helpful in the PowerPC environment.
+
+Originally, the information on CPU flag meanings was in one huge **case** statement; I defend that by noting back in 2009, x86 CPUs had a lot fewer flags (dual-core was around, but quad-core wasn't yet common). In preparation for publishing it here, I took the vast majority of that information and moved it into the cpudecode-data file (a comment tells you where it needs to live), which basically just declares an array and populates it. The tools also depends on the BASH library.
 
 ## dell-query-array.py
 Recently, an environment had about 30 Dell **PowerVault ME-{4,5}012 and ME-4084** Storage Arrays. We didn't have a coherent monitoring/alerting strategy, so we weren't always aware of issues on a timely basis. While we were in the process of addressing that shortcoming, I developed this tool to meet dual needs. First, it provided a quick way for anyone in Operations to get a moment-in-time view of any Storage Array in the environment. Second, it provided a potential mechanism for the Monitoring Team (who were separate from Operations) to peek into a given Storage Array to gather detailed information when constructing an alert.
