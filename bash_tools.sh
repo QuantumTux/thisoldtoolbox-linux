@@ -259,7 +259,7 @@ _init_script_tool_names ()
 	# W
 	readonly W_TOOL=$( ${WHICH_TOOL} --skip-alias w 2>&1 )
 	readonly WC_TOOL=$( ${WHICH_TOOL} --skip-alias wc 2>&1 )
-	readonly WGET_TOOL=$( ${WHICH_TOOL} --skip-alias wget 2>&1 )
+	WGET_TOOL=$( ${WHICH_TOOL} --skip-alias wget 2>&1 )
 	readonly WGET_TOOL="${WGET_TOOL} -q -O"
 	readonly WHO_TOOL=$( ${WHICH_TOOL} --skip-alias who 2>&1 )
 
