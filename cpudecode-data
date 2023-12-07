@@ -1,0 +1,502 @@
+#!/bin/bash
+#######################################################################
+# cpudecode-data - Data file for x86/PowerPC CPU Analysis Tool
+#######################################################################
+# This is a data file that must be sourced by the cpudecode tool
+#
+# This file should reside at /usr/local/lib/cpudecode-data; it should
+#   be readable (does not need to be executable)
+#######################################################################
+DATAFILE_VERSION='100'
+#######################################################################
+# Change Log (Reverse Chronological Order)
+# Who When______ What__________________________________________________
+# dxb 2023-12-07 Created
+#######################################################################
+declare -A CPU_FLAG_DATA_
+##############
+# 3
+CPU_FLAG_DATA_['3dnow']="AMD-specific multi-media extension 3DNow!\n\t\tEquivalent to Intel ${BOLD_TEXT}mmx${ALL_OFF} flag"
+CPU_FLAG_DATA_['3dnowext']="AMD-specific multi-media extension 3DNow! Extended\n\t\tExtension of AMD 3DNow! extension (${BOLD_TEXT}3dnow${ALL_OFF} flag)\n\t\tSimilar to Intel ${BOLD_TEXT}mmx${ALL_OFF} flag"
+CPU_FLAG_DATA_['3dnowprefetch']="AMD-specific - Pre-fetch support for 3DNow!\n\t\tExtension of AMD 3DNow! extension (${BOLD_TEXT}3dnow${ALL_OFF} flag)"
+##############
+# A
+CPU_FLAG_DATA_['abm']='AMD-created + Intel-supported - Advanced Bit Manipulation instruction support'
+CPU_FLAG_DATA_['acpi']='Support for Advanced Configuration and Power Interface features'
+CPU_FLAG_DATA_['adx']='Intel-specific - Multi-Precision Add-Carry Instruction Extensions'
+CPU_FLAG_DATA_['aes']='Support for Advanced Encryption Standard instructions'
+CPU_FLAG_DATA_['altmovcr8']='AMD-specific - Lock MOV CR0'
+CPU_FLAG_DATA_['amd_dcm']='AMD-specific - Multi-Node Processor/Direct Connect Module'
+CPU_FLAG_DATA_['aperfmperf']='Intel-specific - CPU Scaling Frequency Register Support'
+CPU_FLAG_DATA_['apic']="On-board Advanced Programmable Interrupt Controller (Related to the ${BOLD_TEXT}xtpr${ALL_OFF} flag)"
+CPU_FLAG_DATA_['arat']='APIC-Timer-Always-Running'
+CPU_FLAG_DATA_['arch_capabilities']='Intel-specific - Support for enumeration of Architecture Capabilities'
+CPU_FLAG_DATA_['arch_lbr']='CPU supports Architectural Last Branch Record functions'
+CPU_FLAG_DATA_['arch_perfmon']='Intel-specific - Architecture Performance Monitoring for profiling standard events'
+CPU_FLAG_DATA_['art']="Intel-specific - Always Running Timer\n\t\tRelated to ${BOLD_TEXT}constant_tsc${ALL_OFF}, ${BOLD_TEXT}nonstop_tsc${ALL_OFF}, ${BOLD_TEXT}tsc${ALL_OFF} and ${BOLD_TEXT}rdtscp${ALL_OFF} flags"
+CPU_FLAG_DATA_['avx']='Intel-specific - Advanced Vector Extensions'
+CPU_FLAG_DATA_['avx_vnni']='Intel-specific + AMD-supported - The CPU supports AVX2 Vector Neural Network Instructions'
+CPU_FLAG_DATA_['avx2']="${CPU_FLAG_DATA_['avx']}"
+CPU_FLAG_DATA_['avx512_bitalg']='Intel-created with limited AMD support - AVX-512 Support for Byte/Word Bit Manipulation Instructions expanding VPOPCNTDQn'
+CPU_FLAG_DATA_['avx512bw']='Intel-specific - AVX-512 Byte and Word Instructions'
+CPU_FLAG_DATA_['avx512cd']='Intel-specific - AVX-512 Conflict Detection Instruction'
+CPU_FLAG_DATA_['avx512dq']='Intel-specific - AVX-512 Doubleword and Quadword Instructions'
+CPU_FLAG_DATA_['avx512er']='Intel-specific - AVX-512 Exponential and Reciprocal Instructions'
+CPU_FLAG_DATA_['avx512f']='Intel-specific - AVX-512 Foundations'
+CPU_FLAG_DATA_['avx512ifma']='Intel-specific - AVX-512 Integer Fused Multiply-Add Instructions'
+CPU_FLAG_DATA_['avx512pf']='Intel-specific - AVX-512 Prefetch Instructions'
+CPU_FLAG_DATA_['avx512vbmi']='Intel-specific - AVX-512 Vector Bit Manipulation Instructions'
+CPU_FLAG_DATA_['avx512vl']='Intel-specific - AVX-512 Vector Length Extensions'
+# Flags to add: avx512_vbmi2 avx512_vnni avx512_vp2intersect avx512_vpopcntdq
+##############
+# B
+CPU_FLAG_DATA_['bmi1']='Intel-specific - 1st Group Bit Manipulation Extensions'
+CPU_FLAG_DATA_['bmi2']='Intel-specific - 2nd Group Bit Manipulation Extensions'
+CPU_FLAG_DATA_['bts']='Intel-specific - Bit Test and Set'
+##############
+# C
+CPU_FLAG_DATA_['cat_l2']='Intel-specific - Cache Allocation Technology L2'
+CPU_FLAG_DATA_['cat_l3']='Intel-specific - Cache Allocation Technology L3'
+CPU_FLAG_DATA_['cdp_l2']='Intel-specific - Code and Data Prioritization L2'
+CPU_FLAG_DATA_['cdp_l3']='Intel-specific - Code and Data Prioritization L3'
+CPU_FLAG_DATA_['cid']='Context ID - L1 data cache mode can be adaptive or shared (BIOS setting)'
+CPU_FLAG_DATA_['clfsh']='Cache Line Flush instruction supported'
+CPU_FLAG_DATA_['clflush']="${CPU_FLAG_DATA_['clfsh']}"
+CPU_FLAG_DATA_['clflushopt']='Support for CLFUSHOPT Instruction'
+CPU_FLAG_DATA_['clwb']='Support for CLWB instruction'
+CPU_FLAG_DATA_['clzero']='AMD-specific - Support for CLZERO Instruction'
+CPU_FLAG_DATA_['cmov']='Support for Conditional Move/Compare instruction'
+CPU_FLAG_DATA_['cmp_legacy']="CPU is ${BOLD_TEXT}NOT${ALL_OFF} HyperThreading-capable"
+CPU_FLAG_DATA_['cnxt-id']='Intel-specific - L1 data cache mode can be either adaptive or shared (set in BIOS)'
+CPU_FLAG_DATA_['constant_tsc']="Constant Time-Stamp Counter (Related to ${BOLD_TEXT}tsc${ALL_OFF} flag)"
+CPU_FLAG_DATA_['cpb']='AMD-specific - Core Performance Boost'
+CPU_FLAG_DATA_['cqm']='Intel-specific - Support for Cache QoS Monitoring'
+CPU_FLAG_DATA_['cqm_llc']='Intel-specific - Additional support for Cache QoS Last Level Cache Monitoring'
+CPU_FLAG_DATA_['cqm_mbm_local']='Intel-specific - Additional support for Cache QoS Last Level Cache local MBM Monitoring'
+CPU_FLAG_DATA_['cqm_mbm_total']='Intel-specific - Additional support for Cache QoS Last Level Cache total MBM Monitoring'
+CPU_FLAG_DATA_['cqm_occup_llc']='Intel-specific - Additional support for Cache QoS Last Level Cache Occupancy Monitoring'
+CPU_FLAG_DATA_['cpuid']="Intel-specific - CPU supports the CPUID instruction (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
+CPU_FLAG_DATA_['cpuid_fault']='Intel-specific - CPUID Faulting'
+CPU_FLAG_DATA_['cr8_legacy']='Control Register 8/Task Priority Register in 32-bit Mode'
+CPU_FLAG_DATA_['cx8']='Compare And Exchange 8 Bytes'
+CPU_FLAG_DATA_['cx16']="Compare And Exchange 16 Bytes\n\t\tAble to perform atomic operations on 128-bit double-quadword (oword) data types\n\t\tUsed for high-resolution counters"
+CPU_FLAG_DATA_['cxmms']='Cyrix-specific - Support for MMX Extentions'
+
+#				'constant_tsc')
+#							OUTPUT="Constant Time-Stamp Counter (Related to ${BOLD_TEXT}tsc${ALL_OFF} flag)\n\t\tIndicates "
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT}Pentium 4 or later CPU"
+#							else
+#								OUTPUT="${OUTPUT}Newer-model AMD CPU"
+#							fi
+#							OUTPUT="${OUTPUT}\n\t\tNeeded for proper Virtualization support"
+#							(( VIRT_VM = VIRT_VM + 1 ))
+#							;;
+#				'cpuid')	OUTPUT="Intel-specific - CPU supports the CPUID instruction (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+#
+#				'cx8')		OUTPUT="Compare And Exchange 8 Bytes"
+#                  if [ "${CPU_OEM}" == 'Intel' ]; then
+#                    OUTPUT="${OUTPUT} - Indicates older/emulated Pentium CPU"
+#                  fi
+#                  ;;
+
+##############
+# D
+CPU_FLAG_DATA_['dbx']='Intel-specific - Data Breakpoint Extensions'
+CPU_FLAG_DATA_['dca']='Intel-specific - Support for Direct Cache Access'
+CPU_FLAG_DATA_['de']='Debugging Extensions - I/O breakpoints supported'
+CPU_FLAG_DATA_['decodeassists']='AMD-specific - Support for Decode Assists'
+CPU_FLAG_DATA_['dfp']='S/390-specific - Hardware supports additional Floating Point instructions'
+CPU_FLAG_DATA_['ds_cpl']='Current Privilege Level-qualified Debug Store'
+CPU_FLAG_DATA_['ds-cpl']="${CPU_FLAG_DATA_['ds_cpl']}"
+CPU_FLAG_DATA_['dtes64']='Intel-specific - 64-bit Debug Store'
+CPU_FLAG_DATA_['ds']='Debug Store'
+CPU_FLAG_DATA_['dtherm']='Intel-specific - Digital Thermal Sensor'
+CPU_FLAG_DATA_['dts']="Variant Meaning: Either ${BOLD_TEXT}${BLUE_BLACK}Debug Trace Store${ALL_OFF} ${BOLD_TEXT}OR${ALL_OFF} ${BOLD_TEXT}${BLUE_BLACK}Digital Thermal Sensor${ALL_OFF}"
+##############
+# E
+CPU_FLAG_DATA_['eagerfpu']='Support for Non-Lazy x87 Floating Point Restore'
+CPU_FLAG_DATA_['ecmd']='Intel-specific - Extended Clock Modulation Duty'
+CPU_FLAG_DATA_['eimm']='S/390-specific - Support for Extended Immediate 32-bit instructions'
+CPU_FLAG_DATA_['emt64t']="Intel-specific - 64-bit CPU registers and physical RAM addresses\n\t\tSupports up to 1TB of Physical RAM"
+CPU_FLAG_DATA_['epb']='Intel-specific - Energy Performance Bias MSR'
+CPU_FLAG_DATA_['ept']="Intel-specific - Extended Page Table\n\t\tEquivalent to AMD ${BOLD_TEXT}npt${ALL_OFF} flag"
+CPU_FLAG_DATA_['ept_ad']='Intel-specific - Extended Page Table support for Access-Dirty bit'
+# Flags to add: ept_x_only ept_1gb
+CPU_FLAG_DATA_['erms']='Intel-specific - Enhanced REP MOVSB/STOSB instruction support'
+CPU_FLAG_DATA_['est']='Intel-specific - Enhanced Intel Speed Step'
+CPU_FLAG_DATA_['eist']="${CPU_FLAG_DATA_['est']}"
+CPU_FLAG_DATA_['extapic']="AMD-specific - Extended APIC Space (Related to ${BOLD_TEXT}apic${ALL_OFF} flag)"
+CPU_FLAG_DATA_['extd_apicid']='CPU supports extended (8-bit) APICID'
+##############
+# F
+CPU_FLAG_DATA_['f16c']='AMD-created but Intel-supported - Support for 16-bit Floating Point Conversion instructions'
+CPU_FLAG_DATA_['fid']='Frequency Identifier control'
+CPU_FLAG_DATA_['flexpriority']='Intel-specific - Support for Flex Priority Virtualization enhancement'
+CPU_FLAG_DATA_['flushbyasid']='AMD-specific - Support for Flush By Address Space ID'
+CPU_FLAG_DATA_['flush_l1d']="Intel-specific - Flush Level 1 Data Cache (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
+CPU_FLAG_DATA_['fma']='Support for Fused Multiply-Add instructions'
+CPU_FLAG_DATA_['fma4']='AMD-specific - Support for 4-operand Fused Multiply-Add instructions'
+CPU_FLAG_DATA_['fpu']='x87 Floating Point Unit built-in'
+CPU_FLAG_DATA_['fsgsbase']="Intel-specific - Support for FS/GS Base registers access instruction\n\t\tRelated to the ${BOLD_TEXT}avx${ALL_OFF} flag"
+CPU_FLAG_DATA_['fsrm']='Fast Short Rep Mov'
+CPU_FLAG_DATA_['fxsr']='x87 FPU State Save and Restore'
+CPU_FLAG_DATA_['fxsr_opt']='AMD-specific - FX Register Save and Restore Functions'
+
+#				'flush_l1d')
+#							OUTPUT="Intel-specific - Flush Level 1 Data Cache (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+#				'fpu')		OUTPUT="x87 Floating Point Unit built-in"
+#                 if [ "${CPU_OEM}" == 'Intel' ]; then
+#                    OUTPUT="${OUTPUT} - Indicates 80486DX or later"
+#                  fi
+#                  ;;
+
+##############
+# G
+CPU_FLAG_DATA_['gfni']="Intel-specific - Support for Galois Field New Instructions\n\t\tThese accelerate cryptographic and security applications\n\t\tRelated to the ${BOLD_TEXT}avx512${ALL_OFF} flags"
+
+##############
+# H
+CPU_FLAG_DATA_['hfi']='Intel-specific - Support for Hardware Feedback Interface'
+CPU_FLAG_DATA_['hle']='Intel-specific - Hardware Lock Extensions'
+CPU_FLAG_DATA_['hpstate']='AMD-specific - Hardware P-State Control'
+CPU_FLAG_DATA_['hw_pstate']="${CPU_FLAG_DATA_['hpstate']}"
+CPU_FLAG_DATA_['ht']='X'
+CPU_FLAG_DATA_['htt']="${CPU_FLAG_DATA_['ht']}"
+CPU_FLAG_DATA_['hvm']='Hardware Virtual Machines Supported (Xen)'
+CPU_FLAG_DATA_['hwp']='Intel-Specific - Support for Hardware P-States'
+CPU_FLAG_DATA_['hwp_act_window']="Intel-Specific - HWP Activity Window\n\t\tRelated to the ${BOLD_TEXT}hwp${ALL_OFF} flag"
+CPU_FLAG_DATA_['hwp_epp']="Intel-Specific - HWP Energy Performance Preference\n\t\tRelated to the ${BOLD_TEXT}hwp${ALL_OFF} flag"
+CPU_FLAG_DATA_['hwp_notify']="Intel-Specific - HWP Notification\n\t\tRelated to the ${BOLD_TEXT}hwp${ALL_OFF} flag"
+CPU_FLAG_DATA_['hwp_pkg_req']="Intel-Specific - HWP Package Level Request\n\t\tRelated to the ${BOLD_TEXT}hwp${ALL_OFF} flag"
+CPU_FLAG_DATA_['hypervisor']='Intel-created AMD-supported - When present, indicates host is virtualized'
+
+#				'ht' | 'htt')
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="Intel-specific - HyperThreading Supported (may not be active)"
+#							else
+#								OUTPUT="Hyper Transport (equivalent to Intel HyperThreading)"
+#							fi
+#							;;
+
+##############
+# I
+CPU_FLAG_DATA_['ia64']='IA64 Technology Supported'
+CPU_FLAG_DATA_['ibpb']="Intel-specific - Support for Indirect Branch Predictor Barrier (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+CPU_FLAG_DATA_['ibrs']="Intel-specific - CPU support for Indirect Branch Restricted Speculation (a Spectre 1/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+CPU_FLAG_DATA_['ibrs_enhanced']="Intel-specific - Enhanced IBRSCPU support\n\t\tAdds mitigations to defend against Spectre 2"
+CPU_FLAG_DATA_['ibs']='AMD-specific - Instruction Based Sampling'
+CPU_FLAG_DATA_['ida']='Intel Dynamic Acceleration'
+CPU_FLAG_DATA_['intel_pt']='Intel-specific - Intel Processor Tracing"'
+CPU_FLAG_DATA_['invpcid']='Intel-specific - Invalidate Processor Context ID'
+CPU_FLAG_DATA_['invpcid_single']="Intel-specific - Equivalent to ${BOLD_TEXT}invpcid${ALL_OFF} and ${BOLD_TEXT}pcid${ALL_OFF}"
+
+#				'ibpb')		OUTPUT="Intel-specific - Support for Indirect Branch Predictor Barrier (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+#				'ibrs')		OUTPUT="Intel-specific - CPU support for Indirect Branch Restricted Speculation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+
+##############
+# J
+# CPU_FLAG_DATA_['']=''
+
+##############
+# K
+CPU_FLAG_DATA_['k6_mtrr']="AMD-specific - K6 nonstandard Memory Type Range Registers (MTRRs)\n\t\tRelated to the ${BOLD_TEXT}mtrr${ALL_OFF} flag"
+CPU_FLAG_DATA_['kaiser']="Intel-specific - CPU support for Kernal Address Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+
+#				'kaiser')
+#              OUTPUT="Intel-specific - CPU support for Kernal Address Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+
+##############
+# L
+CPU_FLAG_DATA_['lahf_lm']='Load Flags Into AH Register - Long Mode'
+CPU_FLAG_DATA_['lbrv']='AMD-specific - Last Branch Record Virtualization Support'
+CPU_FLAG_DATA_['ldisp']='S/390-specific - Support for Long Displacement Facility'
+CPU_FLAG_DATA_['lm']='64-bit Extensions, Long Mode Supported - Indicates'
+CPU_FLAG_DATA_['longrun']='Transmeta-specific - Support for LongRun Power Control'
+CPU_FLAG_DATA_['lrti']='Transmeta-specific - Support for LongRun Table Interface'
+CPU_FLAG_DATA_['lwp']='AMD-specific - Light Weight Profiling'
+
+#				'lm')     OUTPUT="64-bit Extensions, Long Mode Supported - Indicates"
+#                  if [ "${CPU_OEM}" == 'Intel' ]; then
+#                    OUTPUT="${OUTPUT} Intel EM64T Architecture"
+#                  else
+#                    OUTPUT="${OUTPUT} AMD AMD64 Architecture"
+#                  fi
+#                  OUTPUT="${OUTPUT}\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H systems${ALL_OFF}"
+#                  (( VIRT_VM = VIRT_VM + 4 ))
+#                  ;;
+
+##############
+# M
+CPU_FLAG_DATA_['mca']='Machine Check Architecture'
+CPU_FLAG_DATA_['mce']='Machine Check Exception'
+CPU_FLAG_DATA_['md_clear']='Intel-specific - VERW clears CPU buffers'
+CPU_FLAG_DATA_['misalignsse']="AMD-specific - Support for SSE Misaligned Access\n\t\tRelated to SSE flags"
+CPU_FLAG_DATA_['mmx']="Intel-created multi-media extensions - No official acronym meaning\n\t\tUsually translated as ${BOLD_TEXT}MultiMedia eXtension${ALL_OFF} or ${BOLD_TEXT}Matrix Math eXtension${ALL_OFF}"
+CPU_FLAG_DATA_['mmxext']="Intel-created enhanced multi-media extensions\n\t\tExtended version of MMX"
+CPU_FLAG_DATA_['mni']="Intel-specific - Modular Network Interface\n\t\tRelated to ${BOLD_TEXT}ssse3${ALL_OFF} flag"
+CPU_FLAG_DATA_['mon']="CPU supports MONITOR and MWAIT instructions\n\t\tRelated to ${BOLD_TEXT}ssse3${ALL_OFF} flag"
+CPU_FLAG_DATA_['monitor']="${CPU_FLAG_DATA_['mon']}"
+CPU_FLAG_DATA_['movbe']='Intel-specific - Support for MOV Big-Endian instruction'
+CPU_FLAG_DATA_['movdir64b']='Intel-specific - Support for MOVDIR64B instruction'
+CPU_FLAG_DATA_['movdiri']='Intel-specific - Support for MOVDIRI instruction'
+CPU_FLAG_DATA_['mp']='AMD-specific - Athlon MultiProcessor-capable'
+CPU_FLAG_DATA_['mpx']='Intel-specific - Memory Protection Extensions'
+CPU_FLAG_DATA_['msa']='S/390-specific - Hardware supports generating/guerying encrypted message digests (such as SHA)'
+CPU_FLAG_DATA_['msr']='Support for RDMSR and WRMSR (Model-Specific Registers) Instructions'
+CPU_FLAG_DATA_['mtrr']="Memory Type Range Register (precursor to ${BOLD_TEXT}pat${ALL_OFF} support)"
+
+##############
+# N
+CPU_FLAG_DATA_['nodeid_msr']='AMD-specific - Nodeld MSR'
+CPU_FLAG_DATA_['nonstop_tsc']="Non-stop Time Stamp Counter\n\t\tIndicates support for TSC not stopping during deep C states\n\t\tRelated to ${BOLD_TEXT}tsc${ALL_OFF} flag"
+CPU_FLAG_DATA_['nopl']='AMD-created + Intel-supported - CPU supports NOPL instruction'
+CPU_FLAG_DATA_['npt']="AMD-specific - CPU supports Nested Page Table\n\t\tEquivalent to Intel ${BOLD_TEXT}ept${ALL_OFF} flag"
+CPU_FLAG_DATA_['nrip_save']="AMD-specific - Next RIP Save\n\t\tSupport for saving next sequential instruction pointer on VM exit\n\t\tRelated to ${BOLD_TEXT}svm${ALL_OFF} flag"
+CPU_FLAG_DATA_['nx']="Support for No eXecute\n\t\tCPU can disable code execution for specific memory pages\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H systems${ALL_OFF}"
+
+#				'nx')		  OUTPUT="Support for No eXecute\n\t\tCPU can disable code execution for specific memory pages\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H systems${ALL_OFF}"
+#                  (( VIRT_VM = VIRT_VM + 8 ))
+#                  ;;
+
+##############
+# O
+CPU_FLAG_DATA_['ospke']="OS Kernel has enabled support for memory protection keys\n\t\tRelated to ${BOLD_TEXT}pku${ALL_OFF} flag"
+CPU_FLAG_DATA_['osvw']='AMD-specific - OS-Visible Workaround Support'
+CPU_FLAG_DATA_['osxsave']="Intel-specific - XSETBV/XGETBV instructions enabled for CPU extended state management\n\t\tRelated to ${BOLD_TEXT}xsave${ALL_OFF} flag"
+
+##############
+# P
+CPU_FLAG_DATA_['pae']="Physical Address Extensions (36 bit address, 2MB pages)\n\t\tNewer version of ${BOLD_TEXT}pse/pse36${ALL_OFF} (both ${BOLD_TEXT}pse${ALL_OFF} and this flag may be present)\n\t\tAllows 32-bit CPU to access RAM beyond 4GB by using 36-bit page addresses"
+CPU_FLAG_DATA_['pat']='Page Attribute Table support'
+CPU_FLAG_DATA_['pausefilter']='AMD-specific - Filtered Pause Intercept'
+CPU_FLAG_DATA_['pbe']='Pending Break Enable'
+CPU_FLAG_DATA_['pcid']='Intel-specific - Processor Context Identifiers'
+CPU_FLAG_DATA_['pclmulqdq']='CPU supports the Carry-less Multiplication instruction'
+CPU_FLAG_DATA_['pcommit']='Intel-specific - PCOMMIT Instruction'
+CPU_FLAG_DATA_['pconfig']='Intel-specific - Support for PCONFIG Instruction set'
+CPU_FLAG_DATA_['pcx_l2i']='Intel-specific - L2I Peformance Counter Extensions'
+CPU_FLAG_DATA_['pdcm']='Intel-specific - Support for Performance Capabilities MSR'
+CPU_FLAG_DATA_['pdpe1gb']='AMD-created but Intel-supported - Support for 1GB Page Size'
+CPU_FLAG_DATA_['pebs']='Intel-specific - Support for Precise Event-Based Sampling'
+CPU_FLAG_DATA_['perfctr_core']='AMD-specific - Bulldozer core performance counter support'
+CPU_FLAG_DATA_['perfctr_nb']='AMD-specific - NB performance counter support'
+CPU_FLAG_DATA_['perftsc']='Intel-specific - Core Performance Counter Extensions'
+CPU_FLAG_DATA_['pfthreshold']='AMD-specific - Pause Filter Threshold support'
+CPU_FLAG_DATA_['pge']='PTE Global Bit'
+CPU_FLAG_DATA_['pku']="Intel-specific - CPU supports Memory Protection Keys extensions\n\t\tRelated to ${BOLD_TEXT}ospke${ALL_OFF} flag"
+CPU_FLAG_DATA_['pln']='Intel-specific - Power Limit Notification'
+CPU_FLAG_DATA_['pn']='Intel-specific - Support for Processor Serial Number instruction'
+CPU_FLAG_DATA_['pni']='Intel-created but AMD-supported - Prescott New Instructions'
+CPU_FLAG_DATA_['popcnt']="Support for POPCNT Instruction (Associated with ${BOLD_TEXT}sse4_1${ALL_OFF} and ${BOLD_TEXT}sse4_2${ALL_OFF} flags)"
+CPU_FLAG_DATA_['prefetchwt1']='Intel-specific - PREFETCHWT1 Instruction'
+CPU_FLAG_DATA_['proc_feedback']='AMD-specific - AMD ProcFeedback Interface'
+CPU_FLAG_DATA_['pse']="Page Size Extensions (4 MB pages supported)\n\t\tOlder version of ${BOLD_TEXT}pae${ALL_OFF} flag (both ${BOLD_TEXT}pae${ALL_OFF} and this flag may be present)\n\t\tAllows 32-bit CPU to access RAM beyond 4GB by using 36-bit page addresses"
+CPU_FLAG_DATA_['pse36']="${CPU_FLAG_DATA_['pse']}"
+CPU_FLAG_DATA_['psn']='Intel-specific - Processor Serial Number present and enabled'
+CPU_FLAG_DATA_['pti']="The CPU supports Page Table Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+CPU_FLAG_DATA_['ptm']='Intel-specific - Package Thermal Management'
+CPU_FLAG_DATA_['pts']='Intel-specific - Package Thermal Status'
+
+#				'pni')		OUTPUT="Intel-created but AMD-supported - Prescott New Instructions"
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT}\n\t\tOnly found on older Pentium CPUs (P-4) or chips that emulate them"
+#							fi
+#							;;
+#				'pti')		OUTPUT="The CPU supports Page Table Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+
+##############
+# Q
+# CPU_FLAG_DATA_['']=''
+
+##############
+# R
+CPU_FLAG_DATA_['rdpid']="Intel-specific - Support for Read Processor ID instruction\n\t\tRelated to the ${BOLD_TEXT}rdtscp${ALL_OFF} flag"
+CPU_FLAG_DATA_['rdt_a']='Intel-specific - Resource Director Technology Allocation'
+CPU_FLAG_DATA_['rdrnd']="Intel-specific - Support for RDRAND (hardware random-number generator) instruction\n\t\tRelated to the ${BOLD_TEXT}avx${ALL_OFF} flag"
+CPU_FLAG_DATA_['rdrand']="${CPU_FLAG_DATA_['rdrnd']}"
+CPU_FLAG_DATA_['rdseed']='Intel-specific - Support for RDSEED Instruction to seed a PRNG'
+CPU_FLAG_DATA_['rdtscp']="Read Time Stamp Counter (Related to ${BOLD_TEXT}tsc${ALL_OFF} flag)"
+CPU_FLAG_DATA_['retpoline']="The Return Trampoline (a Spectre mitigation) instruction is supported by the CPU\n\t\t(Probably enabled via an OS-delivered microcode update)"
+CPU_FLAG_DATA_['rep_good']='Indicates that the REP instruction is properly supported'
+CPU_FLAG_DATA_['recovery']='Transmeta-specific - CPU is in Recovery mode'
+CPU_FLAG_DATA_['ring3mwait']='Intel-specific - Ring 3 MONITOR/WAIT'
+CPU_FLAG_DATA_['rtm']='Intel-specific - Restricted Transactional Memory'
+CPU_FLAG_DATA_['rwfsgsbase']='Support for RD/RW FSGSBASE instructions'
+
+#				'retpoline')
+#							OUTPUT="The Return Trampoline (a Spectre mitigation) instruction is supported by the CPU\n\t\t(Probably enabled via an OS-delivered microcode update)"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+# CPU_FLAG_DATA_['']=''
+
+##############
+# S
+CPU_FLAG_DATA_['sdbg']='Intel-specific - CPU supports IA32_DEBUG_INTERFACE MSR for silicon debug'
+CPU_FLAG_DATA_['sep']='Support for SYSENTER and SYSEXIT fast system call instructions'
+CPU_FLAG_DATA_['serial']='Processor Serial Number'
+CPU_FLAG_DATA_['serialize']='CPU supports serialization of instruction fetch and execution'
+CPU_FLAG_DATA_['sha']='Intel-specific - Support for Intel SHA Extensions'
+CPU_FLAG_DATA_['sha_ni']='Intel-specific - Instruction Support for SHA1/SHA256 Extensions'
+CPU_FLAG_DATA_['skinit']="AMD-specific - Secure Kernel Initialization\n\t\tSupport for Secure Kernel Init and Jump with Attestation/Set Global Interrupt Flag instructions"
+CPU_FLAG_DATA_['smap']='Intel-specific - Support for Supervisory Mode Access Prevention'
+CPU_FLAG_DATA_['smep']='Intel-specific - Support for Supervisory Mode Execution Protection'
+CPU_FLAG_DATA_['smx']='Intel-specific - Support for Safer Mode Extensions (Trusted eXecution Technology/Trusted Platform Module)'
+CPU_FLAG_DATA_['split_lock_detect']='Intel-specific - Support for Split Lock Detection'
+CPU_FLAG_DATA_['ss']='Self-Snoop'
+CPU_FLAG_DATA_['ssbd']="Intel-specific - CPU supports Speculative Store Bypass Disable (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
+CPU_FLAG_DATA_['sse']='Streaming SIMD Extensions - Indicates'
+CPU_FLAG_DATA_['sse2']='Streaming SIMD Extensions 2 - Indicates'
+CPU_FLAG_DATA_['sse3']='Streaming SIMD Extensions 3 - Indicates'
+CPU_FLAG_DATA_['ssse3']='Supplemental Streaming SIMD Extensions 3'
+CPU_FLAG_DATA_['sse4']='Streaming SIMD Extensions 4 - Intel-specific flag'
+CPU_FLAG_DATA_['sse4a']='AMD-specific - Streaming SIMD Extensions 4a'
+CPU_FLAG_DATA_['sse4_1']="Streaming SIMD Extensions 4.1\n\t\tAssociated with the ${BOLD_TEXT}popcnt${ALL_OFF} and ${BOLD_TEXT}sse4_2${ALL_OFF} flags"
+CPU_FLAG_DATA_['sse4.1']="${CPU_FLAG_DATA_['sse4_1']}"
+CPU_FLAG_DATA_['sse4_2']="Streaming SIMD Extensions 4.2\n\t\tAssociated with the ${BOLD_TEXT}popcnt${ALL_OFF} and ${BOLD_TEXT}sse4_1${ALL_OFF} flags"
+CPU_FLAG_DATA_['sse4.2']="${CPU_FLAG_DATA_['sse4_2']}"
+CPU_FLAG_DATA_['sse5']="AMD-specific - Streaming SIMD Extensions 5\n\t\tRelated to the ${BOLD_TEXT}xop${ALL_OFF} flag"
+CPU_FLAG_DATA_['stc']='AMD-specific - Software Thermal Control'
+CPU_FLAG_DATA_['stfle']='S/390-specific - Support for an extended version of Store Facility List (sftl) instruction'
+CPU_FLAG_DATA_['stibp']='Intel-specific - Support for Single Thread Indirect Branch Predictors\n\t\t(a Spectre/Meltdown mitigation)'
+CPU_FLAG_DATA_['svm']="AMD-specific - Secure Virtual Machine - Virtualization extensions to 64-bit x86\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
+CPU_FLAG_DATA_['svm_lock']="AMD-specific - Support for SVM Lock instruction\n\t\tRelated to ${BOLD_TEXT}svm${ALL_OFF} flag"
+CPU_FLAG_DATA_['syscall']='AMD-created + Intel-supported - Support for Fast System Call Instruction'
+
+#				'ssbd')		OUTPUT="Intel-specific - CPU supports Speculative Store Bypass Disable (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+#				'sse')		OUTPUT="Streaming SIMD Extensions - Indicates"
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT} Intel Pentium III or later"
+#							else
+#								OUTPUT="${OUTPUT} AMD Athlon XP or later"
+#							fi
+#							;;
+#				'sse2')		OUTPUT="Streaming SIMD Extensions 2 - Indicates"
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT} Intel Pentium 4 or later"
+#							else
+#								OUTPUT="${OUTPUT} AMD Athlon 64 or later"
+#							fi
+#							;;
+#				'sse3')		OUTPUT="Streaming SIMD Extensions 3 - Indicates"
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT} Intel Pentium 4 (Prescott) or later"
+#							else
+#								OUTPUT="${OUTPUT} AMD Athlon 64 (Venice) or later"
+#							fi
+#							;;
+#				'ssse3')	OUTPUT="Supplemental Streaming SIMD Extensions 3"
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT} - Indicates Intel Core 2 Duo or later"
+#							else
+#								OUTPUT="${OUTPUT}\n\t\tAMD CPUs are not known to support this extension, although the flag is present"
+#							fi
+#							;;
+#				'sse4')		OUTPUT="Streaming SIMD Extensions 4 - Intel-specific flag"
+#							if [ "${CPU_OEM}" == 'Intel' ]; then
+#								OUTPUT="${OUTPUT}\n\t\tIndicates Intel Nehalem or later\n\t\tAlso Known as NNI (Nehalem New Instructions)"
+#							else
+#								OUTPUT="${OUTPUT}\n\t\tAMD CPUs are not known to support this extension, although the flag is present"
+#							fi
+#							;;
+#				'stibp')	OUTPUT="Intel-specific - Support for Single Thread Indirect Branch Predictors\n\t\t(a Spectre/Meltdown mitigation)"
+#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
+#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
+#							;;
+#				'svm')		OUTPUT="AMD-specific - Secure Virtual Machine - Virtualization extensions to 64-bit x86\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
+#							(( VIRT_VM = VIRT_VM + 2 ))
+#							;;
+
+
+##############
+# T
+CPU_FLAG_DATA_['tbm']='AMD-created but Intel-supported - CPU supports Trailing Bit Manipulation instruction'
+CPU_FLAG_DATA_['tce']='Intel-specific - Translation Cache Extension'
+CPU_FLAG_DATA_['tm']='Thermal Monitor/Hardware Thermal Control/Automatic Clock Control'
+CPU_FLAG_DATA_['tm2']='Thermal Monitor 2'
+CPU_FLAG_DATA_['tme']='Intel-specific - CPU supports Total Memory Encryption extensions'
+CPU_FLAG_DATA_['tni']="Tejas New Instruction\n\t\tIntel-specific (Related to ${BOLD_TEXT}ssse3${ALL_OFF} flag)"
+CPU_FLAG_DATA_['topoext']='AMD-specific - Processor Topology Extensions'
+CPU_FLAG_DATA_['tpr']='Task Priority Register'
+CPU_FLAG_DATA_['tpr_shadow']='Special Virtualization Feature for Task Priority Register'
+CPU_FLAG_DATA_['ts']='AMD-specific - Temperature sensor'
+CPU_FLAG_DATA_['tsc']="Time Stamp Counter\n\t\tRelated to ${BOLD_TEXT}constant_tsc${ALL_OFF}, ${BOLD_TEXT}nonstop_tsc${ALL_OFF} and ${BOLD_TEXT}rdtscp${ALL_OFF} flags"
+CPU_FLAG_DATA_['tsc_adjust']="Support for adjusting TSC on all logical CPUs\n\t\tRelated to ${BOLD_TEXT}constant_tsc${ALL_OFF}, ${BOLD_TEXT}nonstop_tsc${ALL_OFF} and ${BOLD_TEXT}rdtscp${ALL_OFF} flags"
+CPU_FLAG_DATA_['tsc_reliable']="Indicates that the Time Stamp Counter is properly supported\n\t\tRelated to ${BOLD_TEXT}tsc${ALL_OFF} flag"
+CPU_FLAG_DATA_['tsc-deadline']="Indicates that the CPU's local APIC timer supports one-shot operation using a deadline value"
+CPU_FLAG_DATA_['tsc_deadline']="${CPU_FLAG_DATA_['tsc-deadline']}"
+CPU_FLAG_DATA_['tsc_deadline_timer']="${CPU_FLAG_DATA_['tsc-deadline']}"
+CPU_FLAG_DATA_['tsc_known_freq']="The Time Stamp Counter has a known frequency\n\t\tRelated to ${BOLD_TEXT}tsc${ALL_OFF} flag"
+CPU_FLAG_DATA_['tsc_scale']="AMD-specific - Support for MST-based Time Stamp Counter scaling/rate control\n\t\tRelated to ${BOLD_TEXT}tsc${ALL_OFF} flag"
+CPU_FLAG_DATA_['ttp']='AMD-specific - Thermal Trip'
+
+##############
+# U
+CPU_FLAG_DATA_['umip']="Intel-specific - User-Mode Instruction Prevention\n\t\tOS can restrict execution of certain instructions"
+CPU_FLAG_DATA_['unfair_spinlock']="Intel-created + AMD-Supported - Linux kernel will use unfair spinlocks\n\t\t(indicates host is virtualized)"
+CPU_FLAG_DATA_['up']="Intel-specific - SMP kernel running on Unicore Processor (UP)\n\t\t(if present on a virtualized host\n\t\t\tthis indicates the virtual hardware)"
+
+##############
+# V
+CPU_FLAG_DATA_['vaes']='Intel-specific - Support for Vector AES'
+CPU_FLAG_DATA_['vid']='AMD-specific - Voltage ID Control'
+CPU_FLAG_DATA_['vmcb_clean']='AMD-specific - Support for Virtual Machine Control Block clean bits'
+CPU_FLAG_DATA_['vme']='Virtual-8086 Mode Enhancement'
+CPU_FLAG_DATA_['vmx']="Intel-specific - Virtual Machine eXtensions\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
+CPU_FLAG_DATA_['vnmi']='Virtual Machine Non-Maskable Interrupt'
+CPU_FLAG_DATA_['vpclmulqdq']='Intel-specific - Support for Carry-Less Multiplication Double Quadword instructions'
+CPU_FLAG_DATA_['vpid']='Intel-specific - Virtual Processor ID'
+
+#				'vmx')		OUTPUT="Intel-specific - Virtual Machine eXtensions\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
+#							(( VIRT_VM = VIRT_VM + 2 ))
+#							;;
+
+##############
+# W
+CPU_FLAG_DATA_['waitpkg']='Intel specific - User Mode Wait instructions UMWAIT and UMONITOR are supported'
+CPU_FLAG_DATA_['wdt']='AMD-specific - Support for Watchdog Timer'
+
+##############
+# X
+CPU_FLAG_DATA_['x2apic']="Support for Intel-defined x2APIC architecture\n\t\t(Improves performance for large systems, and those with Guest VMs)"
+CPU_FLAG_DATA_['xop']="AMD-specific - Support for eXtended Operations instructions\n\t\tRelated to the ${BOLD_TEXT}sse5${ALL_OFF} flag"
+CPU_FLAG_DATA_['xgetbv1']='Support for XGETBV with ECX = 1 instruction'
+CPU_FLAG_DATA_['xsave']='Support for XSAVE/XRSTOR/XSETBV/XGETBV instructions'
+CPU_FLAG_DATA_['xsavec']='Support for XSAVEC instruction'
+CPU_FLAG_DATA_['xsaveopt']='Optimized XSAVE instructions'
+CPU_FLAG_DATA_['xsaves']='Support for XSAVES/XRSTORS instructions'
+CPU_FLAG_DATA_['xtopology']='Extended topology enumeration for CPUID'
+CPU_FLAG_DATA_['xtpr']="TPR Register Chipset Update Control Messenger (Related to the ${BOLD_TEXT}apic${ALL_OFF} flag)"
+
+##############
+# Y
+# CPU_FLAG_DATA_['']=''
+##############
+# Z
+# CPU_FLAG_DATA_['']=''
+
+readonly CPU_FLAG_DATA_
+# End of cpudecode-data
+#######################
