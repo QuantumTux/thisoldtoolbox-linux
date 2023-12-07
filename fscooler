@@ -1,0 +1,397 @@
+#!/bin/bash
+#######################################################################
+# fscooler - XFS Filesystem Freeze/Thaw Tool for VMware VMs
+#######################################################################
+# This tool is responsible for performing XFS Freeze/Thaw operations
+#   on one or more local XFS filesystems and is primarily intended to
+#   to function on a VMware-based VM in support of backups.
+#
+# REQUIRES:
+#   0) SLES v15 or later
+#   1) bash_tools.sh
+#   2) Privilege (will not run without privilege)
+#
+# NOTES:
+#   0) Will NOT freeze any filesystem located in the LVM Volume Group
+#       identified in the variable IMMUNE_VG; this VG should
+#       contain the /tmp, /var and root filesystems, and maybe even
+#       /home; the intent is to avoid any chance of causing the
+#       kernel or some critical OS/application process to panic or
+#       die during the filesystem freeze
+#   1) This tool will NOT freeze any filesystem mounted by used its
+#       UUID to specify the device
+#   2) When invoked via open-vm-tools execScripts funtion, the first
+#       command-line parameter must be one of the following strings:
+#       "freeze", "freezeFail" or "thaw"
+#   3) "freeze" and "freezeFail" are both equivalent to "-f -a -q";
+#	      "thaw" is the same as "-t -a -q"
+#   4) This tools has unusual command-line processing (as compared
+#       to most of my other tools) as I have to support a mix of
+#       short and long command-line parameters
+#   5) I looked at supporting some sort of "state check" to determine
+#       if a given filesystem is frozen - it's not really not easy to
+#       do; and XFS has no built-in facility for making such a check;
+#       accordingly, this tool does not support such an operation
+#   6) The Freeze/Backup/Thaw cycle seems to take only a few seconds,
+#       probably less than 5, almost certainly less than 10; while
+#       originally I was concerned about interactions between a frozen
+#       filesystem and Nagios, upon reflection I don't think that
+#       is a significant issue
+#   7) Designed for a VMware-based host using open-vm-tools configured
+#       to invoke this tool as part of a backup process; however,
+#       it is capable of functioning on any host using XFS filesystems
+#
+# KNOWN BUGS:
+#   0) Does not verify all dependencies
+#   1) Of necessity, I make assumptions about how filesystems are
+#       described in /etc/fstab; if the actual definitions do not
+#       match, then at best this tool will not do anything at all
+#       (at worst, it will get confused and behave unpredictably)
+#
+# TO DO:
+#   0) Simplify variables - no need to have 2 variables for Freeze/Thaw
+#######################################################################
+readonly TOOL_VERSION='100'
+#######################################################################
+# Change Log (Reverse Chronological Order)
+# Who When______ What__________________________________________________
+# dxb 2020-03-03 Initial creation
+#######################################################################
+# Require minimum version of bash_tools.sh
+readonly MINIMUM_BASH_TOOLS_LIBRARY_VERSION='100'
+readonly TOOLS_FILE='/usr/local/lib/bash_tools.sh'
+# Check for ${TOOLS_FILE} - make sure it exists, is NOT 0-length,
+#   and is a regular file
+if [[ -e ${TOOLS_FILE} && -s ${TOOLS_FILE} && -f ${TOOLS_FILE} ]]; then
+	# I have a valid TOOLS_FILE - source it and initialize
+	source ${TOOLS_FILE}
+	# Check the version
+	if [[ "${BASH_TOOLS_LIBRARY_VERSION}" -lt "${MINIMUM_BASH_TOOLS_LIBRARY_VERSION}" ]]; then
+		echo -e "\nFATAL ERROR: Outdated tool library (${TOOLS_FILE}) - found v${BASH_TOOLS_LIBRARY_VERSION} but need ${MINIMUM_BASH_TOOLS_LIBRARY_VERSION} or later\n"
+		exit 255
+	else
+		# Initialize non-SLES-version-specific command-shortcut variables
+		_init_script_tool_names
+		# Populate important variables
+		_init_script_variables
+		# Set up variables to colorize text output
+		_init_script_colors
+	fi
+else
+	echo -e "\nFATAL ERROR: Unable to source a valid tool library from ${TOOLS_FILE}\n"
+	exit 255
+fi
+
+# Define syslog tag
+readonly LOG_TAG='fscooler'
+_log_script_message 'Starting Execution'
+
+# Blockaded VG - I will NEVER freeze/thaw a mount-point in this Volume Group
+#	Only a single value is supported - do not make multi-value
+readonly IMMUNE_VG='vg0'
+
+# These tools not defined in bash_tools.sh
+readonly FREEZE_TOOL=$( ${WHICH_TOOL} --skip-alias xfs_freeze 2>&1 )
+readonly FINDMNT_TOOL=$( ${WHICH_TOOL} --skip-alias findmnt 2>&1 )
+
+# Initialize flags for command-line options
+ALL_MOUNTS='NO'
+FREEZE_FS='NO'
+HELP_FLAG='NO'
+OUTPUT_MODE=0
+SINGLE_MOUNT=''
+THAW_FS='NO'
+UNKNOWN='NO'
+
+# Parse command-line options if any provided
+if [[ $# -eq 0 ]]; then
+	# Something MUST be on the command-line
+	UNKNOWN='YES'
+else
+	######################################################################
+	# Normal Command Line Argument Processing
+	# Command Line Argument Processing
+	while getopts 'm:afqth' OPT; do
+		case ${OPT} in
+			a)	ALL_MOUNTS='YES' ;;
+			f)	FREEZE_FS='YES' ;;
+			m)	SINGLE_MOUNT="${OPTARG}" ;;
+			q)	OUTPUT_MODE=1 ;;
+			t)	THAW_FS='YES' ;;
+			h)	HELP_FLAG='YES' ;;
+			*)	UNKNOWN='YES' ;;
+		esac
+	done
+	# End of Normal Command Line Argument Processing
+	######################################################################
+	# If an unknown command-line option, or -h, was NOT provided,
+	#	then see if $1 is one of "freeze", "freezeFail" or "thaw"
+	# NOTE: Long strings like "freeze" or "thaw" are ignored by getopt
+	if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]; then
+		if [[ "${1}" == 'freeze' && "${1}" == 'freezeFail' && "${1}" == 'thaw' ]]; then
+			# All of those values imply -a and -q
+			ALL_MOUNTS='YES'
+			OUTPUT_MODE=1
+			if [[ "${1}" == 'thaw' ]]; then
+				THAW_FS='YES'
+				FREEZE_FS='NO'
+			else
+				FREEZE_FS='YES'
+				THAW_FS='NO'
+			fi
+			# Also, override -m if it was mistakenly added
+			SINGLE_MOUNT=''
+		fi
+	fi
+fi
+# End of if [[ $# -eq 0 ]]
+
+# Help Screen
+readonly HELP="
+${0} - ${BOLD_TEXT}Linux XFS Filesystem Freeze/Thaw Tool v${TOOL_VERSION}${ALL_OFF}
+\n\t\t${BOLD_TEXT}${RED_BLACK}Privilege is ${BLINK_ON}REQUIRED${ALL_OFF}${BOLD_TEXT}${RED_BLACK} when running this tool${ALL_OFF}
+
+\t${BOLD_TEXT}Usage :${ALL_OFF} ${0} ${BOLD_TEXT}[ [ -f | -t ] [ -a | -m <MOUNT POINT> ] [ -q ] ]${ALL_OFF}
+\t\t${0} ${BOLD_TEXT}[ freeze | freezeFail | thaw ] [ -q ]${ALL_OFF}
+\t\t${0} ${BOLD_TEXT}-h${ALL_OFF}
+\t${BOLD_TEXT}Syntax:${ALL_OFF}
+\t\t${BOLD_TEXT}-a${ALL_OFF} --> Operate on ${BOLD_TEXT}ALL${ALL_OFF} filesystems that are ${BOLD_TEXT}NOT${ALL_OFF} in Volume Group ${BOLD_TEXT}${MAGENTA_BLACK}${IMMUNE_VG}${ALL_OFF}
+\t\t\t${BOLD_TEXT}Requires${ALL_OFF} either ${BOLD_TEXT}${MAGENTA_BLACK}-f${ALL_OFF} or ${BOLD_TEXT}${MAGENTA_BLACK}-t${ALL_OFF}; ${BOLD_TEXT}Conflicts${ALL_OFF} with ${BOLD_TEXT}${MAGENTA_BLACK}-m <MOUNT_POINT>${ALL_OFF}
+
+\t\t${BOLD_TEXT}-f${ALL_OFF} --> Freeze one or more filesystems
+\t\t\t${BOLD_TEXT}Requires${ALL_OFF} either ${BOLD_TEXT}${MAGENTA_BLACK}-a${ALL_OFF} or ${BOLD_TEXT}${MAGENTA_BLACK}-m <MOUNT POINT>${ALL_OFF}; ${BOLD_TEXT}Conflicts${ALL_OFF} with ${BOLD_TEXT}${MAGENTA_BLACK}-t${ALL_OFF}
+
+\t\t${BOLD_TEXT}freeze ${MAGENTA_BLACK}OR${ALL_OFF} ${BOLD_TEXT}freezeFail${ALL_OFF} --> Similar to ${BOLD_TEXT}${MAGENTA_BLACK}-f${ALL_OFF}; Implies both ${BOLD_TEXT}${MAGENTA_BLACK}-a${ALL_OFF} and ${BOLD_TEXT}${MAGENTA_BLACK}-q${ALL_OFF}
+
+\t\t${BOLD_TEXT}-h${ALL_OFF} --> Show this help screen and exit
+
+\t\t${BOLD_TEXT}-m <MOUNT_POINT>${ALL_OFF} --> Specific mount-point to freeze or thaw
+\t\t\t${BOLD_TEXT}Requires${ALL_OFF} one of ${BOLD_TEXT}${MAGENTA_BLACK}-f${ALL_OFF} or ${BOLD_TEXT}${MAGENTA_BLACK}-t${ALL_OFF}; ${BOLD_TEXT}Conflicts${ALL_OFF} with ${BOLD_TEXT}${MAGENTA_BLACK}-a${ALL_OFF}
+
+\t\t${BOLD_TEXT}-q${ALL_OFF} --> Quiet mode; prevents most output to ${BOLD_TEXT}stdout${ALL_OFF}
+\t\t\t${BOLD_TEXT}Requires${ALL_OFF} one of ${BOLD_TEXT}${MAGENTA_BLACK}-f${ALL_OFF} or ${BOLD_TEXT}${MAGENTA_BLACK}-t${ALL_OFF}
+\t\t\tIf invoked with ${BOLD_TEXT}${MAGENTA_BLACK}-f${ALL_OFF} or ${BOLD_TEXT}${MAGENTA_BLACK}-t${ALL_OFF}, then return code is ${BOLD_TEXT}${MAGENTA_BLACK}255${ALL_OFF}
+\t\t\t\tif there was a serious error or ${BOLD_TEXT}${MAGENTA_BLACK}0${ALL_OFF} otherwise
+
+\t\t${BOLD_TEXT}-t${ALL_OFF} --> Thaw (unFreeze) one or more filesystems
+\t\t\t${BOLD_TEXT}Requires${ALL_OFF} either ${BOLD_TEXT}${MAGENTA_BLACK}-a${ALL_OFF} or ${BOLD_TEXT}${MAGENTA_BLACK}-m <MOUNT POINT>${ALL_OFF}; ${BOLD_TEXT}Conflicts${ALL_OFF} with ${BOLD_TEXT}${MAGENTA_BLACK}-f${ALL_OFF}
+
+\t\t${BOLD_TEXT}thaw${ALL_OFF} --> Similar to ${BOLD_TEXT}${MAGENTA_BLACK}-t${ALL_OFF}; Implies both ${BOLD_TEXT}${MAGENTA_BLACK}-a${ALL_OFF} and ${BOLD_TEXT}${MAGENTA_BLACK}-q${ALL_OFF}
+
+\t${BOLD_TEXT}Found ${GREEN_BLACK}${TOOLS_FILE} v${BASH_TOOLS_LIBRARY_VERSION}${ALL_OFF}
+\tSkipping any filesystem in Volume Group ${BOLD_TEXT}${IMMUNE_VG}${ALL_OFF} or
+\t\tthat is mounted using ${BOLD_TEXT}UUID${ALL_OFF}
+"
+
+OUTPUT=''
+EXIT_CODE=0
+if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]; then
+	# Check for command-line argument conflicts
+	# -a conflicts with -m
+	# -a requires -f or -t
+	if [[ "${ALL_MOUNTS}" == 'YES' ]]; then
+		if [[ "${SINGLE_MOUNT}" != '' ]]; then
+			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} and ${MAGENTA_BLACK}-m${RED_BLACK} command-line options conflict${ALL_OFF}"
+			readonly EXIT_CODE=255
+		else
+			if [[ "${FREEZE_FS}" == 'NO' && "${THAW_FS}" == 'NO' ]]; then
+				OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-t${RED_BLACK} or ${MAGENTA_BLACK}-t${ALL_OFF}"
+				readonly EXIT_CODE=255
+			fi
+		fi
+	fi
+
+	# -f requires -a or -m
+	# -f conflicts with -t
+	if [[ "${EXIT_CODE}" -eq 0 && "${FREEZE_FS}" == 'YES' ]]; then
+		if [[ "${ALL_MOUNTS}" == 'NO' && "${SINGLE_MOUNT}" == '' ]]; then
+			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-f${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-a${RED_BLACK} or ${MAGENTA_BLACK}-m${ALL_OFF}"
+			readonly EXIT_CODE=255
+		else
+			if [[ "${THAW_FS}" == 'YES' ]]; then
+				OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} command-line parameter conflicts with ${MAGENTA_BLACK}-t${ALL_OFF}"
+				readonly EXIT_CODE=255
+			fi
+		fi
+	fi
+
+	# -q requires -f or -t
+	if [[ "${EXIT_CODE}" -eq 0 && "${OUTPUT_MODE}" -eq 1 ]]; then
+		if [[ "${FREEZE_FS}" == 'NO' && "${THAW_FS}" == 'NO' ]]; then
+			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-q${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-f${RED_BLACK} or ${MAGENTA_BLACK}-t${ALL_OFF}"
+			readonly EXIT_CODE=255
+		fi
+	fi
+
+	# -t conflicts with -f
+	# -t requires -a or -m
+	if [[ "${EXIT_CODE}" -eq 0 && "${THAW_FS}" == 'YES' ]]; then
+		if [[ "${FREEZE_FS}" == 'YES' ]]; then
+			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-t${RED_BLACK} command-line parameter conflicts with ${MAGENTA_BLACK}-f${RED_BLACK}"
+			readonly EXIT_CODE=255
+		else
+			if [[ "${ALL_MOUNTS}" == 'NO' && "${SINGLE_MOUNT}" == '' ]]; then
+				OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-t${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-a${RED_BLACK} or ${MAGENTA_BLACK}-m${ALL_OFF}"
+				readonly EXIT_CODE=255
+			fi
+		fi
+	fi
+fi
+# End of if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]
+
+# User MUST be privileged when running this tool
+#	Do not bother checking if invoked with "-h" or I already have an error
+if [[ "${EUID}" -ne 0 && "${HELP_FLAG}" == 'NO' && "${EXIT_CODE}" -ne 0 ]]; then
+    OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR: ${RED_BLACK}Privilege is required to run this tool${ALL_OFF}"
+    readonly EXIT_CODE=254
+fi
+
+# If -h argument given, or an unknown/invalid argument was given, display help screen and exit
+if [[ "${HELP_FLAG}" == 'YES' || "${UNKNOWN}" == 'YES' || "${EXIT_CODE}" -ge 254 ]]; then
+	if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+		echo -e "${HELP}"
+		if [[ "${EXIT_CODE}" -ge 254 ]]; then
+			echo -e "${OUTPUT}\n"
+		fi
+		exit ${EXIT_CODE}
+	else
+		exit ${EXIT_CODE}
+	fi
+fi
+
+# Create string to ID tool
+OUTPUT="${0} - ${BOLD_TEXT}Linux XFS Filesystem Freeze/Thaw Tool v${TOOL_VERSION}${ALL_OFF}\n"
+
+# Check OS version - uses function from TOOLS_FILE
+_get_os_release
+SLES_VERSION=$?
+if [[ "${SLES_VERSION}" -ne 15 ]]; then
+	if [[ "${SLES_VERSION}" -eq 0 ]]; then
+		# File parse error
+		if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+			echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} File Parse Failed in ${BLUE_BLACK}_get_os_release${ALL_OFF}\n"
+		else
+			_log_script_message 'File Parse Failed in _get_os_release'
+		fi
+	else
+		# Unsupported version
+		if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+			echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} SLES v${SLES_VERSION} is Unsupported${ALL_OFF}\n"
+		else
+			_log_script_message "SLES v${SLES_VERSION} is unsupported"
+		fi
+	fi
+	exit 255
+fi
+# End of if [[ "${SLES_VERSION}" -ne 15 ]]
+
+# If I get here, I have determined that the tool is
+#	- Running on a supported OS version
+_log_script_message 'Execution environment is good'
+
+#########################
+# Real Work Starts Here #
+#########################
+# Get the Host Name
+HOST_NAME=$( ${UNAME_TOOL} -n )
+# ID tool if outputting to screen
+if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+	echo -e "\n${OUTPUT}"
+fi
+
+# Cycle through _FSTAB_FILE (defined in TOOLS_FILE)
+LINE_COUNT=$( ${WC_TOOL} -l ${_FSTAB_FILE} | ${AWK_TOOL} '{ print $1 }' )
+for (( ITERATOR=1 ; ITERATOR<=${LINE_COUNT} ; ITERATOR++ )); do
+	LINE=$( ${HEAD_TOOL} -${ITERATOR} ${_FSTAB_FILE} | ${TAIL_TOOL} -1 )
+	# Is the first character a comment '#' or ';'
+	CHKSTR="${LINE:0:1}"
+	CHECK_TARGET=''
+	if [[ "${CHKSTR}" == '#' || "${CHKSTR}" == ';' ]]; then
+		# Ignore line
+		continue
+	else
+		# If the first 4 characters are 'UUID' then this is
+		#	the boot (or EFI) partition - ignore it
+		CHKSTR="${LINE:0:4}"
+		if [[ "${CHKSTR}" == 'UUID' ]]; then
+			# Ignore line
+			_log_script_message "Ignoring line with ${CHKSTR}"
+			continue
+		else
+			# If the first 6th-8th charactes are IMMUNE_VG then this is
+			#	a Logical Volume on a VG I want to skip - ignore it
+			CHKSTR="${LINE:5:3}"
+			if [[ "${CHKSTR}" == "${IMMUNE_VG}" ]]; then
+				# Ignore line
+				_log_script_message "Ignoring line with ${CHKSTR}"
+				continue
+			else
+				# If the line is blank, ignore it
+				STRIPSTR=$( echo ${LINE} | ${SED_TOOL} -e 's/^[ \t]*//' )
+				if [[ "${#STRIPSTR}" -eq 0 ]]; then
+					# Ignore line
+					_log_script_message 'Ignoring blank line'
+					continue
+				fi
+			fi
+		fi
+	fi
+	# If I get here, the tool has eliminated all the filesystems that
+	#   it is ignoring (and any blank lines)
+	# For each filesystem, freeze or thaw according to requested
+  #   operation
+	TARGET_FS=$( echo ${LINE} | ${AWK_TOOL} '{ print $2 }' )
+	# If -m was specified, and does not match, skip the filesystem
+	if [[ "${SINGLE_MOUNT}" != '' ]]; then
+		if [[ "${TARGET_FS}" != "${SINGLE_MOUNT}" ]]; then
+			# Skip this filesystem
+			_log_script_message "Skipping filesystem ${TARGET_FS} is not ${SINGLE_MOUNT}"
+			continue
+		fi
+	fi
+	# Is it even mounted?
+	${FINDMNT_TOOL} -n ${TARGET_FS} 2>&1 > /dev/null
+	CHKSTR=$?
+	if [[ "${CHKSTR}" -ne 0 ]]; then
+		# Not mounted
+		_log_script_message "${TARGET_FS} is not mounted"
+		continue
+	fi
+	if [[ "${FREEZE_FS}" == 'YES' ]]; then
+		OPERATION='-f'
+		OPERATION_NAME='FREEZE'
+	else
+		OPERATION='-u'
+		OPERATION_NAME='THAW'
+	fi
+	# Make sure this is an XFS filesystem and is mounted rw
+	MOUNT_DATA=$( ${FINDMNT_TOOL} -n ${TARGET_FS} )
+	MOUNT_DATA_TYPE=$( echo "${MOUNT_DATA}" | ${AWK_TOOL} '{ print $3 }' )
+	if [[ "${MOUNT_DATA_TYPE}" != 'xfs' ]]; then
+		# Wrong type - skip
+		_log_script_message "${TARGET_FS} is not XFS"
+		continue
+	else
+		MOUNT_DATA_ATTR=$( echo "${MOUNT_DATA}" | ${AWK_TOOL} '{ print $4 }' )
+		CHKSTR=$( echo ${MOUNT_DATA_ATTR} | ${GREP_TOOL} -c 'rw' )
+		if [[ "${CHKSTR}" -eq 0 ]]; then
+			# Doesn't seem to be mounted rw
+			_log_script_message "${TARGET_FS} is not mounted R/W"
+			continue
+		fi
+	fi
+	_log_script_message "Preparing to ${OPERATION_NAME} XFS filesystem ${TARGET_FS}"
+	# OK, ready to do it
+	${FREEZE_TOOL} ${OPERATION} ${TARGET_FS} 3>/dev/null 2>/dev/null 1>/dev/null > /dev/null
+	CHKSTR=$?
+	if [[ "${CHKSTR}" -eq 0 ]]; then
+		_log_script_message 'Success'
+	else
+		_log_script_message 'Failure'
+	fi
+done
+# End of for (( ITERATOR=1 ; ITERATOR<=${LINE_COUNT} ; ITERATOR++ ))
+_log_script_message 'Execution completed'
+
+# End of fscooler
+#################
