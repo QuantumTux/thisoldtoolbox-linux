@@ -44,7 +44,7 @@ Recently, an environment had about 30 Dell **PowerVault ME-{4,5}012 and ME-4084*
 
 **IMPORTANT** This tool makes a number of assumptions about the environment in which it operates. These are detailed in the _Notes_ section of the comment header.
 
-One of my planned improvements was to provide a way for the tool to retrieve the password for the Management Controller login from a vault such as **1Password** or **LastPass** or whatever. That would be something very specific to the environment, and so I don't include it in this version.
+One of my planned improvements was to provide a way for the tool to retrieve the password for the Management Controller login from a vault such as **1Password** or **LastPass** or whatever. That would be something very specific to the environment, and so I don't include it in this version. However, I have included a **man** page for the tool.
 
 ## ethreport
 DESCRIPTION FORTHCOMING
