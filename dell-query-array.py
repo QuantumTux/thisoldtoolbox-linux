@@ -119,9 +119,9 @@ MIN_SITE_INDEX_=11
 # Define how tool was invoked
 THIS_TOOL_=os.path.realpath(__file__)
 # Create a dictonary that correlates Site Index to Site ID
-# The numbers are the SITE_INDEX values and are used as the 3rd octet
+# The numbers are the SITE_INDEX_ values and are used as the 3rd octet
 #   in the IP address for the Management Controller
-# The strings are the corresponding values for SITE_NAME
+# The strings are the corresponding values for SITE_NAME_
 SITE_INFO_={11:'DEV',12:'TST',13:'PRD',14:'HQ',15:'DR',16:'BACKUP1',17:'BACKUP2'}
 
 def argument_parser_func_():
