@@ -18,9 +18,9 @@
 #       /home; the intent is to avoid any chance of causing the
 #       kernel or some critical OS/application process to panic or
 #       die during the filesystem freeze
-#   1) This tool will NOT freeze any filesystem mounted by used its
+#   1) This tool will NOT freeze any filesystem mounted by using its
 #       UUID to specify the device
-#   2) When invoked via open-vm-tools execScripts funtion, the first
+#   2) When invoked via open-vm-tools execScripts function, the first
 #       command-line parameter must be one of the following strings:
 #       "freeze", "freezeFail" or "thaw"
 #   3) "freeze" and "freezeFail" are both equivalent to "-f -a -q";
@@ -86,7 +86,8 @@ fi
 readonly LOG_TAG='fscooler'
 _log_script_message 'Starting Execution'
 
-# Blockaded VG - I will NEVER freeze/thaw a mount-point in this Volume Group
+# Blockaded VG - I will NEVER freeze/thaw a mount-point in this
+#   Volume Group
 #	Only a single value is supported - do not make multi-value
 readonly IMMUNE_VG='vg0'
 
@@ -123,7 +124,7 @@ else
 		esac
 	done
 	# End of Normal Command Line Argument Processing
-	######################################################################
+	#####################################################################
 	# If an unknown command-line option, or -h, was NOT provided,
 	#	then see if $1 is one of "freeze", "freezeFail" or "thaw"
 	# NOTE: Long strings like "freeze" or "thaw" are ignored by getopt
