@@ -116,6 +116,9 @@ CREDENTIALS_ = dict()
 CREDENTIALS_['USER'] = 'service_id'
 CREDENTIALS_['PASSWORD'] = 'password'
 
+# Define how tool was invoked
+OUR_TOOL_ = os.path.realpath(__file__)
+
 #######################################################################
 # Function: vsphere_connect_func                                      #
 # Local Variables: SSL_OBJECT_ = An SSL socket object                 #
@@ -278,9 +281,17 @@ def print_vm_info_func(SYSTEM_NAME_):
 #################
 # Program Start #
 #################
-DESC_TEXT_ = '\n' + ANSI_.BOLD_TEXT + os.path.realpath(__file__) +  ' - '  + ANSI_.GREEN_BLACK + 'Virtual Machine Information Reporting Tool' + ANSI_.BLUE_BLACK + ' v' + TOOL_VERSION  + ANSI_.ALL_OFF
-HELP_TEXT_ = DESC_TEXT_ + '\n\n\t' + ANSI_.BOLD_TEXT + 'Usage:' + ANSI_.ALL_OFF + ' %(prog)s [ [ ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.BLUE_BLACK + ' <HOSTNAME>' + ANSI_.ALL_OFF + ' | ' + ANSI_.BOLD_TEXT + '-e' + ANSI_.ALL_OFF + ' | ' + ANSI_.BOLD_TEXT + '-w' + ANSI_.ALL_OFF + ' ] | ' + ANSI_.BOLD_TEXT + '-h' + ANSI_.ALL_OFF + ' ]'
-EPILOG_TEXT_ = '\tThe ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.ALL_OFF + ', ' + ANSI_.BOLD_TEXT + '-e' + ANSI_.ALL_OFF + ' and ' + ANSI_.BOLD_TEXT + '-w' + ANSI_.ALL_OFF + ' command-line flags conflict with each other\n \n'
+DESC_TEXT_=('\n'+ANSI_.BOLD_TEXT+OUR_TOOL_+' - '+ANSI_.GREEN_BLACK+
+  'Virtual Machine Information Reporting Tool'+
+  ANSI_.BLUE_BLACK+' v'+TOOL_VERSION_+ANSI_.ALL_OFF)
+HELP_TEXT_=(DESC_TEXT_+'\n\n\t'+ ANSI_.BOLD_TEXT+'Usage:'+ANSI_.ALL_OFF+
+  ' %(prog)s [ [ '+ANSI_.BOLD_TEXT+'-c'+ANSI_.BLUE_BLACK+' <HOSTNAME>'+
+  ANSI_.ALL_OFF+' | '+ANSI_.BOLD_TEXT+'-e'+ANSI_.ALL_OFF+' | '+
+  ANSI_.BOLD_TEXT+'-w'+ANSI_.ALL_OFF+' ] | '+ANSI_.BOLD_TEXT+'-h'+
+  ANSI_.ALL_OFF+' ]')
+EPILOG_TEXT_=('\tThe '+ANSI_.BOLD_TEXT+'-c'+ANSI_.ALL_OFF+', '+
+  ANSI_.BOLD_TEXT+'-e'+ANSI_.ALL_OFF+' and '+ANSI_.BOLD_TEXT+'-w'+
+  ANSI_.ALL_OFF+' command-line flags conflict with each other\n \n')
 
 # Create an argument parser object
 #   usage=argparse.SUPPRESS - Prevents the normal "usage" header from
@@ -288,10 +299,15 @@ EPILOG_TEXT_ = '\tThe ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.ALL_OFF + ', ' + ANSI_.
 #   formatter_class=argparse.RawTextHelpFormatter - Allows me to
 #           control help screen formatting
 COMMAND_LINE_ = argparse.ArgumentParser(usage=argparse.SUPPRESS,description=HELP_TEXT_,epilog=EPILOG_TEXT_,formatter_class=argparse.RawTextHelpFormatter,add_help=True)
-COMMAND_LINE_.add_argument('-c',action='store',default='',metavar=ANSI_.BOLD_TEXT+'<HOSTNAME>'+ANSI_.ALL_OFF+'\t\tLook up a specific host (use the "m" name, for example ' + ANSI_.BOLD_TEXT + 'wtdcsnm0dbw00' + ANSI_.ALL_OFF + ')',help='\tConflicts with ' + ANSI_.BOLD_TEXT + ANSI_.YELLOW_BLACK + '-e' + ANSI_.ALL_OFF + ' and ' + ANSI_.BOLD_TEXT + ANSI_.YELLOW_BLACK + '-w' + ANSI_.ALL_OFF + ' command-line parameters' + "\n\tExits with " + ANSI_.BOLD_TEXT + '1' + ANSI_.ALL_OFF + " if the host exists, " + ANSI_.BOLD_TEXT + '0' + ANSI_.ALL_OFF + " otherwise")
+COMMAND_LINE_.add_argument('-c',action='store',default='',metavar=ANSI_.BOLD_TEXT+
+  '<HOSTNAME>'+ANSI_.ALL_OFF+'\t\tLook up a specific host (use the "m" name, for example '+
+  ANSI_.BOLD_TEXT+'wtdcsnm0dbw00'+ANSI_.ALL_OFF+')',help='\tConflicts with '+ANSI_.BOLD_TEXT+
+  ANSI_.YELLOW_BLACK+'-e'+ANSI_.ALL_OFF+' and '+ANSI_.BOLD_TEXT+ANSI_.YELLOW_BLACK+
+  '-w'+ANSI_.ALL_OFF+' command-line parameters'+"\n\tExits with "+ANSI_.BOLD_TEXT+
+  '1'+ANSI_.ALL_OFF+" if the host exists, "+ANSI_.BOLD_TEXT+'0'+ANSI_.ALL_OFF+" otherwise")
 COMMAND_LINE_.add_argument('-d',action='store_true',help="Enable debugging messages to " + ANSI_.BOLD_TEXT + "stdout" + ANSI_.ALL_OFF)
-COMMAND_LINE_.add_argument('-e',action='store_true',help='Limit output to ' + ANSI_.BOLD_TEXT + ANSI_.YELLOW_BLACK + 'EDC-based' + ANSI_.ALL_OFF + ' VMs (conflicts with ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.ALL_OFF + ' and ' + ANSI_.BOLD_TEXT + '-w' + ANSI_.ALL_OFF + ')')
-COMMAND_LINE_.add_argument('-w',action='store_true',help='Limit output to ' + ANSI_.BOLD_TEXT + ANSI_.YELLOW_BLACK + 'WDC-based' + ANSI_.ALL_OFF + ' VMs (conflicts with ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.ALL_OFF + ' and ' + ANSI_.BOLD_TEXT + '-e' + ANSI_.ALL_OFF + ')')
+COMMAND_LINE_.add_argument('-e',action='store_true',help='Limit output to ' + ANSI_.BOLD_TEXT + ANSI_.YELLOW_BLACK + 'DC1-based' + ANSI_.ALL_OFF + ' VMs (conflicts with ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.ALL_OFF + ' and ' + ANSI_.BOLD_TEXT + '-w' + ANSI_.ALL_OFF + ')')
+COMMAND_LINE_.add_argument('-w',action='store_true',help='Limit output to ' + ANSI_.BOLD_TEXT + ANSI_.YELLOW_BLACK + 'DC2-based' + ANSI_.ALL_OFF + ' VMs (conflicts with ' + ANSI_.BOLD_TEXT + '-c' + ANSI_.ALL_OFF + ' and ' + ANSI_.BOLD_TEXT + '-e' + ANSI_.ALL_OFF + ')')
 # Parse the command-line based on the added arguments
 ARGS_ = COMMAND_LINE_.parse_args()
 
@@ -304,16 +320,22 @@ if ARGS_.d:
 # Validate command-line options
 # -e and -w conflict
 if ARGS_.e and ARGS_.w:
-  print(DESC_TEXT_ + '\n\n\t' + ANSI_.BOLD_TEXT + ANSI_.MAGENTA_BLACK + 'FATAL ERROR: ' + ANSI_.BLUE_BLACK + '-e' + ANSI_.RED_BLACK + ' conflicts with ' + ANSI_.BLUE_BLACK + '-w' + ANSI_.ALL_OFF + '\n')
+  print(DESC_TEXT_+'\n\n\t'+ANSI_.BOLD_TEXT+ANSI_.MAGENTA_BLACK+
+    'FATAL ERROR: '+ANSI_.BLUE_BLACK+'-e'+ANSI_.RED_BLACK+
+    ' conflicts with '+ANSI_.BLUE_BLACK+'-w'+ANSI_.ALL_OFF+'\n')
   sys.exit(255)
 
 # -c conflicts with -e and -w
 if (ARGS_.e or ARGS_.w) and ARGS_.c != '':
-  print(DESC_TEXT_ + '\n\n\t' + ANSI_.BOLD_TEXT + ANSI_.MAGENTA_BLACK + 'FATAL ERROR: ' + ANSI_.BLUE_BLACK + '-c' + ANSI_.RED_BLACK + ' conflicts with ' + ANSI_.BLUE_BLACK + '-e' + ANSI_.RED_BLACK + ' and ' + ANSI_.BLUE_BLACK + '-w' + ANSI_.ALL_OFF + '\n')
+  print(DESC_TEXT_+'\n\n\t'+ANSI_.BOLD_TEXT+ANSI_.MAGENTA_BLACK+
+    'FATAL ERROR: '+ANSI_.BLUE_BLACK+'-c'+ANSI_.RED_BLACK+
+    ' conflicts with '+ANSI_.BLUE_BLACK+'-e'+ANSI_.RED_BLACK+
+    ' and '+ANSI_.BLUE_BLACK+'-w'+ANSI_.ALL_OFF+'\n')
   sys.exit(255)
 
 # Was -c specified?
 if ARGS_.c != '':
+
   # Yes, I need to validate the hostname
 
   #####################################################################
@@ -336,7 +358,7 @@ if ARGS_.c != '':
   if len(ARGS_.c) != 13:
     print(DESC_TEXT_ + '\n\n\t' + ANSI_.BOLD_TEXT + ANSI_.MAGENTA_BLACK + 'FATAL ERROR A: ' + ANSI_.ALL_OFF + ANSI_.BOLD_TEXT + ARGS_.c + ANSI_.RED_BLACK + ' is not a valid hostname (length)' + ANSI_.ALL_OFF + '\n')
     sys.exit(254)
-  elif (ARGS_.c[0:2] != 'dc')
+  elif (ARGS_.c[0:2] != 'dc'):
     # First two must be 'dc'
     print(DESC_TEXT_ + '\n\n\t' + ANSI_.BOLD_TEXT + ANSI_.MAGENTA_BLACK + 'FATAL ERROR B: ' + ANSI_.ALL_OFF + ANSI_.BOLD_TEXT + ARGS_.c + ANSI_.RED_BLACK + ' is not a valid hostname (' + ARGS_.c[0:2] + ')' + ANSI_.ALL_OFF + '\n')
     sys.exit(253)
@@ -372,9 +394,9 @@ else:
       VSPHERE_LIST_ = [ VSPHERES_['DC1'] ]
     else:
       VSPHERE_LIST_ = [ VSPHERES_['DC2'] ]
-    else:
-      # No, so I'm getting the full listing (both DCs)
-      VSPHERE_LIST_ = [ VSPHERES_['DC1'] , VSPHERES_['DC2'] ]
+  else:
+    # No, so I'm getting the full listing (both DCs)
+    VSPHERE_LIST_ = [ VSPHERES_['DC1'] , VSPHERES_['DC2'] ]
 
 # VSPHERE_LIST_ is now populated with the list of vSphere
 #       servers I'll be contacting
