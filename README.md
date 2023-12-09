@@ -56,3 +56,6 @@ It's also important to note that this tool **_assumes_** that filesystems are al
 
 ## hbareport
 **hbareport-lpar** is designed specifically for PowerPC LPARs running SLES v12 or v15, and in particular those having HBAs provided by VIOs using NPIV. The LUN naming assumed by the tool comes from the SLES-for-SAP environment I built for a R3-to-HANA migration.
+
+## vmreport.py
+This is a tool I wrote that was very specific to the environment where I was working; I've sanitized the code and tried to make it more-generic. That said, by design, it is limited to operating against, at most, two ESXi infrastructures (and assumes those are in different data centers, although that's not a critical distinction). There's logic to find a specific host (sort of a "Does a VM with this name exist in this place?" check); the code assumes a host naming convention that, again, was peculiar to the original environment. Bottom Line: You'll need to adapt this tool to **your** environment, don't try to use it as-is. Mainly, I'm publishing it because I found the existing examples of how to use the Python vSphere modules a bit wanting, and I think my code does a better job of demonstrating the basic functionality and making it easy for someone else to understand and adapt to their needs.
