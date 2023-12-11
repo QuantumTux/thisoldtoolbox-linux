@@ -114,8 +114,13 @@ NETWORK_BASE_='192.168.'
 # Standard last octet value of Management Controller IP address
 MC_IP_ADDR_='.110'
 # Min/Max values for numeric argument to -s
-MAX_SITE_INDEX_=17
+#   These could also be determined programmatically
 MIN_SITE_INDEX_=11
+MAX_SITE_INDEX_=17
+# Min/Max values for string argument to -s
+#   These could also be determined programmatically
+MIN_SITE_LEN_=2
+MAX_SITE_LEN_=6
 # Define how tool was invoked
 THIS_TOOL_=os.path.realpath(__file__)
 # Create a dictonary that correlates Site Index to Site ID
@@ -267,6 +272,9 @@ def main():
     SITE_NAME_=''
     PWFILE_=''
     SITE_INDEX_=0
+    # USERNAME_ is used to contruct string referencing home
+    #   directory of invoking user; it is not used to login
+    #   to the Management Controller
     USERNAME_=''
 
     # Determine if the argument to -s is valid
@@ -277,14 +285,16 @@ def main():
         if MIN_SITE_INDEX_ <= int(ARGS_.s) <= MAX_SITE_INDEX_:
           SITE_INDEX_=int(ARGS_.s)
           # Determine Site Name
+          # This uses SITE_INFO_ to match a numeric argument to
+          #   to the string identifying that site
           for key,value in SITE_INFO_.items():
             if key == SITE_INDEX_:
               SITE_VALID_=True
               SITE_NAME_=value
               break
     else:
-        # No, should be a string of 2-6 chars
-        if 2 <= len(ARGS_.s) <= 6:
+        # No, should be a string of chars
+        if MIN_SITE_LEN_ <= len(ARGS_.s) <= MAX_SITE_LEN_:
             # Determine if Site Name is valid
             SITE_NAME_=ARGS_.s.upper()
             for key,value in SITE_INFO_.items():
@@ -303,7 +313,9 @@ def main():
             ' a positive integer between '+ANSI_.MAGENTA_BLACK_+
             MIN_SITE_INDEX_+ANSI_.RED_BLACK_+' and '+
             ANSI_.MAGENTA_BLACK_+MAX_SITE_INDEX_+ANSI_.RED_BLACK+
-            ', inclusive; or a string of 2 to 6 characters)'+
+            ', inclusive; or a string of '+ANSI_.MAGENTA_BLACK_+
+            MIN_SITE_LEN_+ANSI_.RED_BLACK_+' to '+ANSI_.MAGENTA_BLACK_+
+            MAX_SITE_LEN_+ANSI_.RED_BLACK_+' characters)'+
             ANSI_.ALL_OFF_+'\n')
         COMMAND_LINE_.print_help()
         sys.exit(1)
