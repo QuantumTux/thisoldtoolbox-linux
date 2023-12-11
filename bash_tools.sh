@@ -140,132 +140,132 @@ readonly STD_FILE='/etc/std'
 #######################################################################
 _init_script_tool_names ()
 {
-	# NOTE: I append "2>&1" when calling "which" to suppress any
-	#		error messages when a particular executable is
-	#		not found (e.g. ps2pdf, enscript)
+  # NOTE: I append "2>&1" when calling "which" to suppress any
+  #       error messages when a particular executable is
+  #       not found (e.g. ps2pdf, enscript)
 
-	# A
-	readonly AWK_TOOL=$( ${WHICH_TOOL} --skip-alias awk 2>&1 )
+  # A
+  readonly AWK_TOOL=$( ${WHICH_TOOL} --skip-alias awk 2>&1 )
 
-	# B
+  # B
 
-	# C
-	readonly CAT_TOOL=$( ${WHICH_TOOL} --skip-alias cat 2>&1 )
-	readonly CALC_TOOL=$( ${WHICH_TOOL} --skip-alias bc 2>&1 )
+  # C
+  readonly CAT_TOOL=$( ${WHICH_TOOL} --skip-alias cat 2>&1 )
+  readonly CALC_TOOL=$( ${WHICH_TOOL} --skip-alias bc 2>&1 )
   readonly CALENDAR_TOOL=$( ${WHICH_TOOL} --skip-alias cal 2>&1 )
-	readonly CFG_TOOL=$( ${WHICH_TOOL} --skip-alias ifconfig 2>&1 )
-	readonly CHGRP_TOOL=$( ${WHICH_TOOL} --skip-alias chgrp 2>&1 )
-	readonly CHMODE_TOOL=$( ${WHICH_TOOL} --skip-alias chmod 2>&1 )
-	readonly CHOWN_TOOL=$( ${WHICH_TOOL} --skip-alias chown 2>&1 )
-	readonly CHRONY_CLIENT_TOOL=$( ${WHICH_TOOL} --skip-alias chronyc 2>&1 )
-	readonly CP_TOOL=$( ${WHICH_TOOL} --skip-alias cp 2>&1 )
-	readonly CPU_TOOL=$( ${WHICH_TOOL} --skip-alias lscpu 2>&1 )
-	readonly CUT_TOOL=$( ${WHICH_TOOL} --skip-alias cut 2>&1 )
+  readonly CFG_TOOL=$( ${WHICH_TOOL} --skip-alias ifconfig 2>&1 )
+  readonly CHGRP_TOOL=$( ${WHICH_TOOL} --skip-alias chgrp 2>&1 )
+  readonly CHMODE_TOOL=$( ${WHICH_TOOL} --skip-alias chmod 2>&1 )
+  readonly CHOWN_TOOL=$( ${WHICH_TOOL} --skip-alias chown 2>&1 )
+  readonly CHRONY_CLIENT_TOOL=$( ${WHICH_TOOL} --skip-alias chronyc 2>&1 )
+  readonly CP_TOOL=$( ${WHICH_TOOL} --skip-alias cp 2>&1 )
+  readonly CPU_TOOL=$( ${WHICH_TOOL} --skip-alias lscpu 2>&1 )
+  readonly CUT_TOOL=$( ${WHICH_TOOL} --skip-alias cut 2>&1 )
 
-	# D
-	readonly DATE_TOOL=$( ${WHICH_TOOL} --skip-alias date 2>&1 )
-	readonly DD_TOOL=$( ${WHICH_TOOL} --skip-alias dd 2>&1 )
-	readonly DECODE_TOOL=$( ${WHICH_TOOL} --skip-alias dmidecode 2>&1 )
-	readonly DF_TOOL=$( ${WHICH_TOOL} --skip-alias df 2>&1 )
-	readonly DNS_TOOL=$( ${WHICH_TOOL} --skip-alias host 2>&1 )
+  # D
+  readonly DATE_TOOL=$( ${WHICH_TOOL} --skip-alias date 2>&1 )
+  readonly DD_TOOL=$( ${WHICH_TOOL} --skip-alias dd 2>&1 )
+  readonly DECODE_TOOL=$( ${WHICH_TOOL} --skip-alias dmidecode 2>&1 )
+  readonly DF_TOOL=$( ${WHICH_TOOL} --skip-alias df 2>&1 )
+  readonly DNS_TOOL=$( ${WHICH_TOOL} --skip-alias host 2>&1 )
 
-	# E
-	readonly ETH_TOOL=$( ${WHICH_TOOL} --skip-alias ethtool 2>&1 )
-	readonly ETHREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias ethreport 2>&1 )
-	readonly ENSCRIPT_TOOL=$( ${WHICH_TOOL} --skip-alias enscript 2>&1 )
+  # E
+  readonly ETH_TOOL=$( ${WHICH_TOOL} --skip-alias ethtool 2>&1 )
+  readonly ETHREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias ethreport 2>&1 )
+  readonly ENSCRIPT_TOOL=$( ${WHICH_TOOL} --skip-alias enscript 2>&1 )
 
-	# F
+  # F
 
-	# G
-	readonly GREP_TOOL=$( ${WHICH_TOOL} --skip-alias grep 2>&1 )
+  # G
+  readonly GREP_TOOL=$( ${WHICH_TOOL} --skip-alias grep 2>&1 )
 
-	# H
-	readonly HBAREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias hbareport 2>&1 )
-	readonly HEAD_TOOL=$( ${WHICH_TOOL} --skip-alias head 2>&1 )
-	readonly HOSTNAME_TOOL=$( ${WHICH_TOOL} --skip-alias hostname 2>&1 )
+  # H
+  readonly HBAREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias hbareport 2>&1 )
+  readonly HEAD_TOOL=$( ${WHICH_TOOL} --skip-alias head 2>&1 )
+  readonly HOSTNAME_TOOL=$( ${WHICH_TOOL} --skip-alias hostname 2>&1 )
 
 	# I
-	readonly IP_TOOL=$( ${WHICH_TOOL} --skip-alias ip 2>&1 )
-	readonly IPMI_TOOL=$( ${WHICH_TOOL} --skip-alias ipmitool 2>&1 )
+  readonly IP_TOOL=$( ${WHICH_TOOL} --skip-alias ip 2>&1 )
+  readonly IPMI_TOOL=$( ${WHICH_TOOL} --skip-alias ipmitool 2>&1 )
 
-	# J
-	# K
+  # J
+  # K
 
-	# L
-	readonly LAST_TOOL=$( ${WHICH_TOOL} --skip-alias last 2>&1 )
-	readonly LISTMOD_TOOL=$( ${WHICH_TOOL} --skip-alias lsmod 2>&1 )
-	readonly LOGGER_TOOL=$( ${WHICH_TOOL} --skip-alias logger 2>&1 )
-	readonly LS_TOOL=$( ${WHICH_TOOL} --skip-alias ls 2>&1 )
-	readonly LSCFG_TOOL=$( ${WHICH_TOOL} --skip-alias lscfg 2>&1 )
-	readonly LVREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias lvreport 2>&1 )
-	readonly LVS_TOOL=$( ${WHICH_TOOL} --skip-alias lvs 2>&1 )
+  # L
+  readonly LAST_TOOL=$( ${WHICH_TOOL} --skip-alias last 2>&1 )
+  readonly LISTMOD_TOOL=$( ${WHICH_TOOL} --skip-alias lsmod 2>&1 )
+  readonly LOGGER_TOOL=$( ${WHICH_TOOL} --skip-alias logger 2>&1 )
+  readonly LS_TOOL=$( ${WHICH_TOOL} --skip-alias ls 2>&1 )
+  readonly LSCFG_TOOL=$( ${WHICH_TOOL} --skip-alias lscfg 2>&1 )
+  readonly LVREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias lvreport 2>&1 )
+  readonly LVS_TOOL=$( ${WHICH_TOOL} --skip-alias lvs 2>&1 )
 
-	# M
-	readonly MAIL_TOOL=$( ${WHICH_TOOL} --skip-alias sendmail 2>&1 )
-	readonly MAIL_TOOL_CLIENT=$( ${WHICH_TOOL} --skip-alias mail 2>&1 )
-	readonly MKDIR_TOOL=$( ${WHICH_TOOL} --skip-alias mkdir 2>&1 )
-	readonly MKTEMP_TOOL=$( ${WHICH_TOOL} --skip-alias mktemp 2>&1 )
-	readonly MODINFO_TOOL=$( ${WHICH_TOOL} --skip-alias modinfo 2>&1 )
-	readonly MODPROBE_TOOL=$( ${WHICH_TOOL} --skip-alias modprobe 2>&1 )
-	readonly MOUNT_TOOL=$( ${WHICH_TOOL} --skip-alias mount 2>&1 )
-	readonly MPATHREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias mpathreport 2>&1 )
-	readonly MULTIPATH_TOOL=$( ${WHICH_TOOL} --skip-alias multipath 2>&1 )
-	readonly MV_TOOL=$( ${WHICH_TOOL} --skip-alias mv 2>&1 )
+  # M
+  readonly MAIL_TOOL=$( ${WHICH_TOOL} --skip-alias sendmail 2>&1 )
+  readonly MAIL_TOOL_CLIENT=$( ${WHICH_TOOL} --skip-alias mail 2>&1 )
+  readonly MKDIR_TOOL=$( ${WHICH_TOOL} --skip-alias mkdir 2>&1 )
+  readonly MKTEMP_TOOL=$( ${WHICH_TOOL} --skip-alias mktemp 2>&1 )
+  readonly MODINFO_TOOL=$( ${WHICH_TOOL} --skip-alias modinfo 2>&1 )
+  readonly MODPROBE_TOOL=$( ${WHICH_TOOL} --skip-alias modprobe 2>&1 )
+  readonly MOUNT_TOOL=$( ${WHICH_TOOL} --skip-alias mount 2>&1 )
+  readonly MPATHREPORT_TOOL=$( ${WHICH_TOOL} --skip-alias mpathreport 2>&1 )
+  readonly MULTIPATH_TOOL=$( ${WHICH_TOOL} --skip-alias multipath 2>&1 )
+  readonly MV_TOOL=$( ${WHICH_TOOL} --skip-alias mv 2>&1 )
 
-	# N
-	# O
+  # N
+  # O
 
-	# P
-	readonly PCI_TOOL=$( ${WHICH_TOOL} --skip-alias lspci 2>&1 )
-	readonly PDF_TOOL=$( ${WHICH_TOOL} --skip-alias ps2pdf 2>&1 )
-	readonly PING_TOOL=$( ${WHICH_TOOL} --skip-alias ping 2>&1 )
-	readonly PKG_TOOL=$( ${WHICH_TOOL} --skip-alias rpm 2>&1 )
-	readonly PS_TOOL=$( ${WHICH_TOOL} --skip-alias ps 2>&1 )
-	readonly PVS_TOOL=$( ${WHICH_TOOL} --skip-alias pvs 2>&1 )
+  # P
+  readonly PCI_TOOL=$( ${WHICH_TOOL} --skip-alias lspci 2>&1 )
+  readonly PDF_TOOL=$( ${WHICH_TOOL} --skip-alias ps2pdf 2>&1 )
+  readonly PING_TOOL=$( ${WHICH_TOOL} --skip-alias ping 2>&1 )
+  readonly PKG_TOOL=$( ${WHICH_TOOL} --skip-alias rpm 2>&1 )
+  readonly PS_TOOL=$( ${WHICH_TOOL} --skip-alias ps 2>&1 )
+  readonly PVS_TOOL=$( ${WHICH_TOOL} --skip-alias pvs 2>&1 )
 
-	# Q
+  # Q
 
-	# R
-	readonly RM_TOOL=$( ${WHICH_TOOL} --skip-alias rm 2>&1 )
-	readonly ROUTE_TOOL=$( ${WHICH_TOOL} --skip-alias route 2>&1 )
+  # R
+  readonly RM_TOOL=$( ${WHICH_TOOL} --skip-alias rm 2>&1 )
+  readonly ROUTE_TOOL=$( ${WHICH_TOOL} --skip-alias route 2>&1 )
 
-	# S
-	readonly SED_TOOL=$( ${WHICH_TOOL} --skip-alias sed 2>&1 )
-	readonly SHUTDOWN_TOOL=$( ${WHICH_TOOL} --skip-alias shutdown 2>&1 )
-	readonly SLEEP_TOOL=$( ${WHICH_TOOL} --skip-alias sleep 2>&1 )
-	readonly SORT_TOOL=$( ${WHICH_TOOL} --skip-alias sort 2>&1 )
-	readonly SSH_TOOL=$( ${WHICH_TOOL} --skip-alias ssh 2>&1 )
-	readonly STAT_TOOL=$( ${WHICH_TOOL} --skip-alias stat 2>&1 )
-	readonly STRINGS_TOOL=$( ${WHICH_TOOL} --skip-alias strings 2>&1 )
-	readonly SUMINUS_TOOL=$( ${WHICH_TOOL} --skip-alias suminus 2>&1 )
-	readonly SUBSCRIBE_TOOL=$( ${WHICH_TOOL} --skip-alias subscription-manager 2>&1 )
-	readonly SVC_TOOL=$( ${WHICH_TOOL} --skip-alias service 2>&1 )
-	readonly SYSCFG_NET_TOOL=$( ${WHICH_TOOL} --skip-alias system-config-network-cmd 2>&1 )
-	readonly SYSCTL_TOOL=$( ${WHICH_TOOL} --skip-alias systemctl 2>&1 )
+  # S
+  readonly SED_TOOL=$( ${WHICH_TOOL} --skip-alias sed 2>&1 )
+  readonly SHUTDOWN_TOOL=$( ${WHICH_TOOL} --skip-alias shutdown 2>&1 )
+  readonly SLEEP_TOOL=$( ${WHICH_TOOL} --skip-alias sleep 2>&1 )
+  readonly SORT_TOOL=$( ${WHICH_TOOL} --skip-alias sort 2>&1 )
+  readonly SSH_TOOL=$( ${WHICH_TOOL} --skip-alias ssh 2>&1 )
+  readonly STAT_TOOL=$( ${WHICH_TOOL} --skip-alias stat 2>&1 )
+  readonly STRINGS_TOOL=$( ${WHICH_TOOL} --skip-alias strings 2>&1 )
+  readonly SUMINUS_TOOL=$( ${WHICH_TOOL} --skip-alias suminus 2>&1 )
+  readonly SUBSCRIBE_TOOL=$( ${WHICH_TOOL} --skip-alias subscription-manager 2>&1 )
+  readonly SVC_TOOL=$( ${WHICH_TOOL} --skip-alias service 2>&1 )
+  readonly SYSCFG_NET_TOOL=$( ${WHICH_TOOL} --skip-alias system-config-network-cmd 2>&1 )
+  readonly SYSCTL_TOOL=$( ${WHICH_TOOL} --skip-alias systemctl 2>&1 )
 
-	# T
-	readonly TAIL_TOOL=$( ${WHICH_TOOL} --skip-alias tail 2>&1 )
-	readonly TOUCH_TOOL=$( ${WHICH_TOOL} --skip-alias touch 2>&1 )
-	readonly TR_TOOL=$( ${WHICH_TOOL} --skip-alias tr 2>&1 )
+  # T
+  readonly TAIL_TOOL=$( ${WHICH_TOOL} --skip-alias tail 2>&1 )
+  readonly TOUCH_TOOL=$( ${WHICH_TOOL} --skip-alias touch 2>&1 )
+  readonly TR_TOOL=$( ${WHICH_TOOL} --skip-alias tr 2>&1 )
 
-	# U
-	readonly UNAME_TOOL=$( ${WHICH_TOOL} --skip-alias uname 2>&1 )
-	readonly UNLINK_TOOL=$( ${WHICH_TOOL} --skip-alias unlink 2>&1 )
-	readonly UPTIME_TOOL=$( ${WHICH_TOOL} --skip-alias sles_uptime 2>&1 )
+  # U
+  readonly UNAME_TOOL=$( ${WHICH_TOOL} --skip-alias uname 2>&1 )
+  readonly UNLINK_TOOL=$( ${WHICH_TOOL} --skip-alias unlink 2>&1 )
+  readonly UPTIME_TOOL=$( ${WHICH_TOOL} --skip-alias sles_uptime 2>&1 )
 
-	# V
-	readonly VGS_TOOL=$( ${WHICH_TOOL} --skip-alias vgs 2>&1 )
+  # V
+  readonly VGS_TOOL=$( ${WHICH_TOOL} --skip-alias vgs 2>&1 )
 
-	# W
-	readonly W_TOOL=$( ${WHICH_TOOL} --skip-alias w 2>&1 )
-	readonly WC_TOOL=$( ${WHICH_TOOL} --skip-alias wc 2>&1 )
-	WGET_TOOL=$( ${WHICH_TOOL} --skip-alias wget 2>&1 )
-	readonly WGET_TOOL="${WGET_TOOL} -q -O"
-	readonly WHO_TOOL=$( ${WHICH_TOOL} --skip-alias who 2>&1 )
+  # W
+  readonly W_TOOL=$( ${WHICH_TOOL} --skip-alias w 2>&1 )
+  readonly WC_TOOL=$( ${WHICH_TOOL} --skip-alias wc 2>&1 )
+  WGET_TOOL=$( ${WHICH_TOOL} --skip-alias wget 2>&1 )
+  readonly WGET_TOOL="${WGET_TOOL} -q -O"
+  readonly WHO_TOOL=$( ${WHICH_TOOL} --skip-alias who 2>&1 )
 
-	# X
-	# Y
-	# Z
+  # X
+  # Y
+  # Z
 }
 
 #######################################################################
@@ -374,19 +374,19 @@ _init_script_colors ()
 #######################################################################
 _get_os_release ()
 {
-	# If _init_script_variables found the file, then parse the Release
-	#	number from $VERSION_ID
-	if [[ "${VERSION_ID}" != 'X' ]]; then
-		# The string should be in "XX.Y" format, where "XX" is the Release
-		_CHKSTR=$( echo ${VERSION_ID} | ${AWK_TOOL} -F '.' '{ print $1 }' )
-	else
-		_CHKSTR=0
-	fi
-	# Validate that our data is numeric (return "0" if it isn't)
-	case ${_CHKSTR} in
-		*[!0-9]*|"")	return 0 ;;
-		*)		        return ${_CHKSTR} ;;
-	esac
+  # If _init_script_variables found the file, then parse the Release
+  #   number from $VERSION_ID
+  if [[ "${VERSION_ID}" != 'X' ]]; then
+    # The string should be in "XX.Y" format, where "XX" is the Release
+    _CHKSTR=$( echo ${VERSION_ID} | ${AWK_TOOL} -F '.' '{ print $1 }' )
+  else
+    _CHKSTR=0
+  fi
+  # Validate that our data is numeric (return "0" if it isn't)
+  case ${_CHKSTR} in
+    *[!0-9]*|"")  return 0 ;;
+    *)            return ${_CHKSTR} ;;
+  esac
 }
 
 #######################################################################
