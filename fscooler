@@ -24,7 +24,7 @@
 #       command-line parameter must be one of the following strings:
 #       "freeze", "freezeFail" or "thaw"
 #   3) "freeze" and "freezeFail" are both equivalent to "-f -a -q";
-#	      "thaw" is the same as "-t -a -q"
+#        "thaw" is the same as "-t -a -q"
 #   4) This tools has unusual command-line processing (as compared
 #       to most of my other tools) as I have to support a mix of
 #       short and long command-line parameters
@@ -63,23 +63,23 @@ readonly TOOLS_FILE='/usr/local/lib/bash_tools.sh'
 # Check for ${TOOLS_FILE} - make sure it exists, is NOT 0-length,
 #   and is a regular file
 if [[ -e ${TOOLS_FILE} && -s ${TOOLS_FILE} && -f ${TOOLS_FILE} ]]; then
-	# I have a valid TOOLS_FILE - source it and initialize
-	source ${TOOLS_FILE}
-	# Check the version
-	if [[ "${BASH_TOOLS_LIBRARY_VERSION}" -lt "${MINIMUM_BASH_TOOLS_LIBRARY_VERSION}" ]]; then
-		echo -e "\nFATAL ERROR: Outdated tool library (${TOOLS_FILE}) - found v${BASH_TOOLS_LIBRARY_VERSION} but need ${MINIMUM_BASH_TOOLS_LIBRARY_VERSION} or later\n"
-		exit 255
-	else
-		# Initialize non-SLES-version-specific command-shortcut variables
-		_init_script_tool_names
-		# Populate important variables
-		_init_script_variables
-		# Set up variables to colorize text output
-		_init_script_colors
-	fi
+  # I have a valid TOOLS_FILE - source it and initialize
+  source ${TOOLS_FILE}
+  # Check the version
+  if [[ "${BASH_TOOLS_LIBRARY_VERSION}" -lt "${MINIMUM_BASH_TOOLS_LIBRARY_VERSION}" ]]; then
+    echo -e "\nFATAL ERROR: Outdated tool library (${TOOLS_FILE}) - found v${BASH_TOOLS_LIBRARY_VERSION} but need ${MINIMUM_BASH_TOOLS_LIBRARY_VERSION} or later\n"
+    exit 255
+  else
+    # Initialize non-SLES-version-specific command-shortcut variables
+    _init_script_tool_names
+    # Populate important variables
+    _init_script_variables
+    # Set up variables to colorize text output
+    _init_script_colors
+  fi
 else
-	echo -e "\nFATAL ERROR: Unable to source a valid tool library from ${TOOLS_FILE}\n"
-	exit 255
+  echo -e "\nFATAL ERROR: Unable to source a valid tool library from ${TOOLS_FILE}\n"
+  exit 255
 fi
 
 # Define syslog tag
@@ -88,7 +88,7 @@ _log_script_message 'Starting Execution'
 
 # Blockaded VG - I will NEVER freeze/thaw a mount-point in this
 #   Volume Group
-#	Only a single value is supported - do not make multi-value
+#  Only a single value is supported - do not make multi-value
 readonly IMMUNE_VG='vg0'
 
 # These tools not defined in bash_tools.sh
@@ -106,44 +106,44 @@ UNKNOWN='NO'
 
 # Parse command-line options if any provided
 if [[ $# -eq 0 ]]; then
-	# Something MUST be on the command-line
-	UNKNOWN='YES'
+  # Something MUST be on the command-line
+  UNKNOWN='YES'
 else
-	######################################################################
-	# Normal Command Line Argument Processing
-	# Command Line Argument Processing
-	while getopts 'm:afqth' OPT; do
-		case ${OPT} in
-			a)	ALL_MOUNTS='YES' ;;
-			f)	FREEZE_FS='YES' ;;
-			m)	SINGLE_MOUNT="${OPTARG}" ;;
-			q)	OUTPUT_MODE=1 ;;
-			t)	THAW_FS='YES' ;;
-			h)	HELP_FLAG='YES' ;;
-			*)	UNKNOWN='YES' ;;
-		esac
-	done
-	# End of Normal Command Line Argument Processing
-	#####################################################################
-	# If an unknown command-line option, or -h, was NOT provided,
-	#	then see if $1 is one of "freeze", "freezeFail" or "thaw"
-	# NOTE: Long strings like "freeze" or "thaw" are ignored by getopt
-	if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]; then
-		if [[ "${1}" == 'freeze' && "${1}" == 'freezeFail' && "${1}" == 'thaw' ]]; then
-			# All of those values imply -a and -q
-			ALL_MOUNTS='YES'
-			OUTPUT_MODE=1
-			if [[ "${1}" == 'thaw' ]]; then
-				THAW_FS='YES'
-				FREEZE_FS='NO'
-			else
-				FREEZE_FS='YES'
-				THAW_FS='NO'
-			fi
-			# Also, override -m if it was mistakenly added
-			SINGLE_MOUNT=''
-		fi
-	fi
+  ######################################################################
+  # Normal Command Line Argument Processing
+  # Command Line Argument Processing
+  while getopts 'm:afqth' OPT; do
+    case ${OPT} in
+      a)  ALL_MOUNTS='YES' ;;
+      f)  FREEZE_FS='YES' ;;
+      m)  SINGLE_MOUNT="${OPTARG}" ;;
+      q)  OUTPUT_MODE=1 ;;
+      t)  THAW_FS='YES' ;;
+      h)  HELP_FLAG='YES' ;;
+      *)  UNKNOWN='YES' ;;
+    esac
+  done
+  # End of Normal Command Line Argument Processing
+  #####################################################################
+  # If an unknown command-line option, or -h, was NOT provided,
+  #  then see if $1 is one of "freeze", "freezeFail" or "thaw"
+  # NOTE: Long strings like "freeze" or "thaw" are ignored by getopt
+  if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]; then
+    if [[ "${1}" == 'freeze' && "${1}" == 'freezeFail' && "${1}" == 'thaw' ]]; then
+      # All of those values imply -a and -q
+      ALL_MOUNTS='YES'
+      OUTPUT_MODE=1
+      if [[ "${1}" == 'thaw' ]]; then
+        THAW_FS='YES'
+        FREEZE_FS='NO'
+      else
+        FREEZE_FS='YES'
+        THAW_FS='NO'
+      fi
+      # Also, override -m if it was mistakenly added
+      SINGLE_MOUNT=''
+    fi
+  fi
 fi
 # End of if [[ $# -eq 0 ]]
 
@@ -187,61 +187,61 @@ ${0} - ${BOLD_TEXT}Linux XFS Filesystem Freeze/Thaw Tool v${TOOL_VERSION}${ALL_O
 OUTPUT=''
 EXIT_CODE=0
 if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]; then
-	# Check for command-line argument conflicts
-	# -a conflicts with -m
-	# -a requires -f or -t
-	if [[ "${ALL_MOUNTS}" == 'YES' ]]; then
-		if [[ "${SINGLE_MOUNT}" != '' ]]; then
-			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} and ${MAGENTA_BLACK}-m${RED_BLACK} command-line options conflict${ALL_OFF}"
-			readonly EXIT_CODE=255
-		else
-			if [[ "${FREEZE_FS}" == 'NO' && "${THAW_FS}" == 'NO' ]]; then
-				OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-t${RED_BLACK} or ${MAGENTA_BLACK}-t${ALL_OFF}"
-				readonly EXIT_CODE=255
-			fi
-		fi
-	fi
+  # Check for command-line argument conflicts
+  # -a conflicts with -m
+  # -a requires -f or -t
+  if [[ "${ALL_MOUNTS}" == 'YES' ]]; then
+    if [[ "${SINGLE_MOUNT}" != '' ]]; then
+      OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} and ${MAGENTA_BLACK}-m${RED_BLACK} command-line options conflict${ALL_OFF}"
+      readonly EXIT_CODE=255
+    else
+      if [[ "${FREEZE_FS}" == 'NO' && "${THAW_FS}" == 'NO' ]]; then
+        OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-t${RED_BLACK} or ${MAGENTA_BLACK}-t${ALL_OFF}"
+        readonly EXIT_CODE=255
+      fi
+    fi
+  fi
 
-	# -f requires -a or -m
-	# -f conflicts with -t
-	if [[ "${EXIT_CODE}" -eq 0 && "${FREEZE_FS}" == 'YES' ]]; then
-		if [[ "${ALL_MOUNTS}" == 'NO' && "${SINGLE_MOUNT}" == '' ]]; then
-			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-f${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-a${RED_BLACK} or ${MAGENTA_BLACK}-m${ALL_OFF}"
-			readonly EXIT_CODE=255
-		else
-			if [[ "${THAW_FS}" == 'YES' ]]; then
-				OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} command-line parameter conflicts with ${MAGENTA_BLACK}-t${ALL_OFF}"
-				readonly EXIT_CODE=255
-			fi
-		fi
-	fi
+  # -f requires -a or -m
+  # -f conflicts with -t
+  if [[ "${EXIT_CODE}" -eq 0 && "${FREEZE_FS}" == 'YES' ]]; then
+    if [[ "${ALL_MOUNTS}" == 'NO' && "${SINGLE_MOUNT}" == '' ]]; then
+      OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-f${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-a${RED_BLACK} or ${MAGENTA_BLACK}-m${ALL_OFF}"
+      readonly EXIT_CODE=255
+    else
+      if [[ "${THAW_FS}" == 'YES' ]]; then
+        OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-a${RED_BLACK} command-line parameter conflicts with ${MAGENTA_BLACK}-t${ALL_OFF}"
+        readonly EXIT_CODE=255
+      fi
+    fi
+  fi
 
-	# -q requires -f or -t
-	if [[ "${EXIT_CODE}" -eq 0 && "${OUTPUT_MODE}" -eq 1 ]]; then
-		if [[ "${FREEZE_FS}" == 'NO' && "${THAW_FS}" == 'NO' ]]; then
-			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-q${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-f${RED_BLACK} or ${MAGENTA_BLACK}-t${ALL_OFF}"
-			readonly EXIT_CODE=255
-		fi
-	fi
+  # -q requires -f or -t
+  if [[ "${EXIT_CODE}" -eq 0 && "${OUTPUT_MODE}" -eq 1 ]]; then
+    if [[ "${FREEZE_FS}" == 'NO' && "${THAW_FS}" == 'NO' ]]; then
+      OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-q${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-f${RED_BLACK} or ${MAGENTA_BLACK}-t${ALL_OFF}"
+      readonly EXIT_CODE=255
+    fi
+  fi
 
-	# -t conflicts with -f
-	# -t requires -a or -m
-	if [[ "${EXIT_CODE}" -eq 0 && "${THAW_FS}" == 'YES' ]]; then
-		if [[ "${FREEZE_FS}" == 'YES' ]]; then
-			OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-t${RED_BLACK} command-line parameter conflicts with ${MAGENTA_BLACK}-f${RED_BLACK}"
-			readonly EXIT_CODE=255
-		else
-			if [[ "${ALL_MOUNTS}" == 'NO' && "${SINGLE_MOUNT}" == '' ]]; then
-				OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-t${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-a${RED_BLACK} or ${MAGENTA_BLACK}-m${ALL_OFF}"
-				readonly EXIT_CODE=255
-			fi
-		fi
-	fi
+  # -t conflicts with -f
+  # -t requires -a or -m
+  if [[ "${EXIT_CODE}" -eq 0 && "${THAW_FS}" == 'YES' ]]; then
+    if [[ "${FREEZE_FS}" == 'YES' ]]; then
+      OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-t${RED_BLACK} command-line parameter conflicts with ${MAGENTA_BLACK}-f${RED_BLACK}"
+      readonly EXIT_CODE=255
+    else
+      if [[ "${ALL_MOUNTS}" == 'NO' && "${SINGLE_MOUNT}" == '' ]]; then
+        OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} The ${MAGENTA_BLACK}-t${RED_BLACK} command-line parameter requires ${MAGENTA_BLACK}-a${RED_BLACK} or ${MAGENTA_BLACK}-m${ALL_OFF}"
+        readonly EXIT_CODE=255
+      fi
+    fi
+  fi
 fi
 # End of if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]
 
 # User MUST be privileged when running this tool
-#	Do not bother checking if invoked with "-h" or I already have an error
+#  Do not bother checking if invoked with "-h" or I already have an error
 if [[ "${EUID}" -ne 0 && "${HELP_FLAG}" == 'NO' && "${EXIT_CODE}" -ne 0 ]]; then
     OUTPUT="${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR: ${RED_BLACK}Privilege is required to run this tool${ALL_OFF}"
     readonly EXIT_CODE=254
@@ -249,15 +249,15 @@ fi
 
 # If -h argument given, or an unknown/invalid argument was given, display help screen and exit
 if [[ "${HELP_FLAG}" == 'YES' || "${UNKNOWN}" == 'YES' || "${EXIT_CODE}" -ge 254 ]]; then
-	if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
-		echo -e "${HELP}"
-		if [[ "${EXIT_CODE}" -ge 254 ]]; then
-			echo -e "${OUTPUT}\n"
-		fi
-		exit ${EXIT_CODE}
-	else
-		exit ${EXIT_CODE}
-	fi
+  if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+    echo -e "${HELP}"
+    if [[ "${EXIT_CODE}" -ge 254 ]]; then
+      echo -e "${OUTPUT}\n"
+    fi
+    exit ${EXIT_CODE}
+  else
+    exit ${EXIT_CODE}
+  fi
 fi
 
 # Create string to ID tool
@@ -267,129 +267,130 @@ OUTPUT="${0} - ${BOLD_TEXT}Linux XFS Filesystem Freeze/Thaw Tool v${TOOL_VERSION
 _get_os_release
 SLES_VERSION=$?
 if [[ "${SLES_VERSION}" -ne 15 ]]; then
-	if [[ "${SLES_VERSION}" -eq 0 ]]; then
-		# File parse error
-		if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
-			echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} File Parse Failed in ${BLUE_BLACK}_get_os_release${ALL_OFF}\n"
-		else
-			_log_script_message 'File Parse Failed in _get_os_release'
-		fi
-	else
-		# Unsupported version
-		if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
-			echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} SLES v${SLES_VERSION} is Unsupported${ALL_OFF}\n"
-		else
-			_log_script_message "SLES v${SLES_VERSION} is unsupported"
-		fi
-	fi
-	exit 255
+  if [[ "${SLES_VERSION}" -eq 0 ]]; then
+    # File parse error
+    if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+      echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} File Parse Failed in ${BLUE_BLACK}_get_os_release${ALL_OFF}\n"
+    else
+      _log_script_message 'File Parse Failed in _get_os_release'
+    fi
+  else
+    # Unsupported version
+    if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
+      echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}FATAL ERROR:${RED_BLACK} SLES v${SLES_VERSION} is Unsupported${ALL_OFF}\n"
+    else
+      _log_script_message "SLES v${SLES_VERSION} is unsupported"
+    fi
+  fi
+  exit 255
 fi
 # End of if [[ "${SLES_VERSION}" -ne 15 ]]
 
 # If I get here, I have determined that the tool is
-#	- Running on a supported OS version
+#  - Running on a supported OS version
 _log_script_message 'Execution environment is good'
 
 #########################
 # Real Work Starts Here #
 #########################
-# Get the Host Name
-HOST_NAME=$( ${UNAME_TOOL} -n )
 # ID tool if outputting to screen
 if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
-	echo -e "\n${OUTPUT}"
+  echo -e "\n${OUTPUT}"
 fi
 
 # Cycle through _FSTAB_FILE (defined in TOOLS_FILE)
 LINE_COUNT=$( ${WC_TOOL} -l ${_FSTAB_FILE} | ${AWK_TOOL} '{ print $1 }' )
 for (( ITERATOR=1 ; ITERATOR<=${LINE_COUNT} ; ITERATOR++ )); do
-	LINE=$( ${HEAD_TOOL} -${ITERATOR} ${_FSTAB_FILE} | ${TAIL_TOOL} -1 )
-	# Is the first character a comment '#' or ';'
-	CHKSTR="${LINE:0:1}"
-	CHECK_TARGET=''
-	if [[ "${CHKSTR}" == '#' || "${CHKSTR}" == ';' ]]; then
-		# Ignore line
-		continue
-	else
-		# If the first 4 characters are 'UUID' then this is
-		#	the boot (or EFI) partition - ignore it
-		CHKSTR="${LINE:0:4}"
-		if [[ "${CHKSTR}" == 'UUID' ]]; then
-			# Ignore line
-			_log_script_message "Ignoring line with ${CHKSTR}"
-			continue
-		else
-			# If the first 6th-8th charactes are IMMUNE_VG then this is
-			#	a Logical Volume on a VG I want to skip - ignore it
-			CHKSTR="${LINE:5:3}"
-			if [[ "${CHKSTR}" == "${IMMUNE_VG}" ]]; then
-				# Ignore line
-				_log_script_message "Ignoring line with ${CHKSTR}"
-				continue
-			else
-				# If the line is blank, ignore it
-				STRIPSTR=$( echo ${LINE} | ${SED_TOOL} -e 's/^[ \t]*//' )
-				if [[ "${#STRIPSTR}" -eq 0 ]]; then
-					# Ignore line
-					_log_script_message 'Ignoring blank line'
-					continue
-				fi
-			fi
-		fi
-	fi
-	# If I get here, the tool has eliminated all the filesystems that
-	#   it is ignoring (and any blank lines)
-	# For each filesystem, freeze or thaw according to requested
+  LINE=$( ${HEAD_TOOL} -${ITERATOR} ${_FSTAB_FILE} | ${TAIL_TOOL} -1 )
+  # Is the first character a comment '#' or ';'
+  CHKSTR="${LINE:0:1}"
+  CHECK_TARGET=''
+  if [[ "${CHKSTR}" == '#' || "${CHKSTR}" == ';' ]]; then
+    # Ignore line
+    continue
+  else
+    # If the first 4 characters are 'UUID' then this is
+    #  the boot (or EFI) partition - ignore it
+    CHKSTR="${LINE:0:4}"
+    if [[ "${CHKSTR}" == 'UUID' ]]; then
+      # Ignore line
+      _log_script_message "Ignoring line with ${CHKSTR}"
+      continue
+    else
+      # If the first 6th-8th charactes are IMMUNE_VG then this is
+      #  a Logical Volume on a VG I want to skip - ignore it
+      CHKSTR="${LINE:5:3}"
+      if [[ "${CHKSTR}" == "${IMMUNE_VG}" ]]; then
+        # Ignore line
+        _log_script_message "Ignoring line with ${CHKSTR}"
+        continue
+      else
+        # If the line is blank, ignore it
+        STRIPSTR=$( echo ${LINE} | ${SED_TOOL} -e 's/^[ \t]*//' )
+        if [[ "${#STRIPSTR}" -eq 0 ]]; then
+          # Ignore line
+          _log_script_message 'Ignoring blank line'
+          continue
+        fi
+      fi
+    fi
+    # End of if [[ "${CHKSTR}" == 'UUID' ]]
+  fi
+  # End of if [[ "${CHKSTR}" == '#' || "${CHKSTR}" == ';' ]]
+
+  # If I get here, the tool has eliminated all the filesystems that
+  #   it is ignoring (and any blank lines)
+  # For each filesystem, freeze or thaw according to requested
   #   operation
-	TARGET_FS=$( echo ${LINE} | ${AWK_TOOL} '{ print $2 }' )
-	# If -m was specified, and does not match, skip the filesystem
-	if [[ "${SINGLE_MOUNT}" != '' ]]; then
-		if [[ "${TARGET_FS}" != "${SINGLE_MOUNT}" ]]; then
-			# Skip this filesystem
-			_log_script_message "Skipping filesystem ${TARGET_FS} is not ${SINGLE_MOUNT}"
-			continue
-		fi
-	fi
-	# Is it even mounted?
-	${FINDMNT_TOOL} -n ${TARGET_FS} 2>&1 > /dev/null
-	CHKSTR=$?
-	if [[ "${CHKSTR}" -ne 0 ]]; then
-		# Not mounted
-		_log_script_message "${TARGET_FS} is not mounted"
-		continue
-	fi
-	if [[ "${FREEZE_FS}" == 'YES' ]]; then
-		OPERATION='-f'
-		OPERATION_NAME='FREEZE'
-	else
-		OPERATION='-u'
-		OPERATION_NAME='THAW'
-	fi
-	# Make sure this is an XFS filesystem and is mounted rw
-	MOUNT_DATA=$( ${FINDMNT_TOOL} -n ${TARGET_FS} )
-	MOUNT_DATA_TYPE=$( echo "${MOUNT_DATA}" | ${AWK_TOOL} '{ print $3 }' )
-	if [[ "${MOUNT_DATA_TYPE}" != 'xfs' ]]; then
-		# Wrong type - skip
-		_log_script_message "${TARGET_FS} is not XFS"
-		continue
-	else
-		MOUNT_DATA_ATTR=$( echo "${MOUNT_DATA}" | ${AWK_TOOL} '{ print $4 }' )
-		CHKSTR=$( echo ${MOUNT_DATA_ATTR} | ${GREP_TOOL} -c 'rw' )
-		if [[ "${CHKSTR}" -eq 0 ]]; then
-			# Doesn't seem to be mounted rw
-			_log_script_message "${TARGET_FS} is not mounted R/W"
-			continue
-		fi
-	fi
-	_log_script_message "Preparing to ${OPERATION_NAME} XFS filesystem ${TARGET_FS}"
-	# OK, ready to do it
-	${FREEZE_TOOL} ${OPERATION} ${TARGET_FS} 3>/dev/null 2>/dev/null 1>/dev/null > /dev/null
-	CHKSTR=$?
-	if [[ "${CHKSTR}" -eq 0 ]]; then
-		_log_script_message 'Success'
-	else
-		_log_script_message 'Failure'
-	fi
+  TARGET_FS=$( echo ${LINE} | ${AWK_TOOL} '{ print $2 }' )
+  # If -m was specified, and does not match, skip the filesystem
+  if [[ "${SINGLE_MOUNT}" != '' ]]; then
+    if [[ "${TARGET_FS}" != "${SINGLE_MOUNT}" ]]; then
+      # Skip this filesystem
+      _log_script_message "Skipping filesystem ${TARGET_FS} is not ${SINGLE_MOUNT}"
+      continue
+    fi
+  fi
+  # Is it even mounted?
+  ${FINDMNT_TOOL} -n ${TARGET_FS} 2>&1 > /dev/null
+  CHKSTR=$?
+  if [[ "${CHKSTR}" -ne 0 ]]; then
+    # Not mounted
+    _log_script_message "${TARGET_FS} is not mounted"
+    continue
+  fi
+  if [[ "${FREEZE_FS}" == 'YES' ]]; then
+    OPERATION='-f'
+    OPERATION_NAME='FREEZE'
+  else
+    OPERATION='-u'
+    OPERATION_NAME='THAW'
+  fi
+  # Make sure this is an XFS filesystem and is mounted rw
+  MOUNT_DATA=$( ${FINDMNT_TOOL} -n ${TARGET_FS} )
+  MOUNT_DATA_TYPE=$( echo "${MOUNT_DATA}" | ${AWK_TOOL} '{ print $3 }' )
+  if [[ "${MOUNT_DATA_TYPE}" != 'xfs' ]]; then
+    # Wrong type - skip
+    _log_script_message "${TARGET_FS} is not XFS"
+    continue
+  else
+    MOUNT_DATA_ATTR=$( echo "${MOUNT_DATA}" | ${AWK_TOOL} '{ print $4 }' )
+    CHKSTR=$( echo ${MOUNT_DATA_ATTR} | ${GREP_TOOL} -c 'rw' )
+    if [[ "${CHKSTR}" -eq 0 ]]; then
+      # Doesn't seem to be mounted rw
+      _log_script_message "${TARGET_FS} is not mounted R/W"
+      continue
+    fi
+  fi
+  _log_script_message "Preparing to ${OPERATION_NAME} XFS filesystem ${TARGET_FS}"
+  # OK, ready to do it
+  ${FREEZE_TOOL} ${OPERATION} ${TARGET_FS} 3>/dev/null 2>/dev/null 1>/dev/null > /dev/null
+  CHKSTR=$?
+  if [[ "${CHKSTR}" -eq 0 ]]; then
+    _log_script_message 'Success'
+  else
+    _log_script_message 'Failure'
+  fi
 done
 # End of for (( ITERATOR=1 ; ITERATOR<=${LINE_COUNT} ; ITERATOR++ ))
 _log_script_message 'Execution completed'
