@@ -58,8 +58,9 @@ TOOL_VERSION='100'
 #	(which is represented without the decimal, to aid comparison)
 readonly MINIMUM_BASH_TOOLS_LIBRARY_VERSION='100'
 readonly TOOLS_FILE='/usr/local/lib/bash_tools.sh'
-# Check for TOOLS_FILE - make sure it exists, is NOT 0-length, and is a regular file
-if [ -e ${TOOLS_FILE} -a -s ${TOOLS_FILE} -a -f ${TOOLS_FILE} ]; then
+# Check for TOOLS_FILE - make sure it exists, is NOT 0-length, and
+#   is a regular file
+if [[ -e ${TOOLS_FILE} && -s ${TOOLS_FILE} && -f ${TOOLS_FILE} ]]; then
 	# Looks like a valid TOOLS_FILE - source it and initialize
 	source ${TOOLS_FILE}
 	# Check the version
