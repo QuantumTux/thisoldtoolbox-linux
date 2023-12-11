@@ -36,7 +36,7 @@ The earliest version I can find for this tool is January, 2011; but I know I sta
 <details>
 <summary>Read more about cpudecode</summary>
   
-  In the environment at that time, the host population was almost entirely physical, and there was a need to evaluate those systems, on the fly, during OS install. While the environment eventually shifted towards virtual hosts, the tool was still useful from time to time. It also became handy when in the time of Spectre/Meltdown, and proved helpful in the PowerPC environment.
+  In the environment at that time, the host population was almost entirely physical, and there was a need to evaluate those systems, on the fly, during OS install. While the environment eventually shifted towards virtual hosts, the tool was still useful from time to time. It also became handy in the time of Spectre/Meltdown, and proved helpful in the PowerPC environment.
 
   Originally, the information on CPU flag meanings was in one huge **case** statement; I defend that by noting back in 2009, x86 CPUs had a lot fewer flags (dual-core was around, but quad-core wasn't yet common). In preparation for publishing it here, I took the vast majority of that information and moved it into the **cpudecode-data** file (a comment tells you where it needs to live), which basically just declares an array and populates it. The tools also depends on the BASH library.
   
@@ -47,7 +47,7 @@ Recently, an environment had about 30 Dell **PowerVault ME-{4,5}012 and ME-4084*
 <details>
 <summary>Read more about dell-query-array.py</summary>
   
-  We didn't have a coherent monitoring/alerting strategy, so we weren't always aware of issues on a timely basis. While we were in the process of addressing that shortcoming, I developed this tool to meet dual needs. First, it provided a quick way for anyone in Operations to get a moment-in-time view of any Storage Array in the environment. Second, it provided a potential mechanism for the Monitoring Team (who were separate from Operations) to peek into a given Storage Array to gather detailed information when constructing an alert.
+  We didn't have a coherent monitoring/alerting strategy, so we weren't always aware of issues on a timely basis. While we were in the process of addressing that shortcoming, I developed this tool to meet dual needs. First, it provided a quick way for anyone in Operations to get a moment-in-time view of any Storage Array in the environment (quickly, without having to click around the GUI). Second, it provided a potential mechanism for the Monitoring Team (who were separate from Operations) to peek into a given Storage Array to gather detailed information when constructing an alert.
 
   **IMPORTANT!** This tool makes a number of assumptions about the environment in which it operates. These are detailed in the _Notes_ section of the comment header.
 
@@ -63,7 +63,7 @@ I wrote this tool for SLES v15 VMs in a VMware environment.
 <details>
 <summary>Read more about fscooler</summary>
   
-It automates XFS _Freeze_ and _Thaw_ operations during backups (basically, it "settles" the filesystems so the backup is "clean"). Invocation is controlled by the **open-vm-tools** configuration file `/etc/vmware-tools/tools.conf`, specifically the **[vmbackup]** stanza. Among other features, it allows definition of an "immune" Volume Group; that is, an LVM VG where no filesystem in that VG will be frozen. This is important, as freezing something like **/var** or **/tmp**, even for a second, can trigger catastrophic failures in other processes.
+It automates XFS _Freeze_ and _Thaw_ operations during ESXi-mediated backups (basically, it "settles" the filesystems so the backup is "clean"). Invocation is controlled by the **open-vm-tools** configuration file `/etc/vmware-tools/tools.conf`, specifically the **[vmbackup]** stanza. Among other features, it allows definition of an "immune" Volume Group; that is, an LVM VG where no filesystem in that VG will be frozen. This is important, as freezing something like **/var** or **/tmp**, even for a second, can trigger catastrophic failures in other processes.
 
 It's also important to note that this tool **_assumes_** that filesystems are all defined in/mounted by **/etc/fstab** and the entries use a "standard" syntax. Before deploying this tool in your environment, check my assumptions about that, and adjust the code if needed.
 
@@ -91,6 +91,6 @@ This is a tool I wrote that was very specific to the environment where I was wor
 <details>
 <summary>Read more about vmreport.py</summary>
 
-That said, by design, it is limited to operating against, at most, two ESXi infrastructures (and assumes those are in different data centers, although that's not a critical distinction). There's logic to find a specific host (sort of a "Does a VM with this name exist in this place?" check); the code assumes a host naming convention that, again, was peculiar to the original environment. Bottom Line: You'll need to adapt this tool to **your** environment, don't try to use it as-is. Mainly, I'm publishing it because I found the existing examples of how to use the Python vSphere modules a bit wanting, and I think my code does a better job of demonstrating the basic functionality and making it easy for someone else to understand and adapt to their needs.
+That said, by design, it is limited to operating against, at most, two ESXi infrastructures (and assumes those are in different data centers, although that's not a critical distinction). There's logic to find a specific host (sort of a "Does a VM with this name exist in this place?" check); the code assumes a host naming convention that, again, was peculiar to the original environment. Bottom Line: You'll need to adapt this tool to **your** environment, don't try to use it as-is. Mainly, I'm publishing it because I found the existing examples of how to use the Python vSphere modules a bit wanting (I wrote this before VMware published the "Community examples"), and I think my code did a better job of demonstrating the basic functionality and making it easy for someone else to understand and adapt to their needs.
 
 </details>
