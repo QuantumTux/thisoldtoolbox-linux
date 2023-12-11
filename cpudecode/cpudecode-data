@@ -82,27 +82,6 @@ CPU_FLAG_DATA_['cx8']='Compare And Exchange 8 Bytes'
 CPU_FLAG_DATA_['cx16']="Compare And Exchange 16 Bytes\n\t\tAble to perform atomic operations on 128-bit double-quadword (oword) data types\n\t\tUsed for high-resolution counters"
 CPU_FLAG_DATA_['cxmms']='Cyrix-specific - Support for MMX Extentions'
 
-#				'constant_tsc')
-#							OUTPUT="Constant Time-Stamp Counter (Related to ${BOLD_TEXT}tsc${ALL_OFF} flag)\n\t\tIndicates "
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT}Pentium 4 or later CPU"
-#							else
-#								OUTPUT="${OUTPUT}Newer-model AMD CPU"
-#							fi
-#							OUTPUT="${OUTPUT}\n\t\tNeeded for proper Virtualization support"
-#							(( VIRT_VM = VIRT_VM + 1 ))
-#							;;
-#				'cpuid')	OUTPUT="Intel-specific - CPU supports the CPUID instruction (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-#
-#				'cx8')		OUTPUT="Compare And Exchange 8 Bytes"
-#                  if [ "${CPU_OEM}" == 'Intel' ]; then
-#                    OUTPUT="${OUTPUT} - Indicates older/emulated Pentium CPU"
-#                  fi
-#                  ;;
-
 ##############
 # D
 CPU_FLAG_DATA_['dbx']='Intel-specific - Data Breakpoint Extensions'
@@ -146,17 +125,6 @@ CPU_FLAG_DATA_['fsrm']='Fast Short Rep Mov'
 CPU_FLAG_DATA_['fxsr']='x87 FPU State Save and Restore'
 CPU_FLAG_DATA_['fxsr_opt']='AMD-specific - FX Register Save and Restore Functions'
 
-#				'flush_l1d')
-#							OUTPUT="Intel-specific - Flush Level 1 Data Cache (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-#				'fpu')		OUTPUT="x87 Floating Point Unit built-in"
-#                 if [ "${CPU_OEM}" == 'Intel' ]; then
-#                    OUTPUT="${OUTPUT} - Indicates 80486DX or later"
-#                  fi
-#                  ;;
-
 ##############
 # G
 CPU_FLAG_DATA_['gfni']="Intel-specific - Support for Galois Field New Instructions\n\t\tThese accelerate cryptographic and security applications\n\t\tRelated to the ${BOLD_TEXT}avx512${ALL_OFF} flags"
@@ -177,14 +145,6 @@ CPU_FLAG_DATA_['hwp_notify']="Intel-Specific - HWP Notification\n\t\tRelated to 
 CPU_FLAG_DATA_['hwp_pkg_req']="Intel-Specific - HWP Package Level Request\n\t\tRelated to the ${BOLD_TEXT}hwp${ALL_OFF} flag"
 CPU_FLAG_DATA_['hypervisor']='Intel-created AMD-supported - When present, indicates host is virtualized'
 
-#				'ht' | 'htt')
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="Intel-specific - HyperThreading Supported (may not be active)"
-#							else
-#								OUTPUT="Hyper Transport (equivalent to Intel HyperThreading)"
-#							fi
-#							;;
-
 ##############
 # I
 CPU_FLAG_DATA_['ia64']='IA64 Technology Supported'
@@ -197,15 +157,6 @@ CPU_FLAG_DATA_['intel_pt']='Intel-specific - Intel Processor Tracing"'
 CPU_FLAG_DATA_['invpcid']='Intel-specific - Invalidate Processor Context ID'
 CPU_FLAG_DATA_['invpcid_single']="Intel-specific - Equivalent to ${BOLD_TEXT}invpcid${ALL_OFF} and ${BOLD_TEXT}pcid${ALL_OFF}"
 
-#				'ibpb')		OUTPUT="Intel-specific - Support for Indirect Branch Predictor Barrier (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-#				'ibrs')		OUTPUT="Intel-specific - CPU support for Indirect Branch Restricted Speculation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-
 ##############
 # J
 # CPU_FLAG_DATA_['']=''
@@ -214,12 +165,6 @@ CPU_FLAG_DATA_['invpcid_single']="Intel-specific - Equivalent to ${BOLD_TEXT}inv
 # K
 CPU_FLAG_DATA_['k6_mtrr']="AMD-specific - K6 nonstandard Memory Type Range Registers (MTRRs)\n\t\tRelated to the ${BOLD_TEXT}mtrr${ALL_OFF} flag"
 CPU_FLAG_DATA_['kaiser']="Intel-specific - CPU support for Kernal Address Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
-
-#				'kaiser')
-#              OUTPUT="Intel-specific - CPU support for Kernal Address Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
 
 ##############
 # L
@@ -230,16 +175,6 @@ CPU_FLAG_DATA_['lm']='64-bit Extensions, Long Mode Supported - Indicates'
 CPU_FLAG_DATA_['longrun']='Transmeta-specific - Support for LongRun Power Control'
 CPU_FLAG_DATA_['lrti']='Transmeta-specific - Support for LongRun Table Interface'
 CPU_FLAG_DATA_['lwp']='AMD-specific - Light Weight Profiling'
-
-#				'lm')     OUTPUT="64-bit Extensions, Long Mode Supported - Indicates"
-#                  if [ "${CPU_OEM}" == 'Intel' ]; then
-#                    OUTPUT="${OUTPUT} Intel EM64T Architecture"
-#                  else
-#                    OUTPUT="${OUTPUT} AMD AMD64 Architecture"
-#                  fi
-#                  OUTPUT="${OUTPUT}\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H systems${ALL_OFF}"
-#                  (( VIRT_VM = VIRT_VM + 4 ))
-#                  ;;
 
 ##############
 # M
@@ -269,10 +204,6 @@ CPU_FLAG_DATA_['nopl']='AMD-created + Intel-supported - CPU supports NOPL instru
 CPU_FLAG_DATA_['npt']="AMD-specific - CPU supports Nested Page Table\n\t\tEquivalent to Intel ${BOLD_TEXT}ept${ALL_OFF} flag"
 CPU_FLAG_DATA_['nrip_save']="AMD-specific - Next RIP Save\n\t\tSupport for saving next sequential instruction pointer on VM exit\n\t\tRelated to ${BOLD_TEXT}svm${ALL_OFF} flag"
 CPU_FLAG_DATA_['nx']="Support for No eXecute\n\t\tCPU can disable code execution for specific memory pages\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H systems${ALL_OFF}"
-
-#				'nx')		  OUTPUT="Support for No eXecute\n\t\tCPU can disable code execution for specific memory pages\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H systems${ALL_OFF}"
-#                  (( VIRT_VM = VIRT_VM + 8 ))
-#                  ;;
 
 ##############
 # O
@@ -313,16 +244,6 @@ CPU_FLAG_DATA_['pti']="The CPU supports Page Table Isolation (a Spectre/Meltdown
 CPU_FLAG_DATA_['ptm']='Intel-specific - Package Thermal Management'
 CPU_FLAG_DATA_['pts']='Intel-specific - Package Thermal Status'
 
-#				'pni')		OUTPUT="Intel-created but AMD-supported - Prescott New Instructions"
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT}\n\t\tOnly found on older Pentium CPUs (P-4) or chips that emulate them"
-#							fi
-#							;;
-#				'pti')		OUTPUT="The CPU supports Page Table Isolation (a Spectre/Meltdown mitigation),\n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-
 ##############
 # Q
 # CPU_FLAG_DATA_['']=''
@@ -341,13 +262,6 @@ CPU_FLAG_DATA_['recovery']='Transmeta-specific - CPU is in Recovery mode'
 CPU_FLAG_DATA_['ring3mwait']='Intel-specific - Ring 3 MONITOR/WAIT'
 CPU_FLAG_DATA_['rtm']='Intel-specific - Restricted Transactional Memory'
 CPU_FLAG_DATA_['rwfsgsbase']='Support for RD/RW FSGSBASE instructions'
-
-#				'retpoline')
-#							OUTPUT="The Return Trampoline (a Spectre mitigation) instruction is supported by the CPU\n\t\t(Probably enabled via an OS-delivered microcode update)"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-# CPU_FLAG_DATA_['']=''
 
 ##############
 # S
@@ -381,54 +295,6 @@ CPU_FLAG_DATA_['stibp']='Intel-specific - Support for Single Thread Indirect Bra
 CPU_FLAG_DATA_['svm']="AMD-specific - Secure Virtual Machine - Virtualization extensions to 64-bit x86\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
 CPU_FLAG_DATA_['svm_lock']="AMD-specific - Support for SVM Lock instruction\n\t\tRelated to ${BOLD_TEXT}svm${ALL_OFF} flag"
 CPU_FLAG_DATA_['syscall']='AMD-created + Intel-supported - Support for Fast System Call Instruction'
-
-#				'ssbd')		OUTPUT="Intel-specific - CPU supports Speculative Store Bypass Disable (a Spectre/Meltdown mitigation), \n\t\tprobably via an OS-delivered Microcode update"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-#				'sse')		OUTPUT="Streaming SIMD Extensions - Indicates"
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT} Intel Pentium III or later"
-#							else
-#								OUTPUT="${OUTPUT} AMD Athlon XP or later"
-#							fi
-#							;;
-#				'sse2')		OUTPUT="Streaming SIMD Extensions 2 - Indicates"
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT} Intel Pentium 4 or later"
-#							else
-#								OUTPUT="${OUTPUT} AMD Athlon 64 or later"
-#							fi
-#							;;
-#				'sse3')		OUTPUT="Streaming SIMD Extensions 3 - Indicates"
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT} Intel Pentium 4 (Prescott) or later"
-#							else
-#								OUTPUT="${OUTPUT} AMD Athlon 64 (Venice) or later"
-#							fi
-#							;;
-#				'ssse3')	OUTPUT="Supplemental Streaming SIMD Extensions 3"
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT} - Indicates Intel Core 2 Duo or later"
-#							else
-#								OUTPUT="${OUTPUT}\n\t\tAMD CPUs are not known to support this extension, although the flag is present"
-#							fi
-#							;;
-#				'sse4')		OUTPUT="Streaming SIMD Extensions 4 - Intel-specific flag"
-#							if [ "${CPU_OEM}" == 'Intel' ]; then
-#								OUTPUT="${OUTPUT}\n\t\tIndicates Intel Nehalem or later\n\t\tAlso Known as NNI (Nehalem New Instructions)"
-#							else
-#								OUTPUT="${OUTPUT}\n\t\tAMD CPUs are not known to support this extension, although the flag is present"
-#							fi
-#							;;
-#				'stibp')	OUTPUT="Intel-specific - Support for Single Thread Indirect Branch Predictors\n\t\t(a Spectre/Meltdown mitigation)"
-#							(( SPEC_MELT_MITIGATIONS = SPEC_MELT_MITIGATIONS + 1 ))
-#							SPEC_MELT_MITIGATIONS_LIST="${FLAG} ${SPEC_MELT_MITIGATIONS_LIST}"
-#							;;
-#				'svm')		OUTPUT="AMD-specific - Secure Virtual Machine - Virtualization extensions to 64-bit x86\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
-#							(( VIRT_VM = VIRT_VM + 2 ))
-#							;;
-
 
 ##############
 # T
@@ -468,10 +334,6 @@ CPU_FLAG_DATA_['vmx']="Intel-specific - Virtual Machine eXtensions\n\t\t${BOLD_T
 CPU_FLAG_DATA_['vnmi']='Virtual Machine Non-Maskable Interrupt'
 CPU_FLAG_DATA_['vpclmulqdq']='Intel-specific - Support for Carry-Less Multiplication Double Quadword instructions'
 CPU_FLAG_DATA_['vpid']='Intel-specific - Virtual Processor ID'
-
-#				'vmx')		OUTPUT="Intel-specific - Virtual Machine eXtensions\n\t\t${BOLD_TEXT}${MAGENTA_BLACK}Required${ALL_OFF} ${BOLD_TEXT}for RHEV-H, KVM Host and VMware ESX systems${ALL_OFF}\n\t\tKnown as HVM in the Xen hypervisor"
-#							(( VIRT_VM = VIRT_VM + 2 ))
-#							;;
 
 ##############
 # W
