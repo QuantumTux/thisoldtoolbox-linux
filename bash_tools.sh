@@ -282,41 +282,41 @@ _init_script_tool_names ()
 #######################################################################
 _init_script_variables ()
 {
-	# Helpfully, SLES (and OpenSuSE) format $_RELEASE_FILE as a set of
-	#   variable statements I can source
-	# If the file exists, source it, and other functions
+  # Helpfully, SLES (and OpenSuSE) format $_RELEASE_FILE as a set of
+  #   variable statements I can source
+  # If the file exists, source it, and other functions
   #   (like _get_os_release and _get_os_update) can reference the info
   #   instead of parsing the file
-	# I expect the file to contain specific variables:
-	#   NAME - This will be "SLES" or "openSUSE LEAP"
-	#   VERSION - SLES hosts format this similar to "12-SP3"
-	#		            but openSUSE looks like "15.0"
-	#   VERSION_ID - Both SLES and openSUSE format this like "12.3"
-	#   PRETTY_NAME - A string for humans like
+  # I expect the file to contain specific variables:
+  #   NAME - This will be "SLES" or "openSUSE LEAP"
+  #   VERSION - SLES hosts format this similar to "12-SP3"
+  #		            but openSUSE looks like "15.0"
+  #   VERSION_ID - Both SLES and openSUSE format this like "12.3"
+  #   PRETTY_NAME - A string for humans like
   #     "SUSE Linux Enterprise Server 12 SP3" or "openSUSE Leap 15.0"
-	#	  ID - A quick-reference string like "sles" or "opensuse-leap"
-	#		    (looks as if it will always be all-lower-case as
-	#		    compared to NAME)
-	#	  CPE_NAME - A multi-variable colon-separated string like
-  #       "cpe:/o:opensuse:leap:15.0" or "cpe:/o:suse:sles_sap:12:sp3"
-	# There will probably be other variables like ANSI_COLOR,
+  #	  ID - A quick-reference string like "sles" or "opensuse-leap"
+  #		    (looks as if it will always be all-lower-case as
+  #       compared to NAME)
+  #   CPE_NAME - A multi-variable colon-separated string like
+  #     "cpe:/o:opensuse:leap:15.0" or "cpe:/o:suse:sles_sap:12:sp3"
+  # There will probably be other variables like ANSI_COLOR,
   #       BUG_REPORT_URL, HOME_URL and ID_LIKE (the last is similar
   #       to ID) but for my purposes here I don't care about them
-	# I'll initialize the ones I care about with a string that will make
+  # I'll initialize the ones I care about with a string that will make
   #       sure something is present even if the file didn't contain
   #       everything I expected
-	NAME='X'
-	VERSION='X'
-	VERSION_ID='X'
-	PRETTY_NAME='X'
-	ID='X'
-	CPE_NAME='X'
-	if [[ -f ${_RELEASE_FILE} ]]; then
-		source ${_RELEASE_FILE}
-		# The variables should now be populated
-	fi
-	# If the file was missing or some were not populated, then I have the
-	#	default values to let other functions know there was a problem
+  NAME='X'
+  VERSION='X'
+  VERSION_ID='X'
+  PRETTY_NAME='X'
+  ID='X'
+  CPE_NAME='X'
+  if [[ -f ${_RELEASE_FILE} ]]; then
+    source ${_RELEASE_FILE}
+    # The variables should now be populated
+  fi
+  # If the file was missing or some were not populated, then I have the
+  #   default values to let other functions know there was a problem
 	readonly _HOSTS_FILE='/etc/hosts'
   readonly NAME
   readonly VERSION
@@ -338,23 +338,23 @@ _init_script_variables ()
 #################################################################################
 _init_script_colors ()
 {
-	readonly INVERT_TEXT='\033[7m'
-	readonly EOL='\033[0K'
-	readonly UNDERLINE_TEXT='\033[4m'
+  readonly INVERT_TEXT='\033[7m'
+  readonly EOL='\033[0K'
+  readonly UNDERLINE_TEXT='\033[4m'
 
-	readonly SCREEN_HOME='\033[0;0H'
+  readonly SCREEN_HOME='\033[0;0H'
 
-	# Colors for text output
-	readonly GREEN_BLACK='\033[32;40m'
-	readonly YELLOW_BLACK='\033[33;40m'
-	readonly RED_BLACK='\033[31;40m'
-	readonly BLUE_BLACK='\033[34;40m'
-	readonly WHITE_BLACK='\033[37;40m'
-	readonly CYAN_RED='\033[36;41m'
-	readonly MAGENTA_BLACK='\033[35;40m'
-	readonly BOLD_TEXT='\033[1m'
-	readonly BLINK_ON='\033[5m'
-	readonly ALL_OFF='\033[0m'
+  # Colors for text output
+  readonly GREEN_BLACK='\033[32;40m'
+  readonly YELLOW_BLACK='\033[33;40m'
+  readonly RED_BLACK='\033[31;40m'
+  readonly BLUE_BLACK='\033[34;40m'
+  readonly WHITE_BLACK='\033[37;40m'
+  readonly CYAN_RED='\033[36;41m'
+  readonly MAGENTA_BLACK='\033[35;40m'
+  readonly BOLD_TEXT='\033[1m'
+  readonly BLINK_ON='\033[5m'
+  readonly ALL_OFF='\033[0m'
 }
 
 #########################
