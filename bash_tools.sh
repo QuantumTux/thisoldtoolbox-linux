@@ -4,7 +4,7 @@
 #######################################################################
 # IMPORTANT: Sourcing this file will set the PATH to a standard,
 #   vanilla set of directories which are the same as on any unmolested
-#		SLES system
+#   SLES system
 #
 # This is a collection of BASH code functions for use in other tools
 #	It provides a standard library of functions that deal with specific
@@ -30,75 +30,75 @@
 #######################################################################
 #
 # PROVIDES:
-#		_init_script_tool_names ()
-#			Parameters: None
-#			Global Variables: Populates a wide variety of global variable
-#					names for various executable tools called by supported tools
-#			Returns: Nothing
-#			IMPORTANT: This  *MUST*  be called before any of the _get_*
-#					functions will work!
-#		_init_script_variables ()
-#			Parameters: None
-#			Global Variables: Populates a set of variables with SLES-specific
-#					information; also populates _HOSTS_FILE
-#			Returns: Nothing
-#		_init_script_colors ()
-#			Parameters: None
-#			Global Variables: Populates variables that define ANSI color codes
-#					which may be used to colorize output in BASH scripts
-#			Returns: Nothing
-#		_get_os_release ()
-#			Parameters: None
-#			Global Variables: None
-#			Returns: 0=File Parse Error;Otherwise, the Release number
-#		_get_os_update ()
-#			Parameters: None
-#			Global Variables: None
-#			Returns: 255=Unable to determine;Otherwise, the Release number
-#		_get_platform ()
-#			Parameters: None
-#			Global Variables: Populates _MY_PLATFORM
-#			Returns: 0=PowerPC-based;1=VMware-based;255=Unable to determine
-#		_get_tier ()
-#			Parameters: None
-#			Global Variables: Populates _MY_TIER
-#			Returns: 0=Success;255=Unable to determine
-#		_get_hostname ()
-#			Parameters: None
-#			Global Variables: Populates _MY_HOSTNAME
-#			Returns: 0=Success;255=Unable to determine
-#		_get_fqdn ()
-#			Parameters: None
-#			Global Variables: Populates _MY_HOSTNAME_FQDN
-#			Returns: 0=Success;255=Unable to determine
-#		_does_string_contain ()
-#			Parameters: Expected sub-string, string for comparison
-#			Global Variables: None
-#			Returns: 0=Sub-string is NOT present in string
-#				 1=The sub-string is present in the string
-#		_validate_email_address ()
-#			Parameters: String for comparison
-#			Global Variables: None
-#			Returns: 0=String is NOT an RFC-compliant E-mail address
-#				 1=String is compliant with RFCs for E-mail
-#		_log_script_message ()
-#			Parameters: String of text to be sent to syslog (Facility local6)
-#			Global Variables: If LOG_TAG is populated, then the syslog
-#					entry is also tagged with the string
-#			Returns: N/A
+#   _init_script_tool_names ()
+#     Parameters: None
+#     Global Variables: Populates a wide variety of global variable
+#         names for various executable tools called by supported tools
+#     Returns: Nothing
+#     IMPORTANT: This  *MUST*  be called before any of the _get_*
+#         functions will work!
+#   _init_script_variables ()
+#     Parameters: None
+#     Global Variables: Populates a set of variables with SLES-specific
+#         information; also populates _HOSTS_FILE
+#     Returns: Nothing
+#   _init_script_colors ()
+#     Parameters: None
+#     Global Variables: Populates variables that define ANSI color codes
+#         which may be used to colorize output in BASH scripts
+#     Returns: Nothing
+#   _get_os_release ()
+#     Parameters: None
+#     Global Variables: None
+#     Returns: 0=File Parse Error;Otherwise, the Release number
+#   _get_os_update ()
+#     Parameters: None
+#     Global Variables: None
+#     Returns: 255=Unable to determine;Otherwise, the Release number
+#   _get_platform ()
+#     Parameters: None
+#     Global Variables: Populates _MY_PLATFORM
+#     Returns: 0=PowerPC-based;1=VMware-based;255=Unable to determine
+#   _get_tier ()
+#     Parameters: None
+#     Global Variables: Populates _MY_TIER
+#     Returns: 0=Success;255=Unable to determine
+#   _get_hostname ()
+#     Parameters: None
+#     Global Variables: Populates _MY_HOSTNAME
+#     Returns: 0=Success;255=Unable to determine
+#   _get_fqdn ()
+#     Parameters: None
+#     Global Variables: Populates _MY_HOSTNAME_FQDN
+#     Returns: 0=Success;255=Unable to determine
+#   _does_string_contain ()
+#     Parameters: Expected sub-string, string for comparison
+#     Global Variables: None
+#     Returns: 0=Sub-string is NOT present in string
+#             1=The sub-string is present in the string
+#   _validate_email_address ()
+#     Parameters: String for comparison
+#     Global Variables: None
+#     Returns: 0=String is NOT an RFC-compliant E-mail address
+#             1=String is compliant with RFCs for E-mail
+#   _log_script_message ()
+#     Parameters: String of text to be sent to syslog (Facility local6)
+#     Global Variables: If LOG_TAG is populated, then the syslog
+#         entry is also tagged with the string
+#     Returns: N/A
 #   _render_wwpn_func
-#			Parameters: String of text containing the WWPN without :
+#     Parameters: String of text containing the WWPN without :
 #         characters separating the octets
-#			Global Variables: RAW_WWPN, WWPN
-#			Returns: N/A
+#     Global Variables: RAW_WWPN, WWPN
+#     Returns: N/A
 #
 # REQUIRES:	Designed to be sourced by other BASH scripts - not intended
-#			for stand-alone use (no output to screen or files)
-#		Works by several methods; either it parses world-readable files,
-#			or it uses UNAME_TOOL
+#     for stand-alone use (no output to screen or files)
+#   Works by several methods; either it parses world-readable files,
+#     or it uses UNAME_TOOL
 #
 # IMPORTANT: The file version is represented  *without*  the decimal to
-#		aid comparison in tools; so "100" means "1.00"
+#   aid comparison in tools; so "100" means "1.00"
 readonly BASH_TOOLS_LIBRARY_VERSION='100'
 #######################################################################
 # Change Log (Reverse Chronological Order)
@@ -126,17 +126,17 @@ fi
 readonly STD_FILE='/etc/std'
 
 #######################################################################
-# Function: _init_script_tool_names						                        #
-# Parameters: None								                                    #
-# Local Variables: None								                                #
-# Global Variables: See function for list					                    #
+# Function: _init_script_tool_names                                   #
+# Parameters: None                                                    #
+# Local Variables: None                                               #
+# Global Variables: See function for list                             #
 # Purpose: Sets Global Variables for names of OS-provided             #
 #     programs/tools that are used by various other                   #
-#     internally-developed tools	                                    #
-#			The variable names are common across all tools		              #
-# Returns: Nothing								                                    #
+#     internally-developed tools                                      #
+#     The variable names are common across all tools                  #
+# Returns: Nothing                                                    #
 # NOTE: This function  *MUST*  be called before any of the _get_*     #
-#       functions	may be used                                         #
+#       functions may be used                                         #
 #######################################################################
 _init_script_tool_names ()
 {
@@ -269,16 +269,16 @@ _init_script_tool_names ()
 }
 
 #######################################################################
-# Function: _init_script_variables						                        #
-# Parameters: None								                                    #
-# Local Variables: None								                                #
-# Global Variables: See function for list					                    #
+# Function: _init_script_variables                                    #
+# Parameters: None                                                    #
+# Local Variables: None                                               #
+# Global Variables: See function for list                             #
 # Purpose: Sets Global Variables that allow Linux-based BASH shell    #
 #   scripts to parse SLES-specific information stored in              #
 #   SLES-specific files; also populates _HOSTS_FILE                   #
 # Notes: IMPORTANT! The _init_script_tool_names function  *MUST* be   #
 #       invoked prior to invoking this function                       #
-# Returns: Nothing								                                    #
+# Returns: Nothing                                                    #
 #######################################################################
 _init_script_variables ()
 {
@@ -327,14 +327,14 @@ _init_script_variables ()
 }
 
 #################################################################################
-# Function: _init_script_colors							                                    #
-# Parameters: None								                                              #
-# Local Variables: None								                                          #
-# Global Variables: See function for list					                              #
-# Purpose: Sets Global Variables for ASCII colors used by various other		      #
-#			internally-developed tools				                                        #
-#			The variable names are common across all tools		                        #
-# Returns: Nothing								                                              #
+# Function: _init_script_colors                                                 #
+# Parameters: None                                                              #
+# Local Variables: None                                                         #
+# Global Variables: See function for list                                       #
+# Purpose: Sets Global Variables for ASCII colors used by various other         #
+#     internally-developed tools                                                #
+#     The variable names are common across all tools                            #
+# Returns: Nothing                                                              #
 #################################################################################
 _init_script_colors ()
 {
@@ -362,14 +362,14 @@ _init_script_colors ()
 #########################
 
 #######################################################################
-# Function: _get_os_release							                              #
-# Security: No privilege required						                          #
-# Parameters: None								                                    #
-# Local Variables: _CHKSTR - Working string variable				          #
-# Global Variables: None							                                #
+# Function: _get_os_release                                           #
+# Security: No privilege required                                     #
+# Parameters: None                                                    #
+# Local Variables: _CHKSTR - Working string variable                  #
+# Global Variables: None                                              #
 # Purpose: Extracts the SLES (or even openSUSE) Release number from   #
 #            variables initialized in _init_script_variables          #
-# Returns: 0 - Unable to determine						                        #
+# Returns: 0 - Unable to determine                                    #
 #         Any other return value should be the Release number         #
 #######################################################################
 _get_os_release ()
@@ -390,15 +390,15 @@ _get_os_release ()
 }
 
 #######################################################################
-# Function: _get_os_update							                              #
-# Security: No privilege required						                          #
-# Parameters: None								                                    #
-# Local Variables: _CHKSTR - Working string variable				          #
-# Global Variables: None							                                #
+# Function: _get_os_update                                            #
+# Security: No privilege required                                     #
+# Parameters: None                                                    #
+# Local Variables: _CHKSTR - Working string variable                  #
+# Global Variables: None                                              #
 # Purpose: Extracts the Update level of SLES (or even openSUSE) from  #
-#         variables	initialized in _init_script_variables             #
-# Returns: 255 - Unable to determine						                      #
-#		      Any other return value should be the Update number		      #
+#          variables nitialized in _init_script_variables             #
+# Returns: 255 - Unable to determine                                  #
+#             Any other return value should be the Update number      #
 #######################################################################
 _get_os_update ()
 {
@@ -418,16 +418,16 @@ _get_os_update ()
 }
 
 #######################################################################
-# Function: _get_platform							                                #
-# Security: No privilege required						                          #
-# Parameters: None (uses Global Variables instead)				            #
-# Local Variables: _CHKSTR - Working string variable				          #
+# Function: _get_platform                                             #
+# Security: No privilege required                                     #
+# Parameters: None (uses Global Variables instead)                    #
+# Local Variables: _CHKSTR - Working string variable                  #
 # Global Variables: _MY_PLATFORM - Will contain string "PPC"          #
-#                     or "VMware"	                                    #
-# Purpose: Uses UNAME_TOOL to extract the platform type				        #
-# Returns: 0 - Platform is an IBM PowerPC-based Virtual host			    #
-#		       1 - Platform is a VMware-based Virtual Host			          #
-#		      255 - Unable to determine					                          #
+#                     or "VMware"                                     #
+# Purpose: Uses UNAME_TOOL to extract the platform type               #
+# Returns: 0 - Platform is an IBM PowerPC-based Virtual host          #
+#          1 - Platform is a VMware-based Virtual Host                #
+#         255 - Unable to determine                                   #
 #######################################################################
 _get_platform ()
 {
@@ -449,16 +449,16 @@ _get_platform ()
 }
 
 #######################################################################
-# Function: _get_tier										                              #
-# Security: No privilege required								                      #
-# Parameters: None (uses Global Variables instead)						        #
-# Local Variables: _CHKSTR - Working string variable						      #
+# Function: _get_tier                                                 #
+# Security: No privilege required                                     #
+# Parameters: None (uses Global Variables instead)                    #
+# Local Variables: _CHKSTR - Working string variable                  #
 # Global Variables: _MY_TIER - Single character, one of:              #
 #                         P,T,Q,R,D,S,E,A,B or X                      #
-#               where "X" indicates a problem                         #
-# Purpose: Discern the Tier from the host name				                #
-# Returns: 0 - Success										                            #
-#		      255 - Unable to determine							                      #
+#           where "X" indicates a problem                             #
+# Purpose: Discern the Tier from the host name                        #
+# Returns: 0 - Success                                                #
+#         255 - Unable to determine                                   #
 #######################################################################
 # IMPORTANT NOTE: This code is peculiar to an SAP environment for
 #                 which I built the Linux infrastructure; it won't
@@ -483,15 +483,15 @@ _get_tier ()
 }
 
 #######################################################################
-# Function: _get_hostname									                            #
-# Security: No privilege required								                      #
-# Parameters: None (uses Global Variables instead)						        #
-# Local Variables: _CHKSTR - Working string variable						      #
+# Function: _get_hostname                                             #
+# Security: No privilege required                                     #
+# Parameters: None (uses Global Variables instead)                    #
+# Local Variables: _CHKSTR - Working string variable                  #
 # Global Variables: _MY_HOSTNAME - The short hostname as reported by  #
 #                           the "hostname" command	                  #
-# Purpose: Uses HOSTNAME_TOOL to populate a variable						      #
-# Returns: 0 - Success										                            #
-#		      255 - Unable to determine							                      #
+# Purpose: Uses HOSTNAME_TOOL to populate a variable                  #
+# Returns: 0 - Success                                                #
+#         255 - Unable to determine                                   #
 #######################################################################
 _get_hostname ()
 {
@@ -505,17 +505,17 @@ _get_hostname ()
   fi
 }
 
-#########################################################################
-# Function: _get_fqdn										                                #
-# Security: No privilege required								                        #
-# Parameters: None (uses Global Variables instead)						          #
-# Local Variables: _CHKSTR - Working string variable					          #
-# Global Variables: _MY_HOSTNAME_FQDN - The short hostname as reported  #
-#                                    by the "hostname -f" command	      #
-# Purpose: Uses HOSTNAME_TOOL to populate a variable					          #
-# Returns: 0 - Success										                              #
-#		      255 - Unable to determine							                        #
-#########################################################################
+#######################################################################
+# Function: _get_fqdn                                                 #
+# Security: No privilege required                                     #
+# Parameters: None (uses Global Variables instead)                    #
+# Local Variables: _CHKSTR - Working string variable                  #
+# Global Variables: _MY_HOSTNAME_FQDN - The short hostname as         #
+#                       reported by the "hostname -f" command         #
+# Purpose: Uses HOSTNAME_TOOL to populate a variable                  #
+# Returns: 0 - Success                                                #
+#         255 - Unable to determine                                   #
+#######################################################################
 _get_fqdn ()
 {
   readonly _MY_HOSTNAME_FQDN=$( ${HOSTNAME_TOOL} -f )
@@ -529,25 +529,25 @@ _get_fqdn ()
 }
 
 #######################################################################
-# Function: _does_string_contain						                          #
-# Parameters: Sub-string to match, string to be checked				        #
-# Local Variables: None								                                #
-# Global Variables: None							                                #
-# Purpose: Tests if a sub-string is present in another string			    #
-# Returns:	0 = The sub-string is NOT present in the string			      #
-#		        1 = Found the sub-string in the other string			        #
-#										                                                  #
-# Example Usage:	# Test if a string that is supposed to be a host    #
-#			            #   name contains a certain string (like a SID)		  #
-#			            SUB_STR='tsta'						                          #
-#			            HOSTNAME='dcabcnm0xyza2'				                    #
-#			            _does_string_contain "${SUB_STR}" "${HOSTNAME}"		  #
-#			            RET_CODE=$?						                              #
-#			            if [[ "${RET_CODE}" -eq 1 ]]; then			            #
-#				            echo "${HOSTNAME} includes ${SUB_STR}"		        #
-#			            else							                                  #
-#				            echo "${SUB_STR} is NOT in ${HOSTNAME}"		        #
-#			            fi							                                    #
+# Function: _does_string_contain                                      #
+# Parameters: Sub-string to match, string to be checked               #
+# Local Variables: None                                               #
+# Global Variables: None                                              #
+# Purpose: Tests if a sub-string is present in another string         #
+# Returns:	0 = The sub-string is NOT present in the string           #
+#           1 = Found the sub-string in the other string              #
+#                                                                     #
+# Example Usage:  # Test if a string that is supposed to be a host    #
+#                 #   name contains a certain string (like a SID)     #
+#                 SUB_STR='tsta'                                      #
+#                 HOSTNAME='dcabcnm0xyza2'                            #
+#                 _does_string_contain "${SUB_STR}" "${HOSTNAME}"     #
+#                 RET_CODE=$?                                         #
+#                 if [[ "${RET_CODE}" -eq 1 ]]; then                  #
+#                   echo "${HOSTNAME} includes ${SUB_STR}"            #
+#                 else                                                #
+#                   echo "${SUB_STR} is NOT in ${HOSTNAME}"           #
+#                 fi                                                  #
 #######################################################################
 _does_string_contain ()
 {
@@ -555,21 +555,21 @@ _does_string_contain ()
 }
 
 #######################################################################
-# Function: _validate_email_address						                        #
-# Parameters: String containing the prospective E-mail address			  #
-# Local Variables: REGEX (contains a BASH regex)				              #
-# Global Variables: None							                                #
-# Purpose: Tests if a string is an RFC-compliant E-mail address			  #
-# Returns:	0 = The sub-string is NOT a compliant E-mail address		  #
-#		1 = The E-mail address is compliant with RFCs			                #
+# Function: _validate_email_address                                   #
+# Parameters: String containing the prospective E-mail address        #
+# Local Variables: REGEX (contains a BASH regex)                      #
+# Global Variables: None                                              #
+# Purpose: Tests if a string is an RFC-compliant E-mail address       #
+# Returns:	0 = The sub-string is NOT a compliant E-mail address      #
+#           1 = The E-mail address is compliant with RFCs             #
 # NOTES: A string is "valid" if it meets the format of                #
 #                 <recipient>@<domain>                                #
-#     where:									                                        #
-#		      <recipient> is some combination of RFC-compliant characters #
+#     where:                                                          #
+#         <recipient> is some combination of RFC-compliant characters #
 #         <domain> is an RFC-compliant domain specification           #
-#										                                                  #
-#	HOWEVER, only the structure of the string is validated; the E-mail	#
-#	  address is not guaranteed to be deliverable				                #
+#                                                                     #
+# HOWEVER, only the structure of the string is validated; the E-mail  #
+#   address is not guaranteed to be deliverable                       #
 #######################################################################
 _validate_email_address ()
 {
@@ -587,16 +587,16 @@ _validate_email_address ()
 
 #######################################################################
 # Function: _log_script_message                                       #
-# Parameters: String of text message to be logged				              #
+# Parameters: String of text message to be logged                     #
 # Local Variables: TAG_STRING = Either holds '-t' and an argument, or #
 #     is blank,	depending on the value of LOG_TAG                     #
-# Global Variables: LOG_TAG - Optional string for argument to "-t"		#
-#			parameter						                                            #
+# Global Variables: LOG_TAG - Optional string for argument to "-t"    #
+#     parameter                                                       #
 # Purpose: Generates a syslog entry to Facility "local6", the entry   #
 #     includes the PID of the calling process; if the variable        #
-#			LOG_TAG is populated, then the value is added as a tag to the   #
-#     entry					                                                  #
-# Returns: N/A									                                      #
+#     LOG_TAG is populated, then the value is added as a tag to the   #
+#     entry                                                           #
+# Returns: N/A                                                        #
 #######################################################################
 _log_script_message ()
 {
@@ -646,12 +646,12 @@ _render_wwpn_func ()
 
 # Blank template for future use
 #######################################################################
-# Function:									                                          #
-# Parameters: None (uses Global Variables instead)				            #
-# Local Variables:								                                    #
-# Global Variables:								                                    #
-# Purpose:									                                          #
-# Returns:									                                          #
+# Function:                                                           #
+# Parameters: None (uses Global Variables instead)                    #
+# Local Variables:                                                    #
+# Global Variables:                                                   #
+# Purpose:                                                            #
+# Returns:                                                            #
 #######################################################################
 
 ########################
