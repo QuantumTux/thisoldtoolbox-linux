@@ -14,54 +14,54 @@
 #   1) SLES v12 or later - will refuse to run on earlier versions
 #   2) bash_tools.sh v100 or later
 #   3) For full functionality, Privileged Access (may be run
-#         unprivileged; if so, LUN detection and multipath analysis
-#         will be skipped)
+#       unprivileged; if so, LUN detection and multipath analysis
+#       will be skipped)
 #   4) Appropriate HBA drivers must be loaded - will not detect
-#         hardware unless driver is loaded
+#       hardware unless driver is loaded
 #   5) No special package requirements - handles lack of HBAs
 #
 # NOTES:
 #   0) When invoked in Check Mode (-c), writes to CHECK_FILE a set of
-#         BASH variables that can be sourced by a Nagios check script
-#         and then used to generate the return the monitoring host;
-#         the REPORT_DATE is the number of seconds since 1970-01-01 and
-#         can be used by the Nagios check script to judge the
-#         "freshness" of the report
+#       BASH variables that can be sourced by a Nagios check script
+#       and then used to generate the return the monitoring host;
+#       the REPORT_DATE is the number of seconds since 1970-01-01 and
+#       can be used by the Nagios check script to judge the
+#       "freshness" of the report
 #   1) Was  *deliberately*  designed as a tool separate from a Nagios
-#         check script for 3 reasons:
-#			      a) To create a separate tool that had fundamentally the
-#				        same purpose but was operationally restricted to Nagios
-#				        was not worth the effort
-#			      b) Direct execution by NRPE would require the "nagios" ID
-#				        be able to use "sudo" or otherwise attain a Privileged
-#				        state, which is not desirable
-#			      c) Execution can take an extended time on hosts with many
-#				        LUNs and could result in Nagios time-outs
+#       check script for 3 reasons:
+#         a) To create a separate tool that had fundamentally the
+#             same purpose but was operationally restricted to Nagios
+#             was not worth the effort
+#         b) Direct execution by NRPE would require the "nagios" ID
+#             be able to use "sudo" or otherwise attain a Privileged
+#             state, which is not desirable
+#         c) Execution can take an extended time on hosts with many
+#           LUNs and could result in Nagios time-outs
 #   2) This tool is based on a version that was written for a
-#		      multi-RHEL-version environment running on physical hardware
-#		      (bare metal) using about 4 or 5 different possible QLogic
-#         HBAs, some having drivers specific to Veritas NetBackup, with
-#         support for about 4 different makes/models of SAN back-ends;
-#         consequently, the tool on which this version is based was
-#         MUCH more complex, and was designed to account for a great
-#         number of possible variations in the environment; as a
-#         result, there is probably more than a little cruft in this
-#         version of the tool, with variables that are declared but
-#         never used, and even some control logic that is
-#         more-complex/cumbersome than it needs to be; cleaning that
-#         up will be an iterative process
+#       multi-RHEL-version environment running on physical hardware
+#       (bare metal) using about 4 or 5 different possible QLogic
+#       HBAs, some having drivers specific to Veritas NetBackup, with
+#       support for about 4 different makes/models of SAN back-ends;
+#       consequently, the tool on which this version is based was
+#       MUCH more complex, and was designed to account for a great
+#       number of possible variations in the environment; as a
+#       result, there is probably more than a little cruft in this
+#       version of the tool, with variables that are declared but
+#       never used, and even some control logic that is
+#       more-complex/cumbersome than it needs to be; cleaning that
+#       up will be an iterative process
 #   3) Additionally, this tool was designed for a SLES for SAP v15
-#         environment as part of a HANA 2.0 deployment - the code
-#         makes a number of assumptions about LUN names, the
-#         host naming convention, and specifics about the platform
-#         which are probably not true about other environments, so
-#         it is unlikely this tool will work well without some
-#         modifications
+#       environment as part of a HANA 2.0 deployment - the code
+#       makes a number of assumptions about LUN names, the
+#       host naming convention, and specifics about the platform
+#       which are probably not true about other environments, so
+#       it is unlikely this tool will work well without some
+#       modifications
 #   4) In addition to #3, the environment for which this tool was
-#         designed had 3 different SAN makes/models, and this tool
-#         does not recognize anything else
+#       designed had 3 different SAN makes/models, and this tool
+#       does not recognize anything else
 #   5) Initial testing indicates that SLES 15 appears functionally
-#         identical to SLES 12 except for possible deprecated callouts
+#       identical to SLES 12 except for possible deprecated callouts
 #
 # KNOWN BUGS:
 #   0) Does not verify all dependencies
@@ -69,7 +69,7 @@
 # TO DO:
 #   0) Verify script can create CHECK_FILE
 #   1) Improve how this tool reports its own problems back to a
-#         Nagios check
+#       Nagios check
 #   2) Use mktemp instead of static temporary files
 #
 #######################################################################
@@ -84,9 +84,9 @@ MINIMUM_BASH_TOOLS_LIBRARY_VERSION='100'
 TOOLS_FILE='/usr/local/lib/bash_tools.sh'
 # Make sure it exists, is NOT 0-length, and is a regular file
 if [[ -e ${TOOLS_FILE} && -s ${TOOLS_FILE} && -f ${TOOLS_FILE} ]]; then
-	# Looks like valid TOOLS_FILE - source it and initialize
-	source ${TOOLS_FILE}
-	# Check the version
+  # Looks like valid TOOLS_FILE - source it and initialize
+  source ${TOOLS_FILE}
+  # Check the version
   if [[ "${BASH_TOOLS_LIBRARY_VERSION}" -lt "${MINIMUM_BASH_TOOLS_LIBRARY_VERSION}" ]]; then
     echo -e "\nFATAL ERROR: Outdated tool library (${TOOLS_FILE}) - found v${BASH_TOOLS_LIBRARY_VERSION} but need ${MINIMUM_BASH_TOOLS_LIBRARY_VERSION} or later\n"
     exit 1
@@ -107,7 +107,7 @@ fi
 readonly LOG_TAG='hbareport'
 # Files and paths
 # When in Check Mode, write to a log file for later use by the Nagios
-#	check script
+#   check script
 readonly CHECK_FILE='/var/log/hbareport'
 # List of typical SLES-supplied IBM Drivers
 readonly DRIVER_LIST='ibmvfc ibmvscsi'
@@ -117,8 +117,8 @@ readonly MAX_LUN_COUNTER=100
 # Internal debugging flag (no command-line option)
 # Defaults to 'NO'
 # Set to 'YES' to enable additional screen output for debugging; a later
-#	check will force this to "NO" if the tool is running in Setup Mode,
-#	Check Mode or Decomm Mode
+#   check will force this to "NO" if the tool is running in Setup Mode,
+#   Check Mode or Decomm Mode
 __DEBUG='NO'
 
 # Initialize flags for command-line options
@@ -133,42 +133,42 @@ QUICK='NO'
 UNKNOWN='NO'
 
 # Select options from the command-line (if any were specified) or, if none
-#	were given, use the environment variable (if it exists)
+#  were given, use the environment variable (if it exists)
 if [[ $# -gt 0 ]]; then
-	# Command Line Argument Processing
-	while getopts ':cdfhknpqs' OPT; do
-		case ${OPT} in
-			c)	CHECK_MODE='YES'
-				  _log_script_message 'Starting execution to generate Nagios check file'
-				  ;;
-			d)	DECOMM='YES';;
-			f)	FULL='YES';;
-			h)	HELP_FLAG='YES';;
-			k)	KERNEL='YES';;
-			n)	SERIALS='YES';;
-			p)	PATHS='YES';;
-			q)	QUICK='YES';;
-			s)	SETUP='YES';;
-			*)	UNKNOWN='YES';;
-		esac
-	done
+  # Command Line Argument Processing
+  while getopts ':cdfhknpqs' OPT; do
+    case ${OPT} in
+      c)  CHECK_MODE='YES'
+          _log_script_message 'Starting execution to generate Nagios check file'
+          ;;
+      d)  DECOMM='YES';;
+      f)  FULL='YES';;
+      h)  HELP_FLAG='YES';;
+      k)  KERNEL='YES';;
+      n)  SERIALS='YES';;
+      p)  PATHS='YES';;
+      q)  QUICK='YES';;
+      s)  SETUP='YES';;
+      *)  UNKNOWN='YES';;
+    esac
+  done
 else
-	# If the environment variable HBAREPORT_OPTS exists, get arguments
-	#	from it (-d, -f, -k, -n, -p and -q supported)
-	# Unknown/invalid arguments are silently ignored
-	if [[ "${HBAREPORT_OPTS}" ]]; then
-		for OPTION in $( echo "${HBAREPORT_OPTS}" ); do
-			case ${OPTION} in
-				'-d')	DECOMM='YES';;
-				'-f')	FULL='YES';;
-				'-k')	KERNEL='YES';;
-				'-n')	SERIALS='YES';;
-				'-p')	PATHS='YES';;
-				'-q')	QUICK='YES';;
-			esac
-		done
-	fi
-	# End of if [[ "${HBAREPORT_OPTS}" ]]
+  # If the environment variable HBAREPORT_OPTS exists, get arguments
+  #  from it (-d, -f, -k, -n, -p and -q supported)
+  # Unknown/invalid arguments are silently ignored
+  if [[ "${HBAREPORT_OPTS}" ]]; then
+    for OPTION in $( echo "${HBAREPORT_OPTS}" ); do
+      case ${OPTION} in
+        '-d')   DECOMM='YES';;
+        '-f')   FULL='YES';;
+        '-k')   KERNEL='YES';;
+        '-n')   SERIALS='YES';;
+        '-p')   PATHS='YES';;
+        '-q')   QUICK='YES';;
+      esac
+    done
+  fi
+  # End of if [[ "${HBAREPORT_OPTS}" ]]
 fi
 # End of if [[ $# -gt 0 ]]
 readonly HELP_FLAG
@@ -216,120 +216,119 @@ ${0} - ${BOLD_TEXT}Linux HBA Detection and Reporting Tool v${TOOL_VERSION}${ALL_
 # If -h argument given, or an unknown/invalid argument was given,
 #   display help screen and exit
 if [[ "${HELP_FLAG}" == 'YES' || "${UNKNOWN}" == 'YES' ]]; then
-	if [[ "${CHECK_MODE}" == 'NO' ]]; then
-		echo -e "${HELP}"
-		exit 0
-	else
-		_log_script_message 'Abort - invalid argument'
-		echo 'ABORT=1' >> ${CHECK_FILE}
-		exit 1
-	fi
+  if [[ "${CHECK_MODE}" == 'NO' ]]; then
+    echo -e "${HELP}"
+    exit 0
+  else
+    _log_script_message 'Abort - invalid argument'
+    echo 'ABORT=1' >> ${CHECK_FILE}
+    exit 1
+  fi
 fi
 
 # Check Mode supercedes -d!
 if [[ "${CHECK_MODE}" == 'YES' ]]; then
-	readonly DECOMM='NO'
-	readonly SETUP='NO'
+  readonly DECOMM='NO'
+  readonly SETUP='NO'
 else
-  # If just getting Decomm info (-d command-line parameter). then I can
+  # If just getting Decomm info (-d command-line parameter), then I can
   #   leverage Setup Mode to do the heavy lifting
   if [[ "${DECOMM}" == 'YES' ]]; then
-	  readonly DECOMM='NO'
-	  readonly SETUP='YES'
+    readonly DECOMM='NO'
+    readonly SETUP='YES'
   fi
 fi
 
 # Define OUTPUT_MODE
-#	0 - Normal (run interactively; full output to stdout)
-#	1 - Setup Mode (output to file)
-#	2 - Decomm (Output limited info to stdout)
-#	3 - Check mode (Write to CHECK_FILE for later use by Nagios
+#  0 - Normal (run interactively; full output to stdout)
+#  1 - Setup Mode (output to file)
+#  2 - Decomm (Output limited info to stdout)
+#  3 - Check mode (Write to CHECK_FILE for later use by Nagios
 #         check script)
 
 # Set OUTPUT_MODE if -s flag was on command line (or if I'm cheating
 #   and using it for Decomm info)
 if [[ "${SETUP}" == 'YES' ]]; then
-	# Note that -c would have cancelled out -s or -d, so I am not in
-	#   Check Mode here
-	if [[ "${DECOMM}" == 'YES' ]]; then
-		OUTPUT_MODE=2
-		# Init string used for output in this mode
-		DECOMM_LIST=''
-	else
-		OUTPUT_MODE=1
-	fi
-	# If in Setup Mode, do not ID script
-	#	Also, assume execution is Privileged; however, do not expect
-	#   Multipathing to be setup or for LUNs to be visible, so skip that
-	#	  part of this script
-	# EXCEPTION: If in Output Mode 2 (Decomm Mode)
-	if [[ "${OUTPUT_MODE}" -eq 2 ]]; then
-		SKIP_LUN=0
-		KERNEL='NO'
-	else
-		SKIP_LUN=1
-		KERNEL='YES'
-	fi
+  # Note that -c would have cancelled out -s or -d, so I am not in
+  #   Check Mode here
+  if [[ "${DECOMM}" == 'YES' ]]; then
+    readonly OUTPUT_MODE=2
+    # Init string used for output in this mode
+    DECOMM_LIST=''
+  else
+    readonly OUTPUT_MODE=1
+  fi
+  # If in Setup Mode, do not ID script
+  #  Also, assume execution is Privileged; however, do not expect
+  #   Multipathing to be setup or for LUNs to be visible, so skip that
+  #    part of this script
+  # EXCEPTION: If in Output Mode 2 (Decomm Mode)
+  if [[ "${OUTPUT_MODE}" -eq 2 ]]; then
+    SKIP_LUN=0
+    KERNEL='NO'
+  else
+    SKIP_LUN=1
+    KERNEL='YES'
+  fi
 
-	# Turn off everything else too
-	PATHS='NO'
-	SERIALS='NO'
-	# Also initialize file variables
-	# IMPORTANT: These  MUST  match those defined in the Setup Script
-	readonly SETUP_LOG='/root/.setupscriptlog'
-	readonly TMP_FILE='/tmp/.setup'
-	readonly SAN_TMP_FILE='/tmp/.setupSAN'
+  # Turn off everything else too
+  PATHS='NO'
+  SERIALS='NO'
+  # Also initialize file variables
+  # IMPORTANT: These  MUST  match those defined in the Setup Script
+  readonly SETUP_LOG='/root/.setupscriptlog'
+  readonly TMP_FILE='/tmp/.setup'
+  readonly SAN_TMP_FILE='/tmp/.setupSAN'
 else
-	# In Check Mode?
-	if [[ "${CHECK_MODE}" == 'YES' ]]; then
-		OUTPUT_MODE=3
-		# Check mode cancels out -n and -q; but includes -k and -p
-		KERNEL='YES'
-		PATHS='YES'
-		QUICK='NO'
-		SERIALS='NO'
-		# Check Mode requires Privilege!
-		if [[ "${EUID}" -ne 0 ]]; then
-			echo 'ABORT=128' > ${CHECK_FILE}
-			exit 128
-		else
-			SKIP_LUN=0
-		fi
-	else
-		# Not in Check Mode
-		OUTPUT_MODE=0
-		# Did user request Full Report Mode?
-		if [[ "${FULL}" == 'YES' ]]; then
-			KERNEL='YES'
-			PATHS='YES'
-			SERIALS='YES'
-		fi
-		# Quick Mode silently overrides Full Report Mode
-		if [[ "${QUICK}" == 'YES' ]]; then
-			KERNEL='NO'
-			PATHS='NO'
-			SERIALS='NO'
-		fi
-		# ID Script
-		OUTPUT="${0} v${TOOL_VERSION}"
-		# Determine if user has privilege
-		if [[ "${EUID}" -ne 0 ]]; then
-			OUTPUT="${OUTPUT}\t\t${BOLD_TEXT}${MAGENTA_BLACK}WARNING:${ALL_OFF} Running ${BOLD_TEXT}UN-Privileged${ALL_OFF} - Bus Probing and LUN/Multipath Analysis ${BOLD_TEXT}DISABLED${ALL_OFF}"
-			SKIP_LUN=1
-			KERNEL='NO'
-		else
-			OUTPUT="${OUTPUT}\t\t${BOLD_TEXT}${GREEN_BLACK}Privileged status verified${ALL_OFF}"
-			SKIP_LUN=0
-		fi
-		# Display info
-		echo -e "${OUTPUT}"
-	fi
-	# End of if [[ "${CHECK_MODE}" == 'YES' ]]
+  # In Check Mode?
+  if [[ "${CHECK_MODE}" == 'YES' ]]; then
+    readonly OUTPUT_MODE=3
+    # Check mode cancels out -n and -q; but includes -k and -p
+    KERNEL='YES'
+    PATHS='YES'
+    QUICK='NO'
+    SERIALS='NO'
+    # Check Mode requires Privilege!
+    if [[ "${EUID}" -ne 0 ]]; then
+      echo 'ABORT=128' > ${CHECK_FILE}
+      exit 128
+    else
+      SKIP_LUN=0
+    fi
+  else
+    # Not in Check Mode
+    readonly OUTPUT_MODE=0
+    # Did user request Full Report Mode?
+    if [[ "${FULL}" == 'YES' ]]; then
+      KERNEL='YES'
+      PATHS='YES'
+      SERIALS='YES'
+    fi
+    # Quick Mode silently overrides Full Report Mode
+    if [[ "${QUICK}" == 'YES' ]]; then
+      KERNEL='NO'
+      PATHS='NO'
+      SERIALS='NO'
+    fi
+    # ID Script
+    OUTPUT="${0} v${TOOL_VERSION}"
+    # Determine if user has privilege
+    if [[ "${EUID}" -ne 0 ]]; then
+      OUTPUT="${OUTPUT}\t\t${BOLD_TEXT}${MAGENTA_BLACK}WARNING:${ALL_OFF} Running ${BOLD_TEXT}UN-Privileged${ALL_OFF} - Bus Probing and LUN/Multipath Analysis ${BOLD_TEXT}DISABLED${ALL_OFF}"
+      SKIP_LUN=1
+      KERNEL='NO'
+    else
+      OUTPUT="${OUTPUT}\t\t${BOLD_TEXT}${GREEN_BLACK}Privileged status verified${ALL_OFF}"
+      SKIP_LUN=0
+    fi
+    # Display info
+    echo -e "${OUTPUT}"
+  fi
+  # End of if [[ "${CHECK_MODE}" == 'YES' ]]
 fi
 # End of if [[ "${SETUP}" == 'YES' ]]
 readonly CHECK_MODE
 readonly KERNEL
-readonly OUTPUT_MODE
 readonly PATHS
 readonly SERIALS
 readonly SKIP_LUN
@@ -344,51 +343,51 @@ readonly __DEBUG
 _get_os_release
 SLES_VERSION=$?
 case "${SLES_VERSION}" in
-	0)	# File parse error
+  0)  # File parse error
       case "${OUTPUT_MODE}" in
-			  0)	echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}File Parse Failed in _get_os_release${ALL_OFF}\n"
-            exit 1
-				    ;;
-			  1)	echo "ABORTED - ${0} exited with file parse error" > ${TMP_FILE}
-				    exit 0
-				    ;;
-			  2)	# Exit with error
-				    exit 255
-				    ;;
-			  3)	# Exit with error
-				    echo 'ABORT=255' > ${CHECK_FILE}
-				    _log_script_message 'Abort - File Parse Failed in _get_os_release'
-				    exit 255
-				    ;;
-		  esac
-		  ;;
-	12|15)
-		  readonly MODULE_FILE='/etc/modprobe.d/'
-		  # Directory prefix we use when querying for some data items for a
-		  #   VIO-delivered pseudo-HBA
-		  readonly HBA_FIND='/sys/class/scsi_host'
-		  # Files under HBA_FIND that contain specific info items
-		  readonly HBA_VFCHOST_FILE='device_name'
-		  readonly HBA_VIO_FILE='partition_name'
-		  readonly HBA_PORT_FILE='port_loc_code'
-
-		  # Directory where I'll find the sub-dirs for each VIO-delivered
-		  #   pseudo-HBA
-		  readonly HBA_NODE='/sys/class/fc_host'
-		  # Files under HBA_NODE that contain specific info items
-		  readonly HBA_WWPN_FILE='port_name'
-		  readonly HBA_SPEED_FILE='speed'
-		  readonly HBA_STATE_FILE='port_state'
-		  ;;
-	*)	case "${OUTPUT_MODE}" in
-			  0)	echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}SLES v${SLES_VERSION} is Unsupported${ALL_OFF}\n"
+        0)  echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}File Parse Failed in _get_os_release${ALL_OFF}\n"
             exit 1
             ;;
-        1)	# In theory, the Setup script should never call this
+        1)  echo "ABORTED - ${0} exited with file parse error" > ${TMP_FILE}
+            exit 0
+            ;;
+        2)  # Exit with error
+            exit 255
+            ;;
+        3)  # Exit with error
+            echo 'ABORT=255' > ${CHECK_FILE}
+            _log_script_message 'Abort - File Parse Failed in _get_os_release'
+            exit 255
+            ;;
+      esac
+      ;;
+  12|15)
+      readonly MODULE_FILE='/etc/modprobe.d/'
+      # Directory prefix we use when querying for some data items for a
+      #   VIO-delivered pseudo-HBA
+      readonly HBA_FIND='/sys/class/scsi_host'
+      # Files under HBA_FIND that contain specific info items
+      readonly HBA_VFCHOST_FILE='device_name'
+      readonly HBA_VIO_FILE='partition_name'
+      readonly HBA_PORT_FILE='port_loc_code'
+
+      # Directory where I'll find the sub-dirs for each VIO-delivered
+      #   pseudo-HBA
+      readonly HBA_NODE='/sys/class/fc_host'
+      # Files under HBA_NODE that contain specific info items
+      readonly HBA_WWPN_FILE='port_name'
+      readonly HBA_SPEED_FILE='speed'
+      readonly HBA_STATE_FILE='port_state'
+      ;;
+  *)  case "${OUTPUT_MODE}" in
+        0)  echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}SLES v${SLES_VERSION} is Unsupported${ALL_OFF}\n"
+            exit 1
+            ;;
+        1)  # In theory, the Setup script should never call this
             echo "ABORTED - SLES v${SLES_VERSION} is Unsupported" > ${TMP_FILE}
             exit 0
             ;;
-			  2)  # Exit with error
+        2)  # Exit with error
             exit 255
             ;;
         3)  # Exit with error
@@ -397,9 +396,7 @@ case "${SLES_VERSION}" in
             exit 255
             ;;
       esac
-		  ;;
-	#XX)	FUTURE EXPANSION
-	#	;;
+      ;;
 esac
 # End of case "${SLES_VERSION}" in
 
@@ -408,14 +405,14 @@ esac
 _get_platform
 _MY_PLATFORM=$?
 if [[ "${__DEBUG}" == 'YES' ]]; then
-	echo "FULL is ${FULL}"
-	echo "PATHS is ${PATHS}"
-	echo "_MY_PLATFORM is ${_MY_PLATFORM}"
+  echo "FULL is ${FULL}"
+  echo "PATHS is ${PATHS}"
+  echo "_MY_PLATFORM is ${_MY_PLATFORM}"
 fi
 
 # It should be "0" if I'm on PowerPC
 case "${_MY_PLATFORM}" in
-  0)	# Good!
+  0)  # Good!
       # Initialize a list of standard LUN aliases (plus some
       #   SLES-default ones to catch when multipathing is set up not
       #   using standard names)
@@ -454,37 +451,37 @@ case "${_MY_PLATFORM}" in
       LUN_LIST="${LUN_LIST} sap shared usrsap"
       readonly LUN_LIST
       ;;
-  1)	# VMware - do NOT run on that
+  1)  # VMware - do NOT run on that
       case "${OUTPUT_MODE}" in
-			  0)	echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}VMware-based Hosts are Unsupported${ALL_OFF}\n"
+        0)  echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}VMware-based Hosts are Unsupported${ALL_OFF}\n"
             exit 1
             ;;
-        1)	# In theory, the Setup script should never call this
+        1)  # In theory, the Setup script should never call this
             echo "ABORTED - VMware-based Hosts are Unsupported" > ${TMP_FILE}
             exit 0
             ;;
         2)  # Exit with error
             exit 255
             ;;
-        3)	# Exit with error
+        3)  # Exit with error
             echo 'ABORT=255' > ${CHECK_FILE}
             _log_script_message 'Abort - VMware-based Hosts are Unsupported'
             exit 255
             ;;
       esac
       ;;
-  *)	# BAD - parsing error or other problem
+  *)  # BAD - parsing error or other problem
       case "${OUTPUT_MODE}" in
-        0)	echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}File Parse Failed in _get_platform${ALL_OFF}\n"
+        0)  echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${ALL_OFF} ${BOLD_TEXT}File Parse Failed in _get_platform${ALL_OFF}\n"
             exit 1
             ;;
-        1)	echo "ABORTED - ${0} exited with file parse error" > ${TMP_FILE}
+        1)  echo "ABORTED - ${0} exited with file parse error" > ${TMP_FILE}
             exit 0
             ;;
-        2)	# Exit with error
+        2)  # Exit with error
             exit 255
             ;;
-        3)	# Exit with error
+        3)  # Exit with error
             echo 'ABORT=255' > ${CHECK_FILE}
             _log_script_message 'Abort - File Parse Failed in _get_platform'
             exit 255
@@ -499,8 +496,6 @@ SEARCH_FLAG=0
 HBA_PORT_COUNT=0
 DEVICE_COUNT=0
 
-# Variables and commands for SAN LUN detection and Multipath Analysis
-
 # Multipath Executable and arguments
 readonly MULTIPATH_EXEC="${MULTIPATH_TOOL} -ll"
 MULTIPATH_EXEC_OUTPUT='/tmp/mp.out'
@@ -514,7 +509,6 @@ PATH_COUNT=0
 ACTIVE=0
 ENABLED=0
 FAILED=0
-err=0
 OUTPUT=''
 
 #################
@@ -522,15 +516,14 @@ OUTPUT=''
 #################
 # Get host name
 CHKSTR=$( ${UNAME_TOOL} -n )
-
 case "${OUTPUT_MODE}" in
-  0)	echo -e "\tChecking for Fiber HBAs in SLES ${BOLD_TEXT}v${SLES_VERSION}${ALL_OFF} host ${BOLD_TEXT}${CHKSTR}${ALL_OFF}" ;;
-  1)	OUTPUT='Detecting installed SAN HBAs'
+  0)  echo -e "\tChecking for Fiber HBAs in SLES ${BOLD_TEXT}v${SLES_VERSION}${ALL_OFF} host ${BOLD_TEXT}${CHKSTR}${ALL_OFF}" ;;
+  1)  OUTPUT='Detecting installed SAN HBAs'
       echo -e "${OUTPUT}\n"
       echo -e "${OUTPUT}\n" >> ${SETUP_LOG}
       echo -e 'I have scanned for installed HBAs and found the following:\n' >> ${TMP_FILE}
       ;;
-  3)	# Get UTC date in Epoch format (# of seconds since 1970-01-01)
+  3)  # Get UTC date in Epoch format (# of seconds since 1970-01-01)
       CHKSTR=$( ${DATE_TOOL} --utc +%s )
       _log_script_message 'Execution environment is good'
       echo "# ${CHKSTR}:${CHECK_FILE} generated by ${0} v${TOOL_VERSION}" > ${CHECK_FILE}
@@ -544,7 +537,7 @@ esac
 # Driver Detection #
 ####################
 # Look at loaded kernel modules and detect HBA-like drivers in my list
-#	At this point, the only concern is determining what pseudo-HBAs may
+#  At this point, the only concern is determining what pseudo-HBAs may
 #   exist in the system
 
 # Look for HBA-like drivers (basically, the IBM Virtual FC driver)
@@ -553,38 +546,37 @@ declare -a DRIVER_NAME_ARRAY
 for THIS_DRIVER in ${DRIVER_LIST}; do
   CHKSTR=$( ${LISTMOD_TOOL} | ${GREP_TOOL} -w -m 1 -c ${THIS_DRIVER} )
   if [[ "${CHKSTR}" -eq 1 ]]; then
-		DRIVER_NAME_ARRAY[${HBA_DETECT_FLAG}]="${THIS_DRIVER}"
-		(( HBA_DETECT_FLAG = HBA_DETECT_FLAG + 1 ))
-	fi
-	if [[ "${__DEBUG}" == 'YES' ]]; then
-		echo "CHKSTR is ${CHKSTR}"
-		echo "HBA_DETECT_FLAG is ${HBA_DETECT_FLAG}"
-		echo "DRIVER_NAME_ARRAY is ${DRIVER_NAME_ARRAY[*]}"
-	fi
+    DRIVER_NAME_ARRAY[${HBA_DETECT_FLAG}]="${THIS_DRIVER}"
+    (( HBA_DETECT_FLAG = HBA_DETECT_FLAG + 1 ))
+  fi
+  if [[ "${__DEBUG}" == 'YES' ]]; then
+    echo "CHKSTR is ${CHKSTR}"
+    echo "HBA_DETECT_FLAG is ${HBA_DETECT_FLAG}"
+    echo "DRIVER_NAME_ARRAY is ${DRIVER_NAME_ARRAY[*]}"
+  fi
 done
 
 if [[ "${__DEBUG}" == 'YES' ]]; then
-	echo "Final DRIVER_NAME_ARRAY is ${DRIVER_NAME_ARRAY[*]}"
+  echo "Final DRIVER_NAME_ARRAY is ${DRIVER_NAME_ARRAY[*]}"
 fi
-
 ###########################
 # End of Driver Detection #
 #######################################################################
 # At this point, I know OS version and whether or not there are
 #   pseudo-HBA drivers loaded
 if [[ "${HBA_DETECT_FLAG}" -eq 0 ]]; then
-	# I can exit because no drivers were found
-	case "${OUTPUT_MODE}" in
-		0)	echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}No IBM vSCSI drivers are loaded${ALL_OFF}\n" ;;
-		1)	OUTPUT='No IBM vSCSI HBA Drivers detected'
+  # I can exit because no drivers were found
+  case "${OUTPUT_MODE}" in
+    0)  echo -e "\n${BOLD_TEXT}${MAGENTA_BLACK}No IBM vSCSI drivers are loaded${ALL_OFF}\n" ;;
+    1)  OUTPUT='No IBM vSCSI HBA Drivers detected'
         echo -e "\n${OUTPUT}\n"
         echo -e "\n${OUTPUT}\n" >> ${SETUP_LOG}
         echo -e "\n${OUTPUT}\n" >> ${TMP_FILE}
         ;;
-		2)	# Decomm mode - nothing else to do
+    2)  # Decomm mode - nothing else to do
         exit 255
         ;;
-		3)	# Check Mode - Abort because I'm running where I should not be
+    3)  # Check Mode - Abort because I'm running where I should not be
         # NOTE: Append to $CHECK_FILE, do not overwrite, as I have put
         #       in REPORT_DATE by now
         echo 'ABORT=1' >> ${CHECK_FILE}
@@ -610,7 +602,6 @@ else
           # Only put in separator line if there's more than 2 drivers
           for INDEX in $(seq 0 $((${#DRIVER_NAME_ARRAY[@]} - 1))); do
             THIS_DRIVER="${DRIVER_NAME_ARRAY[${INDEX}]}"
-
             # Driver version - get from modinfo command
             STRIPSTR=$( ${MODINFO_TOOL} ${THIS_DRIVER} | ${GREP_TOOL} -m 1 version | ${AWK_TOOL} -F ': ' '{ print $2 }' )
             # Make sure to strip leading spaces
@@ -671,7 +662,7 @@ ACTIVE_HBA_LIST=''
 HBA_LINK_COUNT=0
 
 #######################################################################
-# HBA Detection and Analysis #			REAL WORK STARTS HERE
+# HBA Detection and Analysis #      REAL WORK STARTS HERE
 ##############################
 # Examine the system closely, looking for HBA ports - which are really
 #   virtualized HBAs delivered by a VIO
@@ -715,7 +706,7 @@ if [[ "${RETVAL}" -eq 0 ]]; then
   fi
 fi
 if [[ "${__DEBUG}" == 'YES' ]]; then
-	echo "HOST_DIR_LIST is ${HOST_DIR_LIST}"
+  echo "HOST_DIR_LIST is ${HOST_DIR_LIST}"
 fi
 
 # HOST_DIR_LIST now only contains those directories that I can
@@ -779,19 +770,19 @@ done
 # HBA_BOARD_COUNT should contain an integer equal to the number of VIOs
 #   in the list
 # HBA_PORT_COUNT should contain an integer equal to or greater than
-#	HBA_BOARD_COUNT and equal to the total number of pseudo-HBAs
+#  HBA_BOARD_COUNT and equal to the total number of pseudo-HBAs
 
 case "${OUTPUT_MODE}" in
   0)  if [[ "${QUICK}" != 'YES' ]]; then
         echo -e "\tThere are ${BOLD_TEXT}${HBA_BOARD_COUNT}${ALL_OFF} VIOs providing this system with a total of ${BOLD_TEXT}${HBA_PORT_COUNT}${ALL_OFF} virtual ports"
-		  fi
+      fi
       ;;
-  1)	OUTPUT="\tThere are ${HBA_BOARD_COUNT} VIOs providing virtual HBAs in this system (Drivers: ${HBA_DRIVERS_FOUND})"
+  1)  OUTPUT="\tThere are ${HBA_BOARD_COUNT} VIOs providing virtual HBAs in this system (Drivers: ${HBA_DRIVERS_FOUND})"
       echo -e "${OUTPUT}\n"
       echo -e "${OUTPUT}\n" >> ${SETUP_LOG}
       echo -e "${OUTPUT}\n" >> ${TMP_FILE}
       ;;
-  3)	echo '# Number of VIOs providing pseudo HBAs to this host (should be 2)' >> ${CHECK_FILE}
+  3)  echo '# Number of VIOs providing pseudo HBAs to this host (should be 2)' >> ${CHECK_FILE}
       echo "VIO_COUNT=${HBA_BOARD_COUNT}" >> ${CHECK_FILE}
       ;;
   # No output for other modes
@@ -807,7 +798,7 @@ if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 1 ]]; then
     FOUND_VIO=0
     for VIO_DEVICE in ${HOST_DIR_LIST}; do
       # I need extract which specific "hostX" sub-dir the device is in,
-			#   so I can subsequenty look under HBA_FIND for info; I need the
+      #   so I can subsequenty look under HBA_FIND for info; I need the
       #   last field of the string
       HOST_PATH=$( echo ${VIO_DEVICE} | ${AWK_TOOL} -F '/' '{ print $NF }' )
       # The variable should now hold something like "host1"
@@ -821,7 +812,7 @@ if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 1 ]]; then
         continue
       else
         # If this is the first pseudo-HBA I found for this VIO,
-				#   then output a header line
+        #   then output a header line
         if [[ "${FOUND_VIO}" -eq 0 ]]; then
           if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
             PORT_INFO=$( ${CAT_TOOL} ${HBA_FIND}/${HOST_PATH}/${HBA_PORT_FILE} )
@@ -850,7 +841,7 @@ if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 1 ]]; then
         # The "Port" is the same as the last character of HOST_PATH
         THIS_PORT="${HOST_PATH:(-1)}"
         # The WWPN I can get from HBA_NODE, but I'll need to remove the
-				#   leading 2 characters and format it using _render_wwpn_func
+        #   leading 2 characters and format it using _render_wwpn_func
         THIS_WWPN=$( ${CAT_TOOL} ${HBA_NODE}/${HOST_PATH}/${HBA_WWPN_FILE} )
         RAW_WWPN="${THIS_WWPN:2}"
         _render_wwpn_func
@@ -872,8 +863,8 @@ if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 1 ]]; then
             PORT_SPEED="${BOLD_TEXT}${PORT_SPEED}${ALL_OFF}"
           fi
         else
-					PORT_STATE='DOWN'
-					PORT_SPEED='N/A'
+          PORT_STATE='DOWN'
+          PORT_SPEED='N/A'
         fi
         PORT_VIO_DEVICE=$( ${CAT_TOOL} ${HBA_FIND}/${HOST_PATH}/${HBA_VFCHOST_FILE} )
         if [[ "${OUTPUT_MODE}" -eq 0 ]]; then
@@ -884,10 +875,10 @@ if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 1 ]]; then
         fi
       fi
       # End of if [[ "${CHECK_NAME}" != "${VIO_NAME}" ]]
-		done
-		# End of for VIO_DEVICE in ${HOST_DIR_LIST}
-	done
-	# End of for VIO_NAME in ${VIO_NAME_LIST}
+    done
+    # End of for VIO_DEVICE in ${HOST_DIR_LIST}
+  done
+  # End of for VIO_NAME in ${VIO_NAME_LIST}
 fi
 # End of if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 1 ]]
 
@@ -920,12 +911,9 @@ esac
 # SAN LUN Detection and Multipath Analysis #
 ############################################
 # Only do this if we have Privilege
-if [[ "${SKIP_LUN}" -eq 1 ]]; then
+if [[ "${SKIP_LUN}" -eq 1 && "${OUTPUT_MODE}" -eq 0 ]]; then
   # Not Privileged (or in Decomm or Setup Mode)
-  case "${OUTPUT_MODE}" in
-    0)	echo -e "${BOLD_TEXT}${MAGENTA_BLACK}\tSkipping SAN LUN Detection and Multipath Analysis - Not Privileged${ALL_OFF}" ;;
-    # No output in other modes
-  esac
+  echo -e "${BOLD_TEXT}${MAGENTA_BLACK}\tSkipping SAN LUN Detection and Multipath Analysis - Not Privileged${ALL_OFF}" ;;
 else
   # Privileged - get a list of LUNs under DM Multipathing
   # Note that this code branch will be entered only if OUTPUT_MODE is
@@ -948,8 +936,8 @@ else
         fi
       fi
     ;;
-    #XX)	FUTURE EXPANSION
-    #	    ;;
+    #XX)  FUTURE EXPANSION
+    #      ;;
   esac
   SINGLE_PATH_WARNING_FLAG=0
   # If output file is not empty, check for multipath config
@@ -965,7 +953,7 @@ else
             ;;
             # No output in other modes
       esac
-      # Rewrite our temporary file to omit that line, which should
+      # Rewrite my temporary file to omit that line, which should
       #   avoid logic problems below
       ${MULTIPATH_EXEC} | ${GREP_TOOL} -v 'duplicate keyword' > ${MULTIPATH_EXEC_OUTPUT}
     else
@@ -986,7 +974,7 @@ else
       0)  echo -e "\n\tDetecting SAN LUNs and analyzing Multipathing:\n"
           echo -e "${BOLD_TEXT}\t LUN\t\t   LUN\t\tNumber of Paths${ALL_OFF}"
           # The composition of the rest of the header depends on if
-          #	the user requested LUN serial numbers
+          #  the user requested LUN serial numbers
           if [[ "${SERIALS}" == 'YES' ]]; then
             echo -e "${BOLD_TEXT}\t_Name__\t\tSize_(GB)      Detected___Failed     _SAN_Vendor_\t________Serial_Number____________${ALL_OFF}"
             SEPARATOR="\t---------------------------------------------------------------------------------------------------------"
@@ -995,23 +983,22 @@ else
             SEPARATOR="\t--------------------------------------------------------------------------------"
           fi
           ;;
-      3)	# Check Mode - init some variables for loop below
+      3)  # Check Mode - init some variables for loop below
           LUNS_WITH_MULTIPLE_FAILED_PATHS=0
           LUNS_WITH_SINGLE_FAILED_PATH=0
           LUNS_WITH_SINGLE_PATH=0
           ;;
           # No output in other modes
-		esac
+    esac
 
-		TOTAL_LUN_SIZE=0
-		LUN_SERIAL_LIST=''
-		NO_LUN_PATH=0
-		# Count of LUNs with failed path
-		FAILED_PATH_LUNS=0
-		# List of LUN names that have a failed path
-		FAILED_PATH_LUN_LIST=''
-		LUN_COUNT=0
-
+    TOTAL_LUN_SIZE=0
+    LUN_SERIAL_LIST=''
+    NO_LUN_PATH=0
+    # Count of LUNs with failed path
+    FAILED_PATH_LUNS=0
+    # List of LUN names that have a failed path
+    FAILED_PATH_LUN_LIST=''
+    LUN_COUNT=0
     if [[ "${__DEBUG}" == 'YES' ]]; then
       echo "LUN_LIST is ${LUN_LIST}"
     fi
@@ -1110,11 +1097,11 @@ else
             ;;
         esac
 
-				# At this point, I know the SAN Vendor, and the SAN_TYPE
-				#   variable will be:
-				#	      0 = Unknown/Unsupported Vendor
-				#       1 = EMC
-				#       2 = IBM XIV
+        # At this point, I know the SAN Vendor, and the SAN_TYPE
+        #   variable will be:
+        #        0 = Unknown/Unsupported Vendor
+        #       1 = EMC
+        #       2 = IBM XIV
 
         # Temporary file where I write the subset of the multipath
         #   output specific to this LUN
@@ -1140,7 +1127,7 @@ else
                 #   MB vs GB vs TB
                 SCALE="${CHKSTR:(-1)}"
                 # If SCALE contains just 'B', then I need to
-							  #   get the last TWO characters
+                #   get the last TWO characters
                 if [[ "${SCALE}" == 'B' ]]; then
                   SCALE="${CHKSTR:(-2)}"
                   LUN_SIZE="${CHKSTR:0:(-2)}"
@@ -1160,13 +1147,13 @@ else
                     INTCHK=$( expr index ${LUN_SIZE} . )
                     if [[ "${INTCHK}" -ne 0 ]]; then
                       # Need to make LUN_SIZE and
-                      #	integer - drop all after .
+                      #  integer - drop all after .
                       LUN_SIZE=$( echo ${LUN_SIZE} | ${AWK_TOOL} -F '.' '{ print $1 }' )
                     fi
                     ;;
                   'T' | 'TB')
                     # Seems to be in TB - need to compute using GB
-										# It probably contains a decimal, so I can't use
+                    # It probably contains a decimal, so I can't use
                     #   BASH for the math
                     CALC="scale=0;((${LUN_SIZE} * 1024)/1)"
                     LUN_SIZE=$( echo "${CALC}" | ${CALC_TOOL} -l )
@@ -1175,7 +1162,7 @@ else
                 (( TOTAL_LUN_SIZE = TOTAL_LUN_SIZE + LUN_SIZE ))
 
                 # There also seems to be useful info concerning if the
-                #   LUN is writable; for EMC, the last #	item on this
+                #   LUN is writable; for EMC, the last #  item on this
                 #   line contains "wp=XX" where "XX" is either "ro"
                 #   (read-only) or "rw" (read-write)
                 CHKSTR=$( echo ${LUN_INFO} | ${AWK_TOOL} '{ print $NF }' | ${AWK_TOOL} -F '=' '{ print $2 }' )
@@ -1213,7 +1200,7 @@ else
                     ;;
                 esac
                 ;;
-            *)	# The remaining lines are the paths, and status of each
+            *)  # The remaining lines are the paths, and status of each
                 # The content are uniform across EMC
                 # All I care about right now is counting paths that
                 #   have the proper status info
@@ -1252,7 +1239,7 @@ else
                 #   and will indicate the first test that failed (but
                 #   no further testing happens once a test fails)
                 ;;
-            #)	# FUTURE EXPANSION
+            #)  # FUTURE EXPANSION
             #   ;;
           esac
           # End of case ${ITERATOR}
@@ -1272,7 +1259,7 @@ else
         ${RM_TOOL} -f ${LUN_TMP_FILE}
 
         case "${OUTPUT_MODE}" in
-					0)  # If there are failed paths, highlight the LUN
+          0)  # If there are failed paths, highlight the LUN
               COLOR_TEXT=''
               if [[ "${FAILED_PATH_COUNT}" -ne 0 ]]; then
                 COLOR_TEXT="${BOLD_TEXT}${RED_BLACK}"
@@ -1283,7 +1270,7 @@ else
                 fi
               else
                 # Still highlight the LUN if there is only 1
-                #	path to the LUN
+                #  path to the LUN
                 if [[ "${PATH_COUNT}" -eq 1 ]]; then
                   COLOR_TEXT="${BOLD_TEXT}${BLUE_BACK}"
                   (( SINGLE_PATH_WARNING_FLAG = SINGLE_PATH_WARNING_FLAG + 1 ))
@@ -1297,14 +1284,14 @@ else
               fi
 
               # Put in a separator line every 5 LUNs - but don't
-              #	bother if at end of list
+              #  bother if at end of list
               (( MODULUS = DISPLAY_COUNT % 5 ))
               if [[ "${MODULUS}" -eq 0 && "${DISPLAY_COUNT}" -lt "${LUN_COUNT}" ]]; then
                 echo -e "${SEPARATOR}"
               fi
               ;;
           2)  # Decomm mode - Build list of LUN Serial #s
-              #	NO SCREEN OUTPUT
+              #  NO SCREEN OUTPUT
               if [[ "${LUN_SERIAL_LIST}" == '' ]]; then
                 LUN_SERIAL_LIST="${SERIAL}"
               else
@@ -1339,7 +1326,7 @@ else
       # When this info is utilized depends on OUTPUT_MODE - in Mode 0
       #   it is not referenced until near the end of this script,
       #   in Mode 3 it is referenced about 15 or 20 lines down
-			if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 3 ]]; then
+      if [[ "${OUTPUT_MODE}" -eq 0 || "${OUTPUT_MODE}" -eq 3 ]]; then
         PV_WARNING_FLAG=$( ${PVS_TOOL} -o+lv_name,seg_start_pe,segtype,pv_uuid --segments 2>&1 | ${GREP_TOOL} -c WARNING )
       else
         PV_WARNING_FLAG=0
@@ -1378,12 +1365,12 @@ else
       # Additional Output #
       #####################
       # If here, then MUST be in OUTPUT_MODE zero (0)
-      #	Any other OUTPUT_MODE value would have exited by now
+      #  Any other OUTPUT_MODE value would have exited by now
       if [[ "${FAILED_PATH_LUNS}" -ne 0 ]]; then
-				if [[ "${FAILED_PATH_LUNS}" -lt 2 ]]; then
+        if [[ "${FAILED_PATH_LUNS}" -lt 2 ]]; then
           VERB1='LUN has'
         else
-					VERB1='LUNs have'
+          VERB1='LUNs have'
         fi
         OUTPUT_FAILED_INFO="${BOLD_TEXT}${MAGENTA_BLACK}WARNING: ${FAILED_PATH_LUNS} ${VERB1} at least one failed path${ALL_OFF}"
       else
@@ -1482,7 +1469,7 @@ else
           fi
 
           # Output results
-          #	Assume a LUN_PATH_LIST with a length of less than
+          #  Assume a LUN_PATH_LIST with a length of less than
           #   13 characters indicates a LUN with a single
           #   path and highlight it
           if [[ ${#LUN_PATH_LIST} -lt 13 ]]; then
@@ -1493,7 +1480,7 @@ else
           echo -e "${COLOR_TEXT}\t${LUN}${ALL_OFF}${LUN_PATH_LIST}${ALL_OFF}"
           # Put in a separator line every 5 LUNs - but don't
           #   bother if I'm at end of list
-          #	I can re-use DISPLAY_COUNT from earlier
+          #  I can re-use DISPLAY_COUNT from earlier
           (( MODULUS = LUN_COUNT % 5 ))
           if [[ "${MODULUS}" -eq 0 && "${LUN_COUNT}" -lt "${DISPLAY_COUNT}" ]]; then
             echo -e "${SEPARATOR}"
