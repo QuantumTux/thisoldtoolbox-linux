@@ -488,7 +488,7 @@ _get_tier ()
 # Parameters: None (uses Global Variables instead)                    #
 # Local Variables: _CHKSTR - Working string variable                  #
 # Global Variables: _MY_HOSTNAME - The short hostname as reported by  #
-#                           the "hostname" command	                  #
+#                           the "hostname" command                    #
 # Purpose: Uses HOSTNAME_TOOL to populate a variable                  #
 # Returns: 0 - Success                                                #
 #         255 - Unable to determine                                   #
@@ -534,7 +534,7 @@ _get_fqdn ()
 # Local Variables: None                                               #
 # Global Variables: None                                              #
 # Purpose: Tests if a sub-string is present in another string         #
-# Returns:	0 = The sub-string is NOT present in the string           #
+# Returns:  0 = The sub-string is NOT present in the string           #
 #           1 = Found the sub-string in the other string              #
 #                                                                     #
 # Example Usage:  # Test if a string that is supposed to be a host    #
@@ -560,7 +560,7 @@ _does_string_contain ()
 # Local Variables: REGEX (contains a BASH regex)                      #
 # Global Variables: None                                              #
 # Purpose: Tests if a string is an RFC-compliant E-mail address       #
-# Returns:	0 = The sub-string is NOT a compliant E-mail address      #
+# Returns:  0 = The sub-string is NOT a compliant E-mail address      #
 #           1 = The E-mail address is compliant with RFCs             #
 # NOTES: A string is "valid" if it meets the format of                #
 #                 <recipient>@<domain>                                #
