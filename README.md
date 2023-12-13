@@ -11,7 +11,7 @@ All over the place, really. In my newer BASH code, I try to follow the [Google B
 Absolutely none at all. I stand by my work, yes, but I wrote these things for the environment in which I operated at the time. It probably isn't your environment. If you try to use any of my tools without taking the time to examine and understand the code, you're asking for trouble.
 
 # The Library
-Most of these tools rely upon a BASH library that is part of this repo. It might seem to be a little overkill, but there's history behind it.
+Most of the tools written in BASH rely upon a BASH library that is part of this repo. It might seem to be a little overkill, but there's history behind it.
 
 <details>
 
