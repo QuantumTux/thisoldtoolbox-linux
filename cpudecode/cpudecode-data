@@ -112,7 +112,7 @@ CPU_FLAG_DATA_['extapic']="AMD-specific - Extended APIC Space (Related to ${BOLD
 CPU_FLAG_DATA_['extd_apicid']='CPU supports extended (8-bit) APICID'
 ##############
 # F
-CPU_FLAG_DATA_['f16c']='AMD-created but Intel-supported - Support for 16-bit Floating Point Conversion instructions'
+CPU_FLAG_DATA_['f16c']='AMD-created + Intel-supported - Support for 16-bit Floating Point Conversion instructions'
 CPU_FLAG_DATA_['fid']='Frequency Identifier control'
 CPU_FLAG_DATA_['flexpriority']='Intel-specific - Support for Flex Priority Virtualization enhancement'
 CPU_FLAG_DATA_['flushbyasid']='AMD-specific - Support for Flush By Address Space ID'
@@ -135,7 +135,7 @@ CPU_FLAG_DATA_['hfi']='Intel-specific - Support for Hardware Feedback Interface'
 CPU_FLAG_DATA_['hle']='Intel-specific - Hardware Lock Extensions'
 CPU_FLAG_DATA_['hpstate']='AMD-specific - Hardware P-State Control'
 CPU_FLAG_DATA_['hw_pstate']="${CPU_FLAG_DATA_['hpstate']}"
-CPU_FLAG_DATA_['ht']='X'
+CPU_FLAG_DATA_['ht']='VALUE SET IN cpudecode'
 CPU_FLAG_DATA_['htt']="${CPU_FLAG_DATA_['ht']}"
 CPU_FLAG_DATA_['hvm']='Hardware Virtual Machines Supported (Xen)'
 CPU_FLAG_DATA_['hwp']='Intel-Specific - Support for Hardware P-States'
@@ -223,7 +223,7 @@ CPU_FLAG_DATA_['pcommit']='Intel-specific - PCOMMIT Instruction'
 CPU_FLAG_DATA_['pconfig']='Intel-specific - Support for PCONFIG Instruction set'
 CPU_FLAG_DATA_['pcx_l2i']='Intel-specific - L2I Peformance Counter Extensions'
 CPU_FLAG_DATA_['pdcm']='Intel-specific - Support for Performance Capabilities MSR'
-CPU_FLAG_DATA_['pdpe1gb']='AMD-created but Intel-supported - Support for 1GB Page Size'
+CPU_FLAG_DATA_['pdpe1gb']='AMD-created + Intel-supported - Support for 1GB Page Size'
 CPU_FLAG_DATA_['pebs']='Intel-specific - Support for Precise Event-Based Sampling'
 CPU_FLAG_DATA_['perfctr_core']='AMD-specific - Bulldozer core performance counter support'
 CPU_FLAG_DATA_['perfctr_nb']='AMD-specific - NB performance counter support'
@@ -233,7 +233,7 @@ CPU_FLAG_DATA_['pge']='PTE Global Bit'
 CPU_FLAG_DATA_['pku']="Intel-specific - CPU supports Memory Protection Keys extensions\n\t\tRelated to ${BOLD_TEXT}ospke${ALL_OFF} flag"
 CPU_FLAG_DATA_['pln']='Intel-specific - Power Limit Notification'
 CPU_FLAG_DATA_['pn']='Intel-specific - Support for Processor Serial Number instruction'
-CPU_FLAG_DATA_['pni']='Intel-created but AMD-supported - Prescott New Instructions'
+CPU_FLAG_DATA_['pni']='Intel-created + AMD-supported - Prescott New Instructions'
 CPU_FLAG_DATA_['popcnt']="Support for POPCNT Instruction (Associated with ${BOLD_TEXT}sse4_1${ALL_OFF} and ${BOLD_TEXT}sse4_2${ALL_OFF} flags)"
 CPU_FLAG_DATA_['prefetchwt1']='Intel-specific - PREFETCHWT1 Instruction'
 CPU_FLAG_DATA_['proc_feedback']='AMD-specific - AMD ProcFeedback Interface'
@@ -298,7 +298,7 @@ CPU_FLAG_DATA_['syscall']='AMD-created + Intel-supported - Support for Fast Syst
 
 ##############
 # T
-CPU_FLAG_DATA_['tbm']='AMD-created but Intel-supported - CPU supports Trailing Bit Manipulation instruction'
+CPU_FLAG_DATA_['tbm']='AMD-created + Intel-supported - CPU supports Trailing Bit Manipulation instruction'
 CPU_FLAG_DATA_['tce']='Intel-specific - Translation Cache Extension'
 CPU_FLAG_DATA_['tm']='Thermal Monitor/Hardware Thermal Control/Automatic Clock Control'
 CPU_FLAG_DATA_['tm2']='Thermal Monitor 2'
