@@ -5,46 +5,46 @@
 # Deployment: systools-std
 #######################################################################
 # This tool examines the contents of /proc/cpuinfo and displays the
-#	OEM and Model of the CPU, followed by a list of CPU Feature Flag
+#  OEM and Model of the CPU, followed by a list of CPU Feature Flag
 # (output is abbreviated for non-x86-architecture CPUs)
 #
 # REQUIRES:
-#	0) Any Linux host that supports the /proc filesystem
-#	1) Either Intel x86 (32/64-bit); OR a zLinux VM; OR Linux on Power PC
+#  0) Any Linux host that supports the /proc filesystem
+#  1) Either Intel x86 (32/64-bit); OR a zLinux VM; OR Linux on Power PC
 #     NOTE: Itanium, SPARC, etc are NOT supported
-#	2) bash_tools.sh
+#  2) bash_tools.sh
 #
 # KNOWN BUGS:
-#	0) Values for x86 CPU clock speed (SPEED) obtained from /proc/cpuinfo
+#  0) Values for x86 CPU clock speed (SPEED) obtained from /proc/cpuinfo
 #     do not always match those reported by dmidecode, and the latter
 #     values seem more-accurate; however, since this tool is designed
 #     to be executed without Privilege, it will use /proc/cpuinfo to
 #     determine the CPU speed - UNLESS it is executed with Privilege,
 #     in which case it will use dmidecode for that info (the decision
 #     is made at run-time, no user input)
-#	1) If the kernel version doesn't recognize/support a flag, then this
+#  1) If the kernel version doesn't recognize/support a flag, then this
 #     tool will not detect it, even if the CPU supports the flag (for
 #     example, most virtualization-related flags would not be detected
 #     on RHEL v4 systems, regardless of CPU)
 #
 # TO DO:
-#	0) Make the Help screen architecture-specific (right now, it is
+#  0) Make the Help screen architecture-specific (right now, it is
 #     pretty much Intel-only information) - doing this will require
 #     that I determine platform before defining the Help screen
 #     contents
-#	1) The Intel vulnerability analysis code is a bit of a kludge - just
+#  1) The Intel vulnerability analysis code is a bit of a kludge - just
 #     copied from the PPC portion and tweaked it since the mitigation
 #     information has slight presentation variances; there's got to be
 #     a cleaner way to code it
 #
 # NOTES:
-#	0) Sources of information
-#		- http://www.lohninger.com/helpcsuite/public_constants_cpuid.htm
-#		- http://unix.stackexchange.com/questions/43539/what-do-the-flags-in-proc-cpuinfo-mean
-#		- http://en.wikipedia.org/wiki/CPUID
+#  0) Sources of information
+#    - http://www.lohninger.com/helpcsuite/public_constants_cpuid.htm
+#    - http://unix.stackexchange.com/questions/43539/what-do-the-flags-in-proc-cpuinfo-mean
+#    - http://en.wikipedia.org/wiki/CPUID
 #
 # IMPORTANT:
-#	0) PowerPC CPUs do not have/report "feature" flags
+#  0) PowerPC CPUs do not have/report "feature" flags
 #
 ##########################################################################
 TOOL_VERSION='100'
@@ -55,29 +55,29 @@ TOOL_VERSION='100'
 # dxb 2011-01-12 Initial creation
 ##########################################################################
 # Require a minumum bash_tools.sh version
-#	(which is represented without the decimal, to aid comparison)
+#  (which is represented without the decimal, to aid comparison)
 readonly MINIMUM_BASH_TOOLS_LIBRARY_VERSION='100'
 readonly TOOLS_FILE='/usr/local/lib/bash_tools.sh'
 # Check for TOOLS_FILE - make sure it exists, is NOT 0-length, and
 #   is a regular file
 if [[ -e ${TOOLS_FILE} && -s ${TOOLS_FILE} && -f ${TOOLS_FILE} ]]; then
-	# Looks like a valid TOOLS_FILE - source it and initialize
-	source ${TOOLS_FILE}
-	# Check the version
-	if [[ "${BASH_TOOLS_LIBRARY_VERSION}" -lt "${MINIMUM_BASH_TOOLS_LIBRARY_VERSION}" ]]; then
-		echo -e "\nFATAL ERROR: Outdated tool library (${TOOLS_FILE}) - found v${BASH_TOOLS_LIBRARY_VERSION} but need ${MINIMUM_BASH_TOOLS_LIBRARY_VERSION} or later\n"
-		exit 1
-	else
-		# Initialize non-SLES-version-specific command-shortcut variables
-		_init_script_tool_names
-		# Populate important variables
-		_init_script_variables
-		# Set up variables to colorize text output
-		_init_script_colors
-	fi
+  # Looks like a valid TOOLS_FILE - source it and initialize
+  source ${TOOLS_FILE}
+  # Check the version
+  if [[ "${BASH_TOOLS_LIBRARY_VERSION}" -lt "${MINIMUM_BASH_TOOLS_LIBRARY_VERSION}" ]]; then
+    echo -e "\nFATAL ERROR: Outdated tool library (${TOOLS_FILE}) - found v${BASH_TOOLS_LIBRARY_VERSION} but need ${MINIMUM_BASH_TOOLS_LIBRARY_VERSION} or later\n"
+    exit 1
+  else
+    # Initialize non-SLES-version-specific command-shortcut variables
+    _init_script_tool_names
+    # Populate important variables
+    _init_script_variables
+    # Set up variables to colorize text output
+    _init_script_colors
+  fi
 else
-	echo -e "\nFATAL ERROR: Unable to source a valid tool library at ${TOOLS_FILE}\n"
-	exit 1
+  echo -e "\nFATAL ERROR: Unable to source a valid tool library at ${TOOLS_FILE}\n"
+  exit 1
 fi
 
 unset CHKSTR
@@ -94,15 +94,15 @@ OEMINFO='NO'
 # Get arguments #
 #################
 while getopts 'f:cdhoqt' OPT; do
-	case ${OPT} in
-		d)  DEBUG=1 ;;
-		f)  TEST_FLAG="${OPTARG}";;
-		o)  OEMINFO='YES';;
-		q)  QUIET='YES';;
-		t)  THREAD='YES';;
-		h)  HELP_FLAG='YES';;
-		*)  UNKNOWN='YES';;
- 	esac
+  case ${OPT} in
+    d)  DEBUG=1 ;;
+    f)  TEST_FLAG="${OPTARG}";;
+    o)  OEMINFO='YES';;
+    q)  QUIET='YES';;
+    t)  THREAD='YES';;
+    h)  HELP_FLAG='YES';;
+    *)  UNKNOWN='YES';;
+   esac
 done
 
 # Usage
@@ -147,78 +147,78 @@ ${0} - ${BOLD_TEXT}Linux CPU Detection and Analysis Tool v${TOOL_VERSION}${ALL_O
 _get_os_release
 SLES_VERSION=$?
 if [[ "${SLES_VERSION}" -eq 0 ]]; then
-	echo -e "ERROR: File parse error in ${TOOLS_FILE}"
-	HELP_FLAG='YES'
+  echo -e "ERROR: File parse error in ${TOOLS_FILE}"
+  HELP_FLAG='YES'
 else
-	# Call the platform function
-	_get_platform
-	# ${_MY_PLATFORM} should now be populated
-	CHKSTR=$?
-	if [[ "${CHKSTR}" -gt 1 ]]; then
-		echo -e "ERROR: File parse error in ${TOOLS_FILE}"
-		HELP_FLAG='YES'
-	fi
+  # Call the platform function
+  _get_platform
+  # ${_MY_PLATFORM} should now be populated
+  CHKSTR=$?
+  if [[ "${CHKSTR}" -gt 1 ]]; then
+    echo -e "ERROR: File parse error in ${TOOLS_FILE}"
+    HELP_FLAG='YES'
+  fi
 fi
 
 # The -o and -t flags cause all other flags to be ignored
 if [[ "${OEMINFO}" == 'YES' || "${THREAD}" == 'YES' ]]; then
-	TEST_FLAG='NO'
-	QUIET='NO'
-	VIRT_CONSTANT_TSC=0
-	VIRT_VM=0
+  TEST_FLAG='NO'
+  QUIET='NO'
+  VIRT_CONSTANT_TSC=0
+  VIRT_VM=0
 fi
 
 # The -o and -t flags conflict
 if [[ "${OEMINFO}" == 'YES' && "${THREAD}" == 'YES' ]]; then
-	UNKNOWN='YES'
+  UNKNOWN='YES'
 fi
 
 # If unknown options detected, request help
 if [[ "${UNKNOWN}" == 'YES' ]]; then
-	HELP_FLAG='YES'
+  HELP_FLAG='YES'
 fi
 
 # The -d flag will override -q
 if [[ "${DEBUG}" -eq 1 ]]; then
-	QUIET='NO'
-	VIRT_CONSTANT_TSC=0
-	VIRT_VM=0
+  QUIET='NO'
+  VIRT_CONSTANT_TSC=0
+  VIRT_VM=0
 fi
 
 # If -o option detected, it is incompatible with anything else
-#	Conflict with -t checked above
+#  Conflict with -t checked above
 if [[ "${OEMINFO}" == 'YES' ]]; then
-	if [[ "${QUIET}" == 'YES' || "${TEST_FLAG}" != 'NO' ]]; then
-		HELP_FLAG='YES'
-	fi
-	if [[ "${DEBUG}" -eq 1 ]]; then
-		echo -e '-o detected with other flags'
-	fi
-	CHECK_VIRT=0
-	DEBUG=0
-	TEST_FLAG='NO'
+  if [[ "${QUIET}" == 'YES' || "${TEST_FLAG}" != 'NO' ]]; then
+    HELP_FLAG='YES'
+  fi
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo -e '-o detected with other flags'
+  fi
+  CHECK_VIRT=0
+  DEBUG=0
+  TEST_FLAG='NO'
 fi
 
 # If -t option detected, it is incompatible with anything else
-#	Conflict with -o checked above
+#  Conflict with -o checked above
 if [[ "${THREAD}" == 'YES' ]]; then
-	if [[ "${QUIET}" == 'YES' || "${TEST_FLAG}" != 'NO' ]]; then
-		HELP_FLAG='YES'
-	fi
-	if [[ "${DEBUG}" -eq 1 ]]; then
-		echo "-t detected with other flags"
-	fi
-	CHECK_VIRT=0
-	DEBUG=0
-	TEST_FLAG='NO'
+  if [[ "${QUIET}" == 'YES' || "${TEST_FLAG}" != 'NO' ]]; then
+    HELP_FLAG='YES'
+  fi
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo "-t detected with other flags"
+  fi
+  CHECK_VIRT=0
+  DEBUG=0
+  TEST_FLAG='NO'
 fi
 
 # If -q specified without -f, request help
 if [[ "${QUIET}" == 'YES' && ! "${TEST_FLAG}" != 'NO' ]]; then
-	HELP_FLAG='YES'
-	if [[ "${DEBUG}" -eq 1 ]]; then
-		echo -e '-q detected without -f'
-	fi
+  HELP_FLAG='YES'
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo -e '-q detected without -f'
+  fi
 fi
 # Display help screen if requested, or if # of parameters is more than 3
 if [[ "${HELP_FLAG}" == 'YES' || $# -gt 3 ]]; then
@@ -234,12 +234,12 @@ readonly TEST_FLAG
 readonly THREAD
 # Only generate ID header if -o, -q and -t flags not specified
 if [[ "${QUIET}" == 'NO' && "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
-	echo -e "${0} - ${BOLD_TEXT}Linux CPU Detection and Analysis Tool v${TOOL_VERSION}${ALL_OFF}"
-	if [[ "${DEBUG}" -eq 1 ]]; then
-		echo -e "\nTEST_FLAG = ${TEST_FLAG}"
-		echo -e "QUIET = ${QUIET}"
-		echo -e "OEMINFO = ${OEMINFO}"
-	fi
+  echo -e "${0} - ${BOLD_TEXT}Linux CPU Detection and Analysis Tool v${TOOL_VERSION}${ALL_OFF}"
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo -e "\nTEST_FLAG = ${TEST_FLAG}"
+    echo -e "QUIET = ${QUIET}"
+    echo -e "OEMINFO = ${OEMINFO}"
+  fi
 fi
 
 ##################
@@ -252,333 +252,333 @@ fi
 # So, the "safest" way to start it is using "uname"
 CHKSTR=$( ${UNAME_TOOL} -p )
 case "${CHKSTR}" in
-	'i686'|'x86_64')
-				# Intel x86
-				CPU_OEM=$( ${GREP_TOOL} -m 1 'vendor_id' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $3 }' )
-				PROC_TYPE='X'
-				# Directory where I can find vulnerability info
-				readonly VULNERABILITY_DIRECTORY='/sys/devices/system/cpu/vulnerabilities/'
-				# List of documented vulnerabilities
-				VULNERABILIY_LIST=$( ${LS_TOOL} ${VULNERABILITY_DIRECTORY} )
-				;;
-	'S390x')	# zLinux on S/390
-				CPU_OEM=$( ${GREP_TOOL} -m 1 'vendor_id' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $3 }' )
-				PROC_TYPE='Z'
-				;;
-	'ppc64le'|'ppc64')
-				# PowerPC - "le' = Little-Endian Mode
-				CPU_OEM=$( ${GREP_TOOL} -m 1 'cpu' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $3 }' )
-				PROC_TYPE='P'
-				readonly LPAR_FILE='/proc/ppc64/lparcfg'
-				# Directory where we can find vulnerability info
-				readonly VULNERABILITY_DIRECTORY='/sys/devices/system/cpu/vulnerabilities/'
-				# List of documented vulnerabilities
-				VULNERABILIY_LIST=$( ${LS_TOOL} ${VULNERABILITY_DIRECTORY} )
-				;;
-	*)    # Unknown/unsupported
-				CPU_OEM=''
-				PROC_TYPE=''
-				;;
+  'i686'|'x86_64')
+        # Intel x86
+        CPU_OEM=$( ${GREP_TOOL} -m 1 'vendor_id' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $3 }' )
+        PROC_TYPE='X'
+        # Directory where I can find vulnerability info
+        readonly VULNERABILITY_DIRECTORY='/sys/devices/system/cpu/vulnerabilities/'
+        # List of documented vulnerabilities
+        VULNERABILIY_LIST=$( ${LS_TOOL} ${VULNERABILITY_DIRECTORY} )
+        ;;
+  'S390x')  # zLinux on S/390
+        CPU_OEM=$( ${GREP_TOOL} -m 1 'vendor_id' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $3 }' )
+        PROC_TYPE='Z'
+        ;;
+  'ppc64le'|'ppc64')
+        # PowerPC - "le' = Little-Endian Mode
+        CPU_OEM=$( ${GREP_TOOL} -m 1 'cpu' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $3 }' )
+        PROC_TYPE='P'
+        readonly LPAR_FILE='/proc/ppc64/lparcfg'
+        # Directory where we can find vulnerability info
+        readonly VULNERABILITY_DIRECTORY='/sys/devices/system/cpu/vulnerabilities/'
+        # List of documented vulnerabilities
+        VULNERABILIY_LIST=$( ${LS_TOOL} ${VULNERABILITY_DIRECTORY} )
+        ;;
+  *)    # Unknown/unsupported
+        CPU_OEM=''
+        PROC_TYPE=''
+        ;;
 esac
 readonly PROC_TYPE
 # Debugging output?
 if [[ "${QUIET}" == 'NO' ]]; then
-	if [[ "${DEBUG}" -eq 1 ]]; then
-		echo -e "DEBUG: CHKSTR is ${CHKSTR}"
-		echo -e "DEBUG: CPU_OEM is ${CPU_OEM}"
-		echo -e "DEBUG: PROC_TYPE is ${PROC_TYPE}"
-	fi
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo -e "DEBUG: CHKSTR is ${CHKSTR}"
+    echo -e "DEBUG: CPU_OEM is ${CPU_OEM}"
+    echo -e "DEBUG: PROC_TYPE is ${PROC_TYPE}"
+  fi
 fi
 
 # Is this a supported CPU?
 if [[ "${CPU_OEM}" == '' ]]; then
-	if [[ "${QUIET}" == 'NO' ]]; then
-		if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
-			echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${MAGENTA_BLACK} The CPU OEM does not appear to be supported by this tool${ALL_OFF}"
-			echo -e "\tArchitecture reported by ${UNAME_TOOL} is ${CHKSTR}"
-			echo -e "\t\t(May be blank)\n"
-		else
-			# When -o or -t option selected, exit here
-			echo -e 'Unsupported Unsupported'
-		fi
-	fi
-	exit 1
+  if [[ "${QUIET}" == 'NO' ]]; then
+    if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
+      echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${MAGENTA_BLACK} The CPU OEM does not appear to be supported by this tool${ALL_OFF}"
+      echo -e "\tArchitecture reported by ${UNAME_TOOL} is ${CHKSTR}"
+      echo -e "\t\t(May be blank)\n"
+    else
+      # When -o or -t option selected, exit here
+      echo -e 'Unsupported Unsupported'
+    fi
+  fi
+  exit 1
 fi
 
 ###################################################################
 # NOTE: At this point, I can be reasonably sure I am on a supported
-#		architecture, but the specific OEM may be unsupported (I check
+#    architecture, but the specific OEM may be unsupported (I check
 #   for that possibility in the next block)
 # Supported CPU - Now start analysis based on PROC_TYPE
 case "${PROC_TYPE}" in
-	'X')
-		# IA/x86 - I assume Intel, and that I am not on KVM
-		if [[ "${CPU_OEM}" == 'GenuineIntel' ]]; then
-			CPU_OEM='Intel'
-			# Analyze CPU info
-			# Parsing Intel CPU information is very complex
-			#	Start by looking at the 'model name' line
-			CHKSTR=$( ${GREP_TOOL} -m 1 'model name' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' )
-			FIELD_COUNT=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print NF }' )
-			if [[ "${FIELD_COUNT}" -eq 4 ]]; then
-				# Older Pentium/Xeon CPUs
-				CPU_NAME=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $2 }' | ${AWK_TOOL} -F '(' '{ print $1 }' )
-			else
-				# Newer Xeon CPUs
-				CPU_NAME=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $4 }' )
-				CPU_NAME="Xeon ${CPU_NAME}"
-			fi
-		else
-			# Reported as x86, but this isn't a CPU OEM I support
-			if [[ "${QUIET}" == 'NO' ]]; then
-				if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
-					echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${MAGENTA_BLACK} The CPU OEM does not appear to be supported by this tool${ALL_OFF}"
-					echo -e "\tCPU_OEM as recorded in ${CPU_INFO_FILE} is ${CPU_OEM}"
-					echo -e "\t\t(May be blank)\n"
-				fi
-			else
-				# When -o or -t option selected, exit here
-				echo -e 'Unsupported Unsupported'
-			fi
-			exit 1
-		fi
-		# End of if [[ "${CPU_OEM}" == 'GenuineIntel' ]]
+  'X')
+    # IA/x86 - I assume Intel, and that I am not on KVM
+    if [[ "${CPU_OEM}" == 'GenuineIntel' ]]; then
+      CPU_OEM='Intel'
+      # Analyze CPU info
+      # Parsing Intel CPU information is very complex
+      #  Start by looking at the 'model name' line
+      CHKSTR=$( ${GREP_TOOL} -m 1 'model name' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' )
+      FIELD_COUNT=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print NF }' )
+      if [[ "${FIELD_COUNT}" -eq 4 ]]; then
+        # Older Pentium/Xeon CPUs
+        CPU_NAME=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $2 }' | ${AWK_TOOL} -F '(' '{ print $1 }' )
+      else
+        # Newer Xeon CPUs
+        CPU_NAME=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $4 }' )
+        CPU_NAME="Xeon ${CPU_NAME}"
+      fi
+    else
+      # Reported as x86, but this isn't a CPU OEM I support
+      if [[ "${QUIET}" == 'NO' ]]; then
+        if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
+          echo -e "\n${BOLD_TEXT}${RED_BLACK}FATAL ERROR:${MAGENTA_BLACK} The CPU OEM does not appear to be supported by this tool${ALL_OFF}"
+          echo -e "\tCPU_OEM as recorded in ${CPU_INFO_FILE} is ${CPU_OEM}"
+          echo -e "\t\t(May be blank)\n"
+        fi
+      else
+        # When -o or -t option selected, exit here
+        echo -e 'Unsupported Unsupported'
+      fi
+      exit 1
+    fi
+    # End of if [[ "${CPU_OEM}" == 'GenuineIntel' ]]
 
-		# NOTE: At this point, the tool is on an Intel x86 CPUs - no other
-		#		Intel-esque CPU architecture is supported and the tool
-		#		would have exited by now in that case
-		##################################################################
-		# Gather x86 CPU Attributes #
-		#############################
-		# Detection of the following CPU attributes is fairly standard
-		#   across all x86 CPUs
-		CPU_FAMILY=$( ${GREP_TOOL} -m 1 'cpu family' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-		CPU_MODEL=$( ${GREP_TOOL} -m 1 'model' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-		CPU_STEPPING=$( ${GREP_TOOL} -m 1 'stepping' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-		CPUID_LEVEL=$( ${GREP_TOOL} -m 1 'cpuid level' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-		CPU_CACHE=$( ${GREP_TOOL} -m 1 'cache size' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-		CPU_EXEC_THREADS=$( ${GREP_TOOL} 'processor' ${CPU_INFO_FILE} | ${WC_TOOL} -l )
-		# On VMware, then there is no 'physical id' line
-		#	Use 'processor' to determine the equivalent
-		# On VMware, then there is no 'siblings' line
-		#	Force CPU_SIBLINGS to be equal to CPU_PHYSICAL_SOCKETS
-		CPU_PHYSICAL_SOCKETS=$( ${GREP_TOOL} -c 'processor' ${CPU_INFO_FILE} )
-		CPU_SIBLINGS="${CPU_PHYSICAL_SOCKETS}"
-		CHKSTR=$( ${GREP_TOOL} -c 'cpu cores' ${CPU_INFO_FILE} )
-		if [[ "${CHKSTR}" -ne 0 ]]; then
-			# I have CPU core info
-			CPU_CORE_COUNT=$( ${GREP_TOOL} -m 1 'cpu cores' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-			case "${CPU_CORE_COUNT}" in
-				1)  if [[ "${CPU_CORE_COUNT}" -eq "${CPU_SIBLINGS}" ]]; then
+    # NOTE: At this point, the tool is on an Intel x86 CPUs - no other
+    #    Intel-esque CPU architecture is supported and the tool
+    #    would have exited by now in that case
+    ##################################################################
+    # Gather x86 CPU Attributes #
+    #############################
+    # Detection of the following CPU attributes is fairly standard
+    #   across all x86 CPUs
+    CPU_FAMILY=$( ${GREP_TOOL} -m 1 'cpu family' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+    CPU_MODEL=$( ${GREP_TOOL} -m 1 'model' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+    CPU_STEPPING=$( ${GREP_TOOL} -m 1 'stepping' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+    CPUID_LEVEL=$( ${GREP_TOOL} -m 1 'cpuid level' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+    CPU_CACHE=$( ${GREP_TOOL} -m 1 'cache size' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+    CPU_EXEC_THREADS=$( ${GREP_TOOL} 'processor' ${CPU_INFO_FILE} | ${WC_TOOL} -l )
+    # On VMware, then there is no 'physical id' line
+    #  Use 'processor' to determine the equivalent
+    # On VMware, then there is no 'siblings' line
+    #  Force CPU_SIBLINGS to be equal to CPU_PHYSICAL_SOCKETS
+    CPU_PHYSICAL_SOCKETS=$( ${GREP_TOOL} -c 'processor' ${CPU_INFO_FILE} )
+    CPU_SIBLINGS="${CPU_PHYSICAL_SOCKETS}"
+    CHKSTR=$( ${GREP_TOOL} -c 'cpu cores' ${CPU_INFO_FILE} )
+    if [[ "${CHKSTR}" -ne 0 ]]; then
+      # I have CPU core info
+      CPU_CORE_COUNT=$( ${GREP_TOOL} -m 1 'cpu cores' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+      case "${CPU_CORE_COUNT}" in
+        1)  if [[ "${CPU_CORE_COUNT}" -eq "${CPU_SIBLINGS}" ]]; then
               CPU_CORE_TYPE='UC'
             else
               CPU_CORE_TYPE='HT'
             fi
             ;;
-				2)	CPU_CORE_TYPE='DC' ;;
-				4)	CPU_CORE_TYPE='QC' ;;
-				6)	CPU_CORE_TYPE='HC' ;;
-				8)	CPU_CORE_TYPE='OC' ;;
-			esac
-			# Set a general flag indicating if HyperThreading is actually
-			#	enabled on CPU (regardless of cores)
-			if [[ "${CPU_CORE_COUNT}" -lt "${CPU_SIBLINGS}" ]]; then
-				CPU_HT_ENABLED='YES'
-			else
-				CPU_HT_ENABLED='NO'
-			fi
-		else
-			CPU_CORE_COUNT=1
-			# I see a Uni-Core CPU, which means the Hypervisor is
-			#	presenting it that way
-			CPU_CORE_TYPE='UC'
-			CPU_HT_ENABLED='NO'
-		fi
-		# End of if [[ "${CHKSTR}" -ne 0 ]]
+        2)  CPU_CORE_TYPE='DC' ;;
+        4)  CPU_CORE_TYPE='QC' ;;
+        6)  CPU_CORE_TYPE='HC' ;;
+        8)  CPU_CORE_TYPE='OC' ;;
+      esac
+      # Set a general flag indicating if HyperThreading is actually
+      #  enabled on CPU (regardless of cores)
+      if [[ "${CPU_CORE_COUNT}" -lt "${CPU_SIBLINGS}" ]]; then
+        CPU_HT_ENABLED='YES'
+      else
+        CPU_HT_ENABLED='NO'
+      fi
+    else
+      CPU_CORE_COUNT=1
+      # I see a Uni-Core CPU, which means the Hypervisor is
+      #  presenting it that way
+      CPU_CORE_TYPE='UC'
+      CPU_HT_ENABLED='NO'
+    fi
+    # End of if [[ "${CHKSTR}" -ne 0 ]]
 
-		####################################
-		# End of Gather x86 CPU Attributes #
-		##################################################################
+    ####################################
+    # End of Gather x86 CPU Attributes #
+    ##################################################################
 
-		if [[ "${QUIET}" == 'NO' ]]; then
-			if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
-				CPU_DESC="${BOLD_TEXT}${CPU_NAME} ${CPU_CORE_TYPE}${ALL_OFF} (Family ${BOLD_TEXT}${CPU_FAMILY}${ALL_OFF}, Model ${BOLD_TEXT}${CPU_MODEL}${ALL_OFF}, Stepping ${BOLD_TEXT}${CPU_STEPPING}${ALL_OFF}, CPUID Level ${BOLD_TEXT}${CPUID_LEVEL}${ALL_OFF}, Cache ${BOLD_TEXT}${CPU_CACHE}${ALL_OFF})"
-				echo -e "\nCPU OEM is ${BOLD_TEXT}${CPU_OEM}${ALL_OFF}"
-				echo -e "CPU Description is ${CPU_DESC}\n"
-			else
-				# When -o or -t option selected, exit here
-				if [[ "${OEMINFO}" == 'YES' ]]; then
-					# Error-checks above should prevent -o and -t from
-					#   being true at same time
-					CPU_DESC="${CPU_NAME} !! ${CPU_CORE_TYPE} !! Family ${CPU_FAMILY} Model ${CPU_MODEL} Stepping ${CPU_STEPPING} CPUID Level ${CPUID_LEVEL} Cache ${CPU_CACHE}"
-					echo -e "${CPU_OEM} !! ${CPU_DESC}"
-				else
-					# At this point, I must have had the -t option
-					# Vary how I determine CPU speed based on if execution
-					#   is Privileged
-					if [[ "${EUID}" -eq 0 ]]; then
-						# Execution is Privileged and can use DECODE_TOOL
-						CPU_SPEED=$( ${DECODE_TOOL} -t 4 | ${GREP_TOOL}  -m 1 'Current' | ${AWK_TOOL} '{ print $3 }' )
-					else
-						# Execution not Privileged and must use CPU_INFO_FILE
-						CPU_SPEED=$( ${GREP_TOOL} -m 1 'MHz' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-					fi
-					# Make sure the value is presented without decimal places
-					CHKSTR=$( echo ${CPU_SPEED} | ${GREP_TOOL} -c '\.' )
-					if [[ "${CHKSTR}" -ne 0 ]]; then
-						CPU_SPEED=$( echo ${CPU_SPEED} | ${AWK_TOOL} -F '.' '{ print $1 }' )
-					fi
-					CPU_DESC="${CPU_OEM} ${CPU_NAME} ${CPU_EXEC_THREADS} ${CPU_PHYSICAL_SOCKETS} ${CPU_CORE_COUNT} ${CPU_SPEED} ${CPU_HT_ENABLED}"
-					echo -e "${CPU_DESC}"
-				fi
-				exit 0
-			fi
-			# End if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]
-		fi
-		# End of if [[ "${QUIET}" == 'NO' ]]
-		#################
-		# Get CPU Flags #
-		#################
-		# The use of "tr" and "sort" creates a sorted list
-		CHKSTR=$( ${GREP_TOOL} -m 1 'flags' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${TR_TOOL} " " "\n" | ${SORT_TOOL} | ${TR_TOOL} "\n" " " )
-		;;
-	'Z')
-		# zLinux on S/390
-		CPU_OEM='IBM'
-		CPU_NAME='S/390 (Mainframe)'
-		# From the one example I've seen, these appear (to the OS) as
-		#   single Uni-Core CPU
-		# The closest to the x86 attributes of "Family/Model/Stepping" is
-		#   "Version/Identification/Machine" and there does not seem to
-		#   be any real correlation to the x86 concepts of
-		#   "Threads/Sockets/Cores/Speed/Hyperthreading"
-		CPU_PHYSICAL_SOCKETS=1
-		CPU_CORE_TYPE='UC'
-		CPU_CORE_COUNT=1
-		CPU_HT_ENABLED='NO'
-		CPU_VERSION=$( ${GREP_TOOL} -m 1 'processor 0' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $5 }' | ${AWK_TOOL} -F ',' '{ print $1 }' )
-		CPU_IDENT=$( ${GREP_TOOL} -m 1 'processor 0' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $8 }' | ${AWK_TOOL} -F ',' '{ print $1 }' )
-		CPU_MACHINE=$( ${GREP_TOOL} -m 1 'processor 0' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $11 }' )
-		CPU_EXEC_THREADS=1
-		if [[ "${QUIET}" == 'NO' ]]; then
-			if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
-				CPU_DESC="${BOLD_TEXT}${CPU_NAME} ${CPU_CORE_TYPE}${ALL_OFF} (Version ${BOLD_TEXT}${CPU_VERSION}${ALL_OFF}, Identification ${BOLD_TEXT}${CPU_IDENT}${ALL_OFF}, Machine ${BOLD_TEXT}${CPU_MACHINE}${ALL_OFF})"
-				echo -e "\nCPU OEM is ${BOLD_TEXT}${CPU_OEM}${ALL_OFF}"
-				echo -e "CPU Description is ${CPU_DESC}\n"
-			else
-				# When -o or -t option selected, exit here
-				if [[ "${OEMINFO}" == 'YES' ]]; then
-					# Error-checks above should prevent -o and -t from
-					#   being true at same time
-					CPU_DESC="${CPU_NAME} !! ${CPU_CORE_TYPE} !! Version ${CPU_VERSION} Identification ${CPU_IDENT} Machine ${CPU_MACHINE}"
-					echo -e "${CPU_OEM} !! ${CPU_DESC}"
-				else
-					# At this point, the -t option must have been specified
-					# I do not have a CPU speed
-					CPU_SPEED=0
-					CPU_DESC="${CPU_OEM} ${CPU_NAME} ${CPU_EXEC_THREADS} ${CPU_PHYSICAL_SOCKETS} ${CPU_CORE_COUNT} ${CPU_SPEED} ${CPU_HT_ENABLED}"
-					echo -e "${CPU_DESC}"
-				fi
-				exit 0
-			fi
-		fi
-		# End of if [[ "${QUIET}" == 'NO' ]]
-		#################
-		# Get CPU Flags #
-		#################
-		# zLinux reports these as "features" not "flags"
-		# The use of "tr" and "sort" creates a sorted list
-		CHKSTR=$( ${GREP_TOOL} -m 1 'features' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${TR_TOOL} " " "\n" | ${SORT_TOOL} | ${TR_TOOL} "\n" " " )
-		;;
-	'P')
-		# Power PC
-		# Again, I only have one example, so this code is based on that
-		#	Also, I can find some details from "lscpu"
-		CPU_OEM='IBM'
-		MACHINE_MODEL=$( ${GREP_TOOL} -m 1 '^model' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${AWK_TOOL} -F ',' '{ print $2 }' )
-		CPU_NAME=$( ${GREP_TOOL} -m 1 '^cpu' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${AWK_TOOL} '{ print $1 }' )
-		CPU_SPEED=$( ${GREP_TOOL} -m 1 'clock' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${AWK_TOOL} -F '.' '{ print $1 }' )
-		CPU_VERSION=$( ${GREP_TOOL} -m 1 'revision' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' )
-		CPU_ALTIVEC=$( ${GREP_TOOL} -m 1 '^cpu' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${GREP_TOOL} -c 'altivec supported' )
-		# The number of Threads is the SMT level
-		CPU_CORE_COUNT=$( ${CPU_TOOL} | ${GREP_TOOL} -m 1 'Thread(s) per core' | ${AWK_TOOL} '{ print $4 }' )
-		# The information embodied in CPU_CORE_TYPE is not really relevant
-		#   to PowerPC
-		CPU_CORE_TYPE='N/A'
-		# The number of execution threads available basically shows up as
-		#   the total number of (virtual) CPUs
-		CORE_EXEC_THREADS=$( ${CPU_TOOL} | ${GREP_TOOL} -m 1 'CPU(s):' | ${AWK_TOOL} '{ print $2 }' )
-		# The actual number of physical CPUs is shown as the number of
-		#   populated sockets
-		PHYSICAL_CPU_SOCKETS=$( ${CPU_TOOL} | ${GREP_TOOL} -m 1 'Socket(s)' | ${AWK_TOOL} '{ print $2 }' )
-		if [[ "${QUIET}" == 'NO' ]]; then
-			if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
-				CPU_DESC="${BOLD_TEXT}${CPU_OEM} ${CPU_NAME}${ALL_OFF} (Version${BOLD_TEXT}${CPU_VERSION}${ALL_OFF})"
-				echo -e "\nCPU Description is ${CPU_DESC}\n"
-				echo -e "\tCPU Clock Speed (MHz)             :${BOLD_TEXT}${CPU_SPEED}${ALL_OFF}"
-				echo -e "\tCores Allocated to LPAR           : ${BOLD_TEXT}${PHYSICAL_CPU_SOCKETS}${ALL_OFF}"
-				echo -e "\tSimultaneous Multi-Threading (SMT): ${BOLD_TEXT}${CPU_CORE_COUNT}${ALL_OFF}"
-				echo -e "\tTotal Execution Threads           : ${BOLD_TEXT}${CORE_EXEC_THREADS}${ALL_OFF}"
+    if [[ "${QUIET}" == 'NO' ]]; then
+      if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
+        CPU_DESC="${BOLD_TEXT}${CPU_NAME} ${CPU_CORE_TYPE}${ALL_OFF} (Family ${BOLD_TEXT}${CPU_FAMILY}${ALL_OFF}, Model ${BOLD_TEXT}${CPU_MODEL}${ALL_OFF}, Stepping ${BOLD_TEXT}${CPU_STEPPING}${ALL_OFF}, CPUID Level ${BOLD_TEXT}${CPUID_LEVEL}${ALL_OFF}, Cache ${BOLD_TEXT}${CPU_CACHE}${ALL_OFF})"
+        echo -e "\nCPU OEM is ${BOLD_TEXT}${CPU_OEM}${ALL_OFF}"
+        echo -e "CPU Description is ${CPU_DESC}\n"
+      else
+        # When -o or -t option selected, exit here
+        if [[ "${OEMINFO}" == 'YES' ]]; then
+          # Error-checks above should prevent -o and -t from
+          #   being true at same time
+          CPU_DESC="${CPU_NAME} !! ${CPU_CORE_TYPE} !! Family ${CPU_FAMILY} Model ${CPU_MODEL} Stepping ${CPU_STEPPING} CPUID Level ${CPUID_LEVEL} Cache ${CPU_CACHE}"
+          echo -e "${CPU_OEM} !! ${CPU_DESC}"
+        else
+          # At this point, I must have had the -t option
+          # Vary how I determine CPU speed based on if execution
+          #   is Privileged
+          if [[ "${EUID}" -eq 0 ]]; then
+            # Execution is Privileged and can use DECODE_TOOL
+            CPU_SPEED=$( ${DECODE_TOOL} -t 4 | ${GREP_TOOL}  -m 1 'Current' | ${AWK_TOOL} '{ print $3 }' )
+          else
+            # Execution not Privileged and must use CPU_INFO_FILE
+            CPU_SPEED=$( ${GREP_TOOL} -m 1 'MHz' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+          fi
+          # Make sure the value is presented without decimal places
+          CHKSTR=$( echo ${CPU_SPEED} | ${GREP_TOOL} -c '\.' )
+          if [[ "${CHKSTR}" -ne 0 ]]; then
+            CPU_SPEED=$( echo ${CPU_SPEED} | ${AWK_TOOL} -F '.' '{ print $1 }' )
+          fi
+          CPU_DESC="${CPU_OEM} ${CPU_NAME} ${CPU_EXEC_THREADS} ${CPU_PHYSICAL_SOCKETS} ${CPU_CORE_COUNT} ${CPU_SPEED} ${CPU_HT_ENABLED}"
+          echo -e "${CPU_DESC}"
+        fi
+        exit 0
+      fi
+      # End if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]
+    fi
+    # End of if [[ "${QUIET}" == 'NO' ]]
+    #################
+    # Get CPU Flags #
+    #################
+    # The use of "tr" and "sort" creates a sorted list
+    CHKSTR=$( ${GREP_TOOL} -m 1 'flags' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${TR_TOOL} " " "\n" | ${SORT_TOOL} | ${TR_TOOL} "\n" " " )
+    ;;
+  'Z')
+    # zLinux on S/390
+    CPU_OEM='IBM'
+    CPU_NAME='S/390 (Mainframe)'
+    # From the one example I've seen, these appear (to the OS) as
+    #   single Uni-Core CPU
+    # The closest to the x86 attributes of "Family/Model/Stepping" is
+    #   "Version/Identification/Machine" and there does not seem to
+    #   be any real correlation to the x86 concepts of
+    #   "Threads/Sockets/Cores/Speed/Hyperthreading"
+    CPU_PHYSICAL_SOCKETS=1
+    CPU_CORE_TYPE='UC'
+    CPU_CORE_COUNT=1
+    CPU_HT_ENABLED='NO'
+    CPU_VERSION=$( ${GREP_TOOL} -m 1 'processor 0' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $5 }' | ${AWK_TOOL} -F ',' '{ print $1 }' )
+    CPU_IDENT=$( ${GREP_TOOL} -m 1 'processor 0' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $8 }' | ${AWK_TOOL} -F ',' '{ print $1 }' )
+    CPU_MACHINE=$( ${GREP_TOOL} -m 1 'processor 0' ${CPU_INFO_FILE} | ${AWK_TOOL} '{ print $11 }' )
+    CPU_EXEC_THREADS=1
+    if [[ "${QUIET}" == 'NO' ]]; then
+      if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
+        CPU_DESC="${BOLD_TEXT}${CPU_NAME} ${CPU_CORE_TYPE}${ALL_OFF} (Version ${BOLD_TEXT}${CPU_VERSION}${ALL_OFF}, Identification ${BOLD_TEXT}${CPU_IDENT}${ALL_OFF}, Machine ${BOLD_TEXT}${CPU_MACHINE}${ALL_OFF})"
+        echo -e "\nCPU OEM is ${BOLD_TEXT}${CPU_OEM}${ALL_OFF}"
+        echo -e "CPU Description is ${CPU_DESC}\n"
+      else
+        # When -o or -t option selected, exit here
+        if [[ "${OEMINFO}" == 'YES' ]]; then
+          # Error-checks above should prevent -o and -t from
+          #   being true at same time
+          CPU_DESC="${CPU_NAME} !! ${CPU_CORE_TYPE} !! Version ${CPU_VERSION} Identification ${CPU_IDENT} Machine ${CPU_MACHINE}"
+          echo -e "${CPU_OEM} !! ${CPU_DESC}"
+        else
+          # At this point, the -t option must have been specified
+          # I do not have a CPU speed
+          CPU_SPEED=0
+          CPU_DESC="${CPU_OEM} ${CPU_NAME} ${CPU_EXEC_THREADS} ${CPU_PHYSICAL_SOCKETS} ${CPU_CORE_COUNT} ${CPU_SPEED} ${CPU_HT_ENABLED}"
+          echo -e "${CPU_DESC}"
+        fi
+        exit 0
+      fi
+    fi
+    # End of if [[ "${QUIET}" == 'NO' ]]
+    #################
+    # Get CPU Flags #
+    #################
+    # zLinux reports these as "features" not "flags"
+    # The use of "tr" and "sort" creates a sorted list
+    CHKSTR=$( ${GREP_TOOL} -m 1 'features' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${TR_TOOL} " " "\n" | ${SORT_TOOL} | ${TR_TOOL} "\n" " " )
+    ;;
+  'P')
+    # Power PC
+    # Again, I only have one example, so this code is based on that
+    #  Also, I can find some details from "lscpu"
+    CPU_OEM='IBM'
+    MACHINE_MODEL=$( ${GREP_TOOL} -m 1 '^model' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${AWK_TOOL} -F ',' '{ print $2 }' )
+    CPU_NAME=$( ${GREP_TOOL} -m 1 '^cpu' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${AWK_TOOL} '{ print $1 }' )
+    CPU_SPEED=$( ${GREP_TOOL} -m 1 'clock' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${AWK_TOOL} -F '.' '{ print $1 }' )
+    CPU_VERSION=$( ${GREP_TOOL} -m 1 'revision' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' )
+    CPU_ALTIVEC=$( ${GREP_TOOL} -m 1 '^cpu' ${CPU_INFO_FILE} | ${AWK_TOOL} -F ':' '{ print $2 }' | ${GREP_TOOL} -c 'altivec supported' )
+    # The number of Threads is the SMT level
+    CPU_CORE_COUNT=$( ${CPU_TOOL} | ${GREP_TOOL} -m 1 'Thread(s) per core' | ${AWK_TOOL} '{ print $4 }' )
+    # The information embodied in CPU_CORE_TYPE is not really relevant
+    #   to PowerPC
+    CPU_CORE_TYPE='N/A'
+    # The number of execution threads available basically shows up as
+    #   the total number of (virtual) CPUs
+    CORE_EXEC_THREADS=$( ${CPU_TOOL} | ${GREP_TOOL} -m 1 'CPU(s):' | ${AWK_TOOL} '{ print $2 }' )
+    # The actual number of physical CPUs is shown as the number of
+    #   populated sockets
+    PHYSICAL_CPU_SOCKETS=$( ${CPU_TOOL} | ${GREP_TOOL} -m 1 'Socket(s)' | ${AWK_TOOL} '{ print $2 }' )
+    if [[ "${QUIET}" == 'NO' ]]; then
+      if [[ "${OEMINFO}" == 'NO' && "${THREAD}" == 'NO' ]]; then
+        CPU_DESC="${BOLD_TEXT}${CPU_OEM} ${CPU_NAME}${ALL_OFF} (Version${BOLD_TEXT}${CPU_VERSION}${ALL_OFF})"
+        echo -e "\nCPU Description is ${CPU_DESC}\n"
+        echo -e "\tCPU Clock Speed (MHz)             :${BOLD_TEXT}${CPU_SPEED}${ALL_OFF}"
+        echo -e "\tCores Allocated to LPAR           : ${BOLD_TEXT}${PHYSICAL_CPU_SOCKETS}${ALL_OFF}"
+        echo -e "\tSimultaneous Multi-Threading (SMT): ${BOLD_TEXT}${CPU_CORE_COUNT}${ALL_OFF}"
+        echo -e "\tTotal Execution Threads           : ${BOLD_TEXT}${CORE_EXEC_THREADS}${ALL_OFF}"
 
-				# Power PC does not have "feature flags" like x86 CPUs,
-				#   but I can see if the CPU supports the "altivec"
-				#   Vector Media Extensions
-				if [[ "${CPU_ALTIVEC}" -eq 1 ]]; then
-					echo -e "\tThe CPU supports Vector Multimedia Extension (VMX/AltiVec)"
-					echo -e "\t\t(Similar to the x86-64 SSE feature set)"
-				else
-					echo -e "\tThe CPU does NOT appear to support Vector Multimedia Extension (VMX/AltiVec)"
-				fi
-				echo -e "\n\t${BOLD_TEXT}The CPU reports the following vulnerability status information:${ALL_OFF}\n"
-				# Vulnerability checks
-				for VULN in ${VULNERABILIY_LIST}; do
-					CHKSTR=$( ${CAT_TOOL} ${VULNERABILITY_DIRECTORY}${VULN} )
-					if [[ "${CHKSTR}" == 'Not affected' ]]; then
-						VULN_STATUS="${BOLD_TEXT}${GREEN_BLACK}${CHKSTR}${ALL_OFF}"
-					else
-						WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $1 }' )
-						if [[ "${WORKSTR}" == 'Mitigation:' ]]; then
-							WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-							VULN_STATUS="${BOLD_TEXT}${YELLOW_BLACK}Mitigated: ${BLUE_BLACK}${WORKSTR}${ALL_OFF}"
-						elif [[ "${WORKSTR}" == 'Vulnerable,' ]]; then
-							WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F 'able, ' '{ print $2 }' )
-							VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${WORKSTR}${ALL_OFF}"
-						elif [[ "${WORKSTR}" == 'Vulnerable' ]]; then
-							VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${MAGENTA_BLACK}No partial mitigation${ALL_OFF}"
-						else
-							VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}UNKNOWN:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${CHKSTR}${ALL_OFF}"
-						fi
-					fi
-					if [[ "${#VULN}" -gt 11 ]]; then
-						SPACER='\t'
-					elif [[ "${#VULN}" -lt 7 ]]; then
-						SPACER='\t\t\t'
-					else
-						SPACER='\t\t'
-					fi
-					echo -e "\t\t${BOLD_TEXT}${VULN}${SPACER}${VULN_STATUS}"
-				done
-				# End of for VULN in ${VULNERABILIY_LIST}
-			else
-				# When -o or -t option selected, print specific info
-				if [[ "${OEMINFO}" == 'YES' ]]; then
-					# Error-checks above should prevent -o and -t from
-					#	being true at same time
-					CPU_DESC="${CPU_NAME} !! ${CPU_CORE_TYPE} !! Version ${CPU_VERSION}"
-					echo -e "${CPU_OEM} !! ${CPU_DESC}"
-				else
-					# At this point, the -t option must have been specified
-					CPU_DESC="${CPU_OEM} ${CPU_NAME} ${CPU_EXEC_THREADS} ${CPU_PHYSICAL_SOCKETS} ${CPU_CORE_COUNT} ${CPU_SPEED} ${CORE_THREAD_COUNT}"
-					echo -e "${CPU_DESC}"
-				fi
-			fi
-			echo
-		fi
-		# End of if [[ "${QUIET}" == 'NO' ]]
+        # Power PC does not have "feature flags" like x86 CPUs,
+        #   but I can see if the CPU supports the "altivec"
+        #   Vector Media Extensions
+        if [[ "${CPU_ALTIVEC}" -eq 1 ]]; then
+          echo -e "\tThe CPU supports Vector Multimedia Extension (VMX/AltiVec)"
+          echo -e "\t\t(Similar to the x86-64 SSE feature set)"
+        else
+          echo -e "\tThe CPU does NOT appear to support Vector Multimedia Extension (VMX/AltiVec)"
+        fi
+        echo -e "\n\t${BOLD_TEXT}The CPU reports the following vulnerability status information:${ALL_OFF}\n"
+        # Vulnerability checks
+        for VULN in ${VULNERABILIY_LIST}; do
+          CHKSTR=$( ${CAT_TOOL} ${VULNERABILITY_DIRECTORY}${VULN} )
+          if [[ "${CHKSTR}" == 'Not affected' ]]; then
+            VULN_STATUS="${BOLD_TEXT}${GREEN_BLACK}${CHKSTR}${ALL_OFF}"
+          else
+            WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $1 }' )
+            if [[ "${WORKSTR}" == 'Mitigation:' ]]; then
+              WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+              VULN_STATUS="${BOLD_TEXT}${YELLOW_BLACK}Mitigated: ${BLUE_BLACK}${WORKSTR}${ALL_OFF}"
+            elif [[ "${WORKSTR}" == 'Vulnerable,' ]]; then
+              WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F 'able, ' '{ print $2 }' )
+              VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${WORKSTR}${ALL_OFF}"
+            elif [[ "${WORKSTR}" == 'Vulnerable' ]]; then
+              VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${MAGENTA_BLACK}No partial mitigation${ALL_OFF}"
+            else
+              VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}UNKNOWN:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${CHKSTR}${ALL_OFF}"
+            fi
+          fi
+          if [[ "${#VULN}" -gt 11 ]]; then
+            SPACER='\t'
+          elif [[ "${#VULN}" -lt 7 ]]; then
+            SPACER='\t\t\t'
+          else
+            SPACER='\t\t'
+          fi
+          echo -e "\t\t${BOLD_TEXT}${VULN}${SPACER}${VULN_STATUS}"
+        done
+        # End of for VULN in ${VULNERABILIY_LIST}
+      else
+        # When -o or -t option selected, print specific info
+        if [[ "${OEMINFO}" == 'YES' ]]; then
+          # Error-checks above should prevent -o and -t from
+          #  being true at same time
+          CPU_DESC="${CPU_NAME} !! ${CPU_CORE_TYPE} !! Version ${CPU_VERSION}"
+          echo -e "${CPU_OEM} !! ${CPU_DESC}"
+        else
+          # At this point, the -t option must have been specified
+          CPU_DESC="${CPU_OEM} ${CPU_NAME} ${CPU_EXEC_THREADS} ${CPU_PHYSICAL_SOCKETS} ${CPU_CORE_COUNT} ${CPU_SPEED} ${CORE_THREAD_COUNT}"
+          echo -e "${CPU_DESC}"
+        fi
+      fi
+      echo
+    fi
+    # End of if [[ "${QUIET}" == 'NO' ]]
 
-		# That's all I can detect, so there is no point to further processing
-		exit 0
-		;;
+    # That's all I can detect, so there is no point to further processing
+    exit 0
+    ;;
 esac
 # End of case "${PROC_TYPE}" in
 source ./cpudecode-data
@@ -587,7 +587,7 @@ source ./cpudecode-data
 
 ###################################################################
 # NOTE: At this point, I am only continuing if the CPU is IA/x86 or
-#		S/390-zLinux; PowerPC does not have "feature flags"
+#    S/390-zLinux; PowerPC does not have "feature flags"
 FLAG_COUNT=0
 UNKNOWN_FLAG_COUNT=0
 UNKNOWN_FLAG_LIST=''
@@ -599,8 +599,8 @@ SPEC_MELT_MITIGATIONS_LIST=''
 
 # I now have flags in one long string
 for FLAG in ${CHKSTR}; do
-	if [[ "${QUIET}" == 'NO' ]]; then
-		if [[ "${TEST_FLAG}" == 'NO' || "${TEST_FLAG}" == "${FLAG}" ]]; then
+  if [[ "${QUIET}" == 'NO' ]]; then
+    if [[ "${TEST_FLAG}" == 'NO' || "${TEST_FLAG}" == "${FLAG}" ]]; then
       OUTPUT=''
       OUTPUT="${CPU_FLAG_DATA_[${FLAG}]}"
       if [[ "${OUTPUT}" == '' ]]; then
@@ -719,89 +719,89 @@ for FLAG in ${CHKSTR}; do
       fi
       # End of if [[ "${OUTPUT}" == '' ]]
 
-			if [[ "${QUIET}" == 'NO' ]]; then
-				echo -e "\t${BOLD_TEXT}${FLAG}${ALL_OFF} - ${OUTPUT}"
-			fi
-		fi
-		# End of if [ "${TEST_FLAG}" == 'NO' ] || [ "${TEST_FLAG}" == 'YES' -a "${TEST_FLAG}" == "${FLAG}" ]
-	fi
-	# End of if [[ "${QUIET}" == 'NO' ]]
-	(( FLAG_COUNT = FLAG_COUNT + 1 ))
-	if [[ "${TEST_FLAG}" == "${FLAG}" ]]; then
-		FLAG_FOUND=1
-	fi
+      if [[ "${QUIET}" == 'NO' ]]; then
+        echo -e "\t${BOLD_TEXT}${FLAG}${ALL_OFF} - ${OUTPUT}"
+      fi
+    fi
+    # End of if [ "${TEST_FLAG}" == 'NO' ] || [ "${TEST_FLAG}" == 'YES' -a "${TEST_FLAG}" == "${FLAG}" ]
+  fi
+  # End of if [[ "${QUIET}" == 'NO' ]]
+  (( FLAG_COUNT = FLAG_COUNT + 1 ))
+  if [[ "${TEST_FLAG}" == "${FLAG}" ]]; then
+    FLAG_FOUND=1
+  fi
 done
 # End of for FLAG in ${CHKSTR}
 
 if [[ "${QUIET}" == 'NO' ]]; then
-	if [[ "${SPEC_MELT_MITIGATIONS}" -eq 0 ]]; then
-		echo -e "\n\t${BOLD_TEXT}${YELLOW_BLACK}WARNING:${ALL_OFF} ${BOLD_TEXT}No CPU flags found indicating Spectre/Meltdown mitigations are supported/enabled${ALL_OFF}"
-	else
-		if [[ "${SPEC_MELT_MITIGATIONS}" -eq 1 ]]; then
-			NOUN="mitigation"
-		else
-			NOUN="mitigations"
-		fi
-		echo -e "\n\t${BOLD_TEXT}${GREEN_BLACK}NOTICE:${ALL_OFF} ${BOLD_TEXT}CPU supports/has enabled ${SPEC_MELT_MITIGATIONS} Spectre/Meltdown ${NOUN} ( ${MAGENTA_BLACK}${SPEC_MELT_MITIGATIONS_LIST}${ALL_OFF}${BOLD_TEXT})${ALL_OFF}"
-	fi
-	echo -e "\nTotal Flags  : ${FLAG_COUNT}"
-	if [[ "${UNKNOWN_FLAG_LIST}" != '' ]]; then
-		UNKNOWN_FLAG_LIST=" (${BOLD_TEXT}${MAGENTA_BLACK}${UNKNOWN_FLAG_LIST}${ALL_OFF})"
-	fi
-	echo -e "${BOLD_TEXT}Unknown Flags:${ALL_OFF} ${UNKNOWN_FLAG_COUNT}${UNKNOWN_FLAG_LIST}\n"
-	if [[ "${TEST_FLAG}" != 'NO' ]]; then
-		if [[ "${FLAG_FOUND}" -eq 1 ]]; then
-			echo -e "${BOLD_TEXT}${GREEN_BLACK}Flag ${TEST_FLAG} is present${ALL_OFF}"
-		else
-			echo -e "${BOLD_TEXT}${MAGENTA_BLACK}Flag ${TEST_FLAG} is NOT present${ALL_OFF}"
-		fi
-	fi
-	echo -e "\t${BOLD_TEXT}The CPU reports the following vulnerability status information:${ALL_OFF}\n"
-	# Vulnerability checks
-	for VULN in ${VULNERABILIY_LIST}; do
-		CHKSTR=$( ${CAT_TOOL} ${VULNERABILITY_DIRECTORY}${VULN} )
-		if [[ "${CHKSTR}" == 'Not affected' ]]; then
-			VULN_STATUS="${BOLD_TEXT}${GREEN_BLACK}${CHKSTR}${ALL_OFF}"
-		else
-			WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $1 }' )
-			if [[ "${WORKSTR}" == 'Mitigation:' ]]; then
-				WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
-				VULN_STATUS="${BOLD_TEXT}${YELLOW_BLACK}Mitigated: ${BLUE_BLACK}${WORKSTR}${ALL_OFF}"
-			elif [[ "${WORKSTR}" == 'Vulnerable,' || "${WORKSTR}" == 'Vulnerable:' ]]; then
-				WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F 'able, ' '{ print $2 }' )
-				if [[ "${WORKSTR}" == '' ]]; then
-					WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F 'able: ' '{ print $2 }' )
-				fi
-				VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${WORKSTR}${ALL_OFF}"
-			elif [[ "${WORKSTR}" == 'Vulnerable' ]]; then
-				VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${MAGENTA_BLACK}No partial mitigation${ALL_OFF}"
-			else
-				VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}UNKNOWN:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${CHKSTR}${ALL_OFF}"
-			fi
-		fi
-		if [[ "${#VULN}" -gt 15 ]]; then
-			SPACER='\t'
-		elif [[ "${#VULN}" -lt 7 ]]; then
-			SPACER='\t\t\t'
-		else
-			SPACER='\t\t'
-		fi
-		echo -e "\t\t${BOLD_TEXT}${VULN}${SPACER}${VULN_STATUS}"
-	done
-	# End of for VULN in ${VULNERABILIY_LIST}
-	echo
+  if [[ "${SPEC_MELT_MITIGATIONS}" -eq 0 ]]; then
+    echo -e "\n\t${BOLD_TEXT}${YELLOW_BLACK}WARNING:${ALL_OFF} ${BOLD_TEXT}No CPU flags found indicating Spectre/Meltdown mitigations are supported/enabled${ALL_OFF}"
+  else
+    if [[ "${SPEC_MELT_MITIGATIONS}" -eq 1 ]]; then
+      NOUN="mitigation"
+    else
+      NOUN="mitigations"
+    fi
+    echo -e "\n\t${BOLD_TEXT}${GREEN_BLACK}NOTICE:${ALL_OFF} ${BOLD_TEXT}CPU supports/has enabled ${SPEC_MELT_MITIGATIONS} Spectre/Meltdown ${NOUN} ( ${MAGENTA_BLACK}${SPEC_MELT_MITIGATIONS_LIST}${ALL_OFF}${BOLD_TEXT})${ALL_OFF}"
+  fi
+  echo -e "\nTotal Flags  : ${FLAG_COUNT}"
+  if [[ "${UNKNOWN_FLAG_LIST}" != '' ]]; then
+    UNKNOWN_FLAG_LIST=" (${BOLD_TEXT}${MAGENTA_BLACK}${UNKNOWN_FLAG_LIST}${ALL_OFF})"
+  fi
+  echo -e "${BOLD_TEXT}Unknown Flags:${ALL_OFF} ${UNKNOWN_FLAG_COUNT}${UNKNOWN_FLAG_LIST}\n"
+  if [[ "${TEST_FLAG}" != 'NO' ]]; then
+    if [[ "${FLAG_FOUND}" -eq 1 ]]; then
+      echo -e "${BOLD_TEXT}${GREEN_BLACK}Flag ${TEST_FLAG} is present${ALL_OFF}"
+    else
+      echo -e "${BOLD_TEXT}${MAGENTA_BLACK}Flag ${TEST_FLAG} is NOT present${ALL_OFF}"
+    fi
+  fi
+  echo -e "\t${BOLD_TEXT}The CPU reports the following vulnerability status information:${ALL_OFF}\n"
+  # Vulnerability checks
+  for VULN in ${VULNERABILIY_LIST}; do
+    CHKSTR=$( ${CAT_TOOL} ${VULNERABILITY_DIRECTORY}${VULN} )
+    if [[ "${CHKSTR}" == 'Not affected' ]]; then
+      VULN_STATUS="${BOLD_TEXT}${GREEN_BLACK}${CHKSTR}${ALL_OFF}"
+    else
+      WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} '{ print $1 }' )
+      if [[ "${WORKSTR}" == 'Mitigation:' ]]; then
+        WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F ': ' '{ print $2 }' )
+        VULN_STATUS="${BOLD_TEXT}${YELLOW_BLACK}Mitigated: ${BLUE_BLACK}${WORKSTR}${ALL_OFF}"
+      elif [[ "${WORKSTR}" == 'Vulnerable,' || "${WORKSTR}" == 'Vulnerable:' ]]; then
+        WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F 'able, ' '{ print $2 }' )
+        if [[ "${WORKSTR}" == '' ]]; then
+          WORKSTR=$( echo ${CHKSTR} | ${AWK_TOOL} -F 'able: ' '{ print $2 }' )
+        fi
+        VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${WORKSTR}${ALL_OFF}"
+      elif [[ "${WORKSTR}" == 'Vulnerable' ]]; then
+        VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}VULNERABLE:${ALL_OFF} ${BOLD_TEXT}${MAGENTA_BLACK}No partial mitigation${ALL_OFF}"
+      else
+        VULN_STATUS="${BOLD_TEXT}${RED_BLACK}${BLINK_ON}UNKNOWN:${ALL_OFF} ${BOLD_TEXT}${YELLOW_BLACK}${CHKSTR}${ALL_OFF}"
+      fi
+    fi
+    if [[ "${#VULN}" -gt 15 ]]; then
+      SPACER='\t'
+    elif [[ "${#VULN}" -lt 7 ]]; then
+      SPACER='\t\t\t'
+    else
+      SPACER='\t\t'
+    fi
+    echo -e "\t\t${BOLD_TEXT}${VULN}${SPACER}${VULN_STATUS}"
+  done
+  # End of for VULN in ${VULNERABILIY_LIST}
+  echo
 else
-	if [[ "${FLAG_FOUND}" -eq 1 ]]; then
-		if [[ "${DEBUG}" -eq 1 ]]; then
-			echo -e 'Quiet Mode Exit 1'
-		fi
-		exit 1
-	else
-		if [[ "${DEBUG}" -eq 1 ]]; then
-			echo -e 'Quiet Mode Exit 0'
-		fi
-		exit 0
-	fi
+  if [[ "${FLAG_FOUND}" -eq 1 ]]; then
+    if [[ "${DEBUG}" -eq 1 ]]; then
+      echo -e 'Quiet Mode Exit 1'
+    fi
+    exit 1
+  else
+    if [[ "${DEBUG}" -eq 1 ]]; then
+      echo -e 'Quiet Mode Exit 0'
+    fi
+    exit 0
+  fi
 fi
 # End of if [[ "${QUIET}" == 'NO' ]]
 
