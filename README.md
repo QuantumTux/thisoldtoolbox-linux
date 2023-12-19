@@ -8,7 +8,7 @@ These tools have extensive in-line documentation in the form of comments.
 All over the place, really. In my newer BASH code, I try to follow the [Google BASH Style Guide](https://google.github.io/styleguide/shellguide.html). For Python, I make an effort to adhere to [PEP 8](https://peps.python.org/pep-0008/). However, [I value thorough and well-written comments](https://github.com/QuantumTux/thisoldtoolbox-linux/wiki/What-is-it-About-Documentation%3F) above following a specific code style.
 
 # Warranty
-Absolutely none at all. I stand by my work, yes, but I wrote these things for the environment in which I operated at the time. It probably isn't your environment. If you try to use any of my tools without taking the time to examine and understand the code, you're asking for trouble.
+Absolutely none at all. I stand by my work, yes, but I wrote these things for the environment in which I operated at the time. It probably isn't the same as any other environment. If someone tries to use any of my tools without taking the time to examine and understand the code, they're asking for trouble.
 
 # The Library
 Most of the tools written in BASH rely upon a BASH library that is part of this repo. It might seem to be a little overkill, but there's history behind it.
