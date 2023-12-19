@@ -77,7 +77,7 @@ I've designed and built several Nagios environments.
 <details>
 <summary>Read more about nagios_downtime.py</summary>
   
-At one point, I developed this tool to integrate with other automation so those processes could exert a limited control over Nagios (specifically, the generation of alerts), specifically during process flows that I noticed tended to generate false-positive notifications.
+At one point, I developed this tool to integrate with other automation so those processes could exert a limited control over Nagios (specifically, the generation of alerts), generally during process flows that I noticed tended to generate false-positive notifications.
 
 This tool expects to run as an **unprivileged** user (so don't try to run it as **root**); it also expects that user to be a member of a specific Group (identified by numeric **GID**). If you want to integrate it into your environment, then you'll need to tweak several variables, including **NAGIOS_URL_** and **REQUIRED_GROUP_**; of course, as currently engineered, the user ID under which it runs must also be recognized by your Nagios installation (and have control over the target objects).
 
