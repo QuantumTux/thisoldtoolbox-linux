@@ -63,14 +63,21 @@ I wrote this tool for SLES v15 VMs in a VMware environment.
 <details>
 <summary>Read more about fscooler</summary>
   
-It automates XFS _Freeze_ and _Thaw_ operations during ESXi-mediated backups (basically, it "settles" the filesystems so the backup is "clean"). Invocation is controlled by the **open-vm-tools** configuration file `/etc/vmware-tools/tools.conf`, specifically the **[vmbackup]** stanza. Among other features, it allows definition of an "immune" Volume Group; that is, an LVM VG where no filesystem in that VG will be frozen. This is important, as freezing something like **/var** or **/tmp**, even for a second, can trigger catastrophic failures in other processes.
+This tool automates XFS _Freeze_ and _Thaw_ operations during ESXi-mediated backups (basically, it "settles" the filesystems so the backup is "clean"). I designed it so invocation is controlled by the **open-vm-tools** configuration file `/etc/vmware-tools/tools.conf`, specifically the **[vmbackup]** stanza. Among other features, it allows definition of an "immune" Volume Group; that is, an LVM VG where no filesystem in that VG will be frozen. This is important, as freezing something like **/var** or **/tmp**, even for a second, can trigger catastrophic failures in other processes.
 
 It's also important to note that this tool **_assumes_** that filesystems are all defined in/mounted by **/etc/fstab** and the entries use a "standard" syntax. Before deploying this tool in your environment, check my assumptions about that, and adjust the code if needed.
 
 </details>
 
 ## hbareport
-**hbareport-lpar** is designed specifically for PowerPC LPARs running SLES v12 or v15, and in particular those having HBAs provided by VIOs using NPIV. The LUN naming assumed by the tool comes from the SLES-for-SAP environment I built for a R3-to-HANA migration.
+**hbareport-lpar** is designed specifically for PowerPC LPARs running SLES v12 or v15, and in particular those having HBAs provided by VIOs using NPIV.
+<details>
+<summary>Read more about hbareport-lpar</summary>
+The impetus for this tool originated in the X86/physical hardware world, but I found it useful to modify it for **SLES for SAP** LPARs on IBM Power9 hardware. In that environment, I was building the Linux infrastructure underlying an SAP R3 migration, from DB2 atop AIX v7 on Power7 to HANA 2.0 atop SLES on Power9.
+
+The LUN naming conventions, and expectations regarding the number of HBAs and names of the VIOs, are all derived from that specific environment. They may or may not be compatible with other places.
+
+</details>
 
 ## nagios_downtime.py
 I've designed and built several Nagios environments.
