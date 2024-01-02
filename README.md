@@ -73,6 +73,7 @@ It's also important to note that this tool **_assumes_** that filesystems are al
 **hbareport-lpar** is designed specifically for PowerPC LPARs running SLES v12 or v15, and in particular those having HBAs provided by VIOs using NPIV.
 <details>
 <summary>Read more about hbareport-lpar</summary>
+
 The impetus for this tool originated in the X86/physical hardware world, but I found it useful to modify it for **SLES for SAP** LPARs on IBM Power9 hardware. In that environment, I was building the Linux infrastructure underlying an SAP R3 migration, from DB2 atop AIX v7 on Power7 to HANA 2.0 atop SLES on Power9.
 
 The LUN naming conventions, and expectations regarding the number of HBAs and names of the VIOs, are all derived from that specific environment. They may or may not be compatible with other places.
