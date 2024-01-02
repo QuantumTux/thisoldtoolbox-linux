@@ -270,7 +270,7 @@ def print_vm_info_func(SYSTEM_NAME_):
         # Increment counter
         LINE_COUNT_ += 1
 
-        # What I return depends on how script was invoked
+        # What I return depends on how tool was invoked
         if SYSTEM_NAME_ != '':
           # I got done and did not match the host name
           return(0,0)
@@ -401,7 +401,7 @@ else:
 # VSPHERE_LIST_ is now populated with the list of vSphere
 #       servers I'll be contacting
 
-# If not invoked with -c, ID this script
+# If not invoked with -c, ID this tool
 if ARGS_.c == '':
   print(DESC_TEXT_)
 # Debugging ouput
@@ -414,7 +414,7 @@ for VSPHERE_TARGET_ in VSPHERE_LIST_:
     print('VSPHERE_TARGET_ is ' + VSPHERE_TARGET_)
     # Connect to the vSphere
     vsphere_connect_func()
-    # What I do with the connection depends on how script was invoked
+    # What I do with the connection depends on how tool was invoked
     if ARGS_.c != '':
       # Look for a specific host
       (WAS_FOUND_,ALWAYS_ZERO_) = _print_vm_info_func(ARGS_.c)
