@@ -1,4 +1,5 @@
-LICENSE linguist-generated=true
-README.md linguist-generated=true
+LICENSE linguist-documentation=true
+README.md linguist-documentation=true
 bash_tools.sh linguist-generated=true
-cpudecode/cpudecode-data linguist-generated=true
+cpudecode/cpudecode-data linguist-documentation=true
+dell-query-array/dell-query-array.1.gz linguist-documentation=true
