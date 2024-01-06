@@ -240,7 +240,7 @@ def print_vm_info_func(SYSTEM_NAME_):
       THIS_VM_CPU_ = THIS_VM_DATA_.config.numCpu
 
       # Determine if this is an FT
-      if THIS_VM_DATA_.runtime.faultToleranceState == 'running':
+      if (THIS_VM_DATA_.runtime.faultToleranceState == 'running'):
         THIS_VM_FT_ = ANSI_.BOLD_TEXT + 'YES' + ANSI_.ALL_OFF
       else:
         THIS_VM_FT_ = ' NO'
@@ -271,7 +271,7 @@ def print_vm_info_func(SYSTEM_NAME_):
         LINE_COUNT_ += 1
 
         # What I return depends on how tool was invoked
-        if SYSTEM_NAME_ != '':
+        if (SYSTEM_NAME_ != ''):
           # I got done and did not match the host name
           return(0,0)
         else:
@@ -318,7 +318,7 @@ if ARGS_.d:
   print('ARGS_.w is ' + str(ARGS_.w))
 
 # Validate command-line options
-# -e and -w conflict
+#   -e and -w conflict
 if ARGS_.e and ARGS_.w:
   print(DESC_TEXT_+'\n\n\t'+ANSI_.BOLD_TEXT+ANSI_.MAGENTA_BLACK+
     'FATAL ERROR: '+ANSI_.BLUE_BLACK+'-e'+ANSI_.RED_BLACK+
@@ -372,7 +372,7 @@ if ARGS_.c != '':
     sys.exit(251)
   else:
     # Determine Data Center based on 3rd character
-    if ARGS_.c[2:1] == '1':
+    if (ARGS_.c[2:1] == '1'):
       VSPHERE_LIST_ = [ VSPHERES_['DC1'] ]
     else:
       VSPHERE_LIST_ = [ VSPHERES_['DC2'] ]
@@ -387,7 +387,7 @@ else:
   #####################################################################
 
   # -c was not used; check to see if -e or -w was specified
-  if ARGS_.e or ARGS_.w:
+  if (ARGS_.e or ARGS_.w):
     # Yes - I already know that BOTH -e and -c were
     #       not specified, so I only have to test for one
     if ARGS_.e:
@@ -402,7 +402,7 @@ else:
 #       servers I'll be contacting
 
 # If not invoked with -c, ID this tool
-if ARGS_.c == '':
+if (ARGS_.c == ''):
   print(DESC_TEXT_)
 # Debugging ouput
 if ARGS_.d:
@@ -420,11 +420,14 @@ for VSPHERE_TARGET_ in VSPHERE_LIST_:
       (WAS_FOUND_,ALWAYS_ZERO_) = _print_vm_info_func(ARGS_.c)
       if ARGS_.d:
         print('WAS_FOUND_ is ' + str(WAS_FOUND_))
-        # Exit with an RC or "1" if I found the system, or "0" otherwise
+        # Exit with an RC or "1" if I found the system,
+        #   or "0" otherwise
         sys.exit(WAS_FOUND_)
       else:
         # Print header
-        print('\n\t\t' + ANSI_.BOLD_TEXT + ANSI_.GREEN_BLACK + '___VM_Name___\t__State__\t__Tools__\t\t__RAM(GB)__\t\t__CPU__\t\t__FT?__' + ANSI_.ALL_OFF)
+        print('\n\t\t'+ANSI_.BOLD_TEXT+ANSI_.GREEN_BLACK+
+          '___VM_Name___\t__State__\t__Tools__\t\t__RAM(GB)__\t\t__CPU__\t\t__FT?__'
+          +ANSI_.ALL_OFF)
 
         # Print the VM data
         (_THIS_DC_COUNT,_THIS_DC_SKIP) = _print_vm_info_func(ARGS_.c)
