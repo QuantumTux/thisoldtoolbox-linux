@@ -39,7 +39,18 @@ The earliest version I can find for this tool is January, 2011; but I know I sta
   In the environment at that time, the host population was almost entirely physical, and there was a need to evaluate those systems, on the fly, during OS install. While the environment eventually shifted towards virtual hosts, the tool was still useful from time to time. It also became handy in the time of Spectre/Meltdown, and proved helpful in the PowerPC environment.
 
   Originally, the information on CPU flag meanings was in one huge **case** statement; I defend that by noting back in 2009, x86 CPUs had a lot fewer flags (dual-core was around, but quad-core wasn't yet common). In preparation for publishing it here, I took the vast majority of that information and moved it into the **cpudecode-data** file (a comment tells you where it needs to live), which basically just declares an array and populates it. The tools also depends on the BASH library.
+
+</details>
+
+## curses_demo.py
+This was a one-off, _proof-of-concept_ I threw together.
+<details>
+<summary>Read more about curses_demo.py</summary>
   
+  So, in the environment I was in at the time, [the AIX guy had created a "menu" system that re-invented all sorts of wheels, complete with needlessly complicated and totally undocumented shell code](https://github.com/QuantumTux/Effluvia/wiki/What-is-it-About-Documentation%3F#lack-of-documentation-is-not-a-sign-of-skill). One of the first things has asked me to do, when I arrived, was to look at his jumble of scripts and see if I could replace it. I didn't understand it at the time, but he just wanted to make sure his obfuscated mess wasn't going to be easily replaced.
+
+  Some time later, I thought about it, and decided to see what could be done in Linux. Curiosity, really, more than any serious development effort. This code lacks most of my usual comments and was never intended for actual use.
+
 </details>
 
 ## dell-query-array.py
