@@ -38,6 +38,7 @@
 #       252-254 - An invalid host name was provided with the "-c"
 #           parameter
 #       255 - Invalid command-line parameter combination
+#   3) Based in part on listallvms.py by sm
 #
 # KNOWN BUGS:
 #   0) There is no error-handling for comm failures when attempting
@@ -54,6 +55,10 @@ TOOL_VERSION_='100'
 #######################################################################
 # Change Log (Reverse Chronological Order)
 # Who When______ What__________________________________________________
+# dxb 2023-12-09 Sanitized and published to GitHub
+# sm  2020-01-14 Make the credentials into dictionary
+# sm  2020-01-14 Fix the display of multiple VMs when Guest
+#                 is FT-enabled
 # dxb 2019-12-20 Initial creation
 #######################################################################
 # Module Imports #
