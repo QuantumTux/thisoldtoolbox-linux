@@ -53,7 +53,7 @@ This was a one-off, _proof-of-concept_ I threw together.
 
 </details>
 
-## dell-query-array.py
+## [dell-query-array.py](https://github.com/QuantumTux/thisoldtoolbox-linux/tree/main/dell-query-array)
 Recently, an environment had about 30 Dell **PowerVault ME-{4,5}012 and ME-4084** Storage Arrays.
 <details>
 <summary>Read more about dell-query-array.py</summary>
