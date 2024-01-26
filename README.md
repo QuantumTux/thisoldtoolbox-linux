@@ -47,7 +47,7 @@ This was a one-off, _proof-of-concept_ I threw together.
 <details>
 <summary>Read more about curses_demo.py</summary>
   
-  So, in the environment I was in at the time, [the AIX guy had created a "menu" system that re-invented all sorts of wheels, complete with needlessly complicated and totally undocumented shell code](https://github.com/QuantumTux/Effluvia/wiki/What-is-it-About-Documentation%3F#lack-of-documentation-is-not-a-sign-of-skill). One of the first things has asked me to do, when I arrived, was to look at his jumble of scripts and see if I could replace it. I didn't understand it at the time, but he just wanted to make sure his obfuscated mess wasn't going to be easily replaced.
+  So, in the environment I was in at the time, the AIX guy had created a "menu" system that re-invented all sorts of wheels, complete with needlessly complicated and totally undocumented shell code. One of the first things has asked me to do, when I arrived, was to look at his jumble of scripts and see if I could replace it. I didn't understand it at the time, but he just wanted to make sure [his obfuscated mess wasn't going to be easily replaced](https://github.com/QuantumTux/Effluvia/wiki/What-is-it-About-Documentation%3F#lack-of-documentation-is-not-a-sign-of-skill).
 
   Some time later, I thought about it, and decided to see what could be done in Linux. Curiosity, really, more than any serious development effort. This code lacks most of my usual comments and was never intended for actual use.
 
