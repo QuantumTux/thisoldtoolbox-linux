@@ -1,5 +1,5 @@
 # thisoldtoolbox-linux
-This repo is part of my **This Old Toolbox** set of repos, which collectively host various system administration/management tools I've written over the years, for a variety of platforms and environments. I'm making them public so that others might find the ideas and/or the accumulated knowledge helpful to whatever they need to create.
+This repo is part of my **This Old Toolbox** set of repos, which collectively host various system administration/management tools I've written over the years, [for a variety of platforms and environments](https://github.com/QuantumTux/Effluvia/wiki/Why-I-Love-Python,-But-I-Still-Write-Tools-in-BASH). I'm making them public so that others might find the ideas and/or the accumulated knowledge helpful to whatever they need to create.
 
 # Documentation
 These tools have extensive in-line documentation in the form of comments.
