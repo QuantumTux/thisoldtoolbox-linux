@@ -129,7 +129,7 @@ else
   #  then see if $1 is one of "freeze", "freezeFail" or "thaw"
   # NOTE: Long strings like "freeze" or "thaw" are ignored by getopt
   if [[ "${HELP_FLAG}" == 'NO' && "${UNKNOWN}" == 'NO' ]]; then
-    if [[ "${1}" == 'freeze' && "${1}" == 'freezeFail' && "${1}" == 'thaw' ]]; then
+    if [[ "${1}" == 'freeze' || "${1}" == 'freezeFail' || "${1}" == 'thaw' ]]; then
       # All of those values imply -a and -q
       ALL_MOUNTS='YES'
       OUTPUT_MODE=1
