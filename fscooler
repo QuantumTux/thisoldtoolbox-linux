@@ -29,7 +29,7 @@
 #       to most of my other tools) as I have to support a mix of
 #       short and long command-line parameters
 #   5) I looked at supporting some sort of "state check" to determine
-#       if a given filesystem is frozen - it's not really not easy to
+#       if a given filesystem is frozen - it's not really easy to
 #       do; and XFS has no built-in facility for making such a check;
 #       accordingly, this tool does not support such an operation
 #   6) The Freeze/Backup/Thaw cycle seems to take only a few seconds,
