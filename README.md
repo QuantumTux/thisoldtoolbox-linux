@@ -38,7 +38,7 @@ The earliest version I can find for this tool is January, 2011; but I know I sta
   
   In the environment at that time, the host population was almost entirely physical, and there was a need to evaluate those systems, on the fly, during OS install. While the environment eventually shifted towards virtual hosts, the tool was still useful from time to time. It also became handy in the time of Spectre/Meltdown, and proved helpful in the PowerPC environment.
 
-  Originally, the information on CPU flag meanings was in one huge **case** statement; I defend that by noting back in 2009, x86 CPUs had a lot fewer flags (dual-core was around, but quad-core wasn't yet common). In preparation for publishing it here, I took the vast majority of that information and moved it into the **cpudecode-data** file (a comment tells you where it needs to live), which basically just declares an array and populates it. The tools also depends on the BASH library.
+  Originally, the information on CPU flag meanings was in one huge **case** statement; I defend that by noting back in 2009, x86 CPUs had a lot fewer flags (dual-core was around, but quad-core wasn't yet common). In preparation for publishing it here, I took the vast majority of that information and moved it into the **cpudecode-data** file (a comment tells you where it needs to live), which basically just declares an array and populates it. The tool also depends on the BASH library.
 
 </details>
 
