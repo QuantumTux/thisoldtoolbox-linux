@@ -124,7 +124,7 @@ def log_tool_message_(LOG_MESSAGE_):
   Arguments: String of text message to be logged
   Returns: N/A
   '''
-  # Only do something if we were passed a message
+  # Only do something if a messages was provided
   if len(LOG_MESSAGE_) > 0:
     syslog.syslog(LOG_MESSAGE_)
   else:
@@ -141,10 +141,10 @@ def argument_parser_func_():
   Also requires the Global TOOL_VERSION_ string holding the current
   version of the program in the format ###
 
-  Finally requires import of the argparse and os packages
+  Finally, requires import of the argparse and os modules
   """
 
-  # Redefine the ArgumentParser class so we can force it to print out
+  # Redefine the ArgumentParser class so I can force it to print out
   #	the Help screen if a required parameter is missing
   class MyParser(argparse.ArgumentParser):
     """
@@ -183,7 +183,7 @@ def argument_parser_func_():
     ANSI_.BLUE_BLACK+REQUIRED_GROUP_+ANSI_.ALL_OFF+'\n'+'\t'+ANSI_.BOLD_TEXT+
     'Using credential file '+ANSI_.BLUE_BLACK+PW_FILENAME_+ANSI_.ALL_OFF+'\n \n')
 
-  # Create an argument parser object (using our special Class)
+  # Create an argument parser object (using my special Class)
   #   usage=argparse.SUPPRESS - Prevents the normal "usage" header from
   #       appearing; I built my own in HELP_TEXT_
   #   formatter_class=argparse.RawTextHelpFormatter - Allow me to control
@@ -333,8 +333,8 @@ def main():
           CHKMIN_ = ARGS_.d[CHKINDEX_+1:CHKSTR_]
 
         if (CHKHOUR_.isdigit()) and (CHKMIN_.isdigit()):
-          # CHKHOUR_ needs to in the range 0-23
-          # CHKMIN_ needs to in the range 0-59
+          # CHKHOUR_ needs to be in the range 0-23
+          # CHKMIN_ needs to be in the range 0-59
           # isdigit accepts negative numbers
           if ( ( ( int(CHKHOUR_) < 0 ) or ( int(CHKMIN_) < 0 ) ) or
             ( ( int(CHKHOUR_) == 0 ) and ( int(CHKMIN_) == 0 ) ) or
