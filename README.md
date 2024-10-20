@@ -110,6 +110,8 @@ This is a tool I wrote that was very specific to the environment where I was wor
 <details>
 <summary>Read more about vmreport.py</summary>
 
-That said, by design, it is limited to operating against, at most, two ESXi infrastructures (and assumes those are in different data centers, although that's not a critical distinction). There's logic to find a specific host (sort of a "Does a VM with this name exist in this place?" check); the code assumes a host naming convention that, again, was peculiar to the original environment. Bottom Line: You'll need to adapt this tool to **your** environment, don't try to use it as-is. Mainly, I'm publishing it because I found the existing examples of how to use the Python vSphere modules a bit wanting (I wrote this before VMware published the "Community examples"), and I think my code did a better job of demonstrating the basic functionality and making it easy for someone else to understand and adapt to their needs.
+That said, by design, it is limited to operating against, at most, two ESXi infrastructures (and assumes those are in different data centers, although that's not a critical distinction). There's logic to find a specific host (sort of a "Does a VM with this name exist in this place?" check); the code assumes a host naming convention that, again, was peculiar to the original environment.
+
+Bottom Line: You'll need to adapt this tool to **your** environment, don't try to use it as-is. Mainly, I'm publishing it because I found the existing examples of how to use the Python vSphere modules a bit wanting (I wrote this before VMware published the "Community examples"), and I think my code did a better job of demonstrating the basic functionality and making it easy for someone else to understand and adapt to their needs.
 
 </details>
