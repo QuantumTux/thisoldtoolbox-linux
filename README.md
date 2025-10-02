@@ -5,7 +5,7 @@ This repo is part of my **This Old Toolbox** set of repos, which collectively ho
 These tools have extensive in-line documentation in the form of comments.
 
 # Code Style
-All over the place, really. In my newer BASH code, I try to follow the [Google BASH Style Guide](https://google.github.io/styleguide/shellguide.html). For Python, I make an effort to adhere to [PEP 8](https://peps.python.org/pep-0008/). However, [I value thorough and well-written comments](https://github.com/QuantumTux/Effluvia/wiki/What-is-it-About-Documentation%3F#comments-are-code-for-humans) above following a specific code style.
+All over the place, really. In my newer BASH code, I try to follow the [Google BASH Style Guide](https://google.github.io/styleguide/shellguide.html). For Python, I make an effort to adhere to [PEP 8](https://peps.python.org/pep-0008/) (yeah, I know I'm bad about not putting spaces around **=** when used for assignment). However, [I value thorough and well-written comments](https://github.com/QuantumTux/Effluvia/wiki/What-is-it-About-Documentation%3F#comments-are-code-for-humans) above following a specific code style.
 
 # Warranty
 Absolutely none at all. I stand by my work, yes, but I wrote these things for the environment in which I operated at the time. It probably isn't the same as any other environment. If someone tries to use any of my tools without taking the time to examine and understand the code, they're asking for trouble.
