@@ -115,3 +115,10 @@ That said, by design, it is limited to operating against, at most, two ESXi infr
 Bottom Line: You'll need to adapt this tool to **your** environment, don't try to use it as-is. Mainly, I'm publishing it because I found the existing examples of how to use the Python vSphere modules a bit wanting (I wrote this before VMware published the "Community examples"), and I think my code did a better job of demonstrating the basic functionality and making it easy for someone else to understand and adapt to their needs.
 
 </details>
+
+# Artificial Intelligence / Large Language Model Training PROHIBITED
+Without limiting the exclusive rights of any author, contributor and/or authorized publisher of this creative work,
+the use of the publications contained in this repository to train artificial intelligence, of a "generative" type, or
+of any other type known or unknown at the time of publication, is expressly prohibited. The copyright holder also
+exercises their rights under Article 4(3) of the Digital Single Market Directive 2019/790 and expressly reserves
+this publication from the text and data mining exceptions.
